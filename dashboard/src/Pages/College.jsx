@@ -37,9 +37,8 @@ const College = () => {
     axios
       .get("http://localhost:8000/getdataUniversity")
       .then((res) => {
-        setCategoriesData(res.data.data);
-        // setCategories(res.data.data);  // Assuming the response contains a `data` array
-        // setCategory(res.data.data);
+       const udata = res.data.data.filter( (item) => item.status === 'active' )
+        setCategoriesData(udata);
         console.log("Categories fetched:", res.data.data);
       })
       .catch((err) => {
@@ -51,8 +50,8 @@ const College = () => {
     axios
       .get("http://localhost:8000/getdataCity")
       .then((res) => {
-        setCategories(res.data.data); // Assuming the response contains a `data` array
-        // setCategoryData(res.data.data);
+        const udata = res.data.data.filter( (item) => item.status === 'active' )
+        setCategories(udata); // Assuming the response contains a data array
         console.log("Categories fetched:", res.data.data);
       })
       .catch((err) => {
@@ -282,7 +281,7 @@ const College = () => {
                   <Form.Label>College Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter University Name"
+                    placeholder="Enter College Name"
                     value={college_name}
                     onChange={(e) => setCollegeName(e.target.value)}
                     required

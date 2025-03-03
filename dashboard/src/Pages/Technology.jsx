@@ -25,7 +25,7 @@ const Technology = () => {
   //   }
   // };
   const handleShow = () => setShow(true);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [userData, setUserData] = useState([]);
   // const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,6 +68,7 @@ const Technology = () => {
     setName("");
     setStatus("active");
     setEditingId(null); // Reset editing state
+    setErrorMessage('');
   };
 
   // const handleShow = () => setShow(true);
@@ -99,20 +100,26 @@ const Technology = () => {
           showUsers();
           handleClose();
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("Technology is already exist.."); // Set error message
+          } else {
+            console.error(err);
+          }
+        })
         .finally(() => setIsSubmitting(false));
     }
   };
 
   // Delete Technology
   const deletedata = (_id) => {
-      axios
-        .delete(`http://localhost:8000/deleteTechnology/${_id}`)
-        .then(() => {
-          alert("Are you sure you want to delete this record?");
-          showUsers();
-        })
-        .catch((err) => console.error(err));
+    axios
+      .delete(`http://localhost:8000/deleteTechnology/${_id}`)
+      .then(() => {
+        alert("Are you sure you want to delete this record?");
+        showUsers();
+      })
+      .catch((err) => console.error(err));
   };
 
   // Handle Edit Click
@@ -141,7 +148,7 @@ const Technology = () => {
     const doc = new jsPDF();
     doc.text("Technology Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No",  "Technology Name"]],
+      head: [["Sr.No", "Technology Name"]],
       body: userData.map((a, index) => [
         index + 1,
         a.name,
@@ -237,6 +244,13 @@ const Technology = () => {
                     required
                   />
                 </Col>
+                {errorMessage && (
+                  <Col md={12} className="mt-2">
+                    <div style={{ color: 'red' }}>
+                      {errorMessage}
+                    </div>
+                  </Col>
+                )}
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check

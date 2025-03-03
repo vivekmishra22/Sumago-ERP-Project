@@ -10,6 +10,18 @@ const add = async(req, res) => {
         const userdata = await data.save()
         res.send({userdata});
     }
+//     catch (error){
+//         if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
+//             return res.status(400).json({ message: 'College already exists' });
+//         }
+
+//         console.log(error);
+//         return res.status(500).json({ message:'internal servar error'})
+//     }
+//     const existingCity = await college.findOne({ college_name });
+//   if (existingCity) {
+//     return res.status(400).json({ message: 'College name already exists' });
+//   }
     catch (error){
         console.log(error);
         return res.status(500).json({ message:'internal servar error'})

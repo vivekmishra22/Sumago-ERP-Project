@@ -24,6 +24,8 @@ const University = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
+  const [errorMessage, setErrorMessage] = useState("");
+
 
   // Fetch Data from API
   useEffect(() => {
@@ -50,6 +52,7 @@ const University = () => {
     setUniversityName("");
     setStatus("active");
     setEditingId(null); // Reset editing state
+    setErrorMessage('');
   };
 
 
@@ -80,20 +83,27 @@ const University = () => {
           showUsers();
           handleClose();
         })
-        .catch((err) => console.error(err))
+        // .catch((err) => console.error(err))
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("Technology is already exist.."); // Set error message
+          } else {
+            console.error(err);
+          }
+        })
         .finally(() => setIsSubmitting(false));
     }
   };
 
   // Delete University
   const deletedata = (_id) => {
-      axios
-        .delete(`http://localhost:8000/deleteUniversity/${_id}`)
-        .then(() => {
-          alert("Are you sure you want to delete this record?");
-          showUsers();
-        })
-        .catch((err) => console.error(err));
+    axios
+      .delete(`http://localhost:8000/deleteUniversity/${_id}`)
+      .then(() => {
+        alert("Are you sure you want to delete this record?");
+        showUsers();
+      })
+      .catch((err) => console.error(err));
   };
 
   // Handle Edit Click
@@ -104,7 +114,7 @@ const University = () => {
     setShow(true);
   };
 
-  
+
 
   // Export to Excel
   const handleExcel = () => {
@@ -124,7 +134,7 @@ const University = () => {
     const doc = new jsPDF();
     doc.text("University Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No",  "University Name"]],
+      head: [["Sr.No", "University Name"]],
       body: userData.map((a, index) => [
         index + 1,
         a.university_name,
@@ -220,6 +230,13 @@ const University = () => {
                     required
                   />
                 </Col>
+                {errorMessage && (
+                  <Col md={12} className="mt-2">
+                    <div style={{ color: 'red' }}>
+                      {errorMessage}
+                    </div>
+                  </Col>
+                )}
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check

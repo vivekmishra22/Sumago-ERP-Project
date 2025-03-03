@@ -12,6 +12,7 @@ const data = mongoose.Schema({
     office_name: {
         type: String,
         required: true,
+        unique:true
     },
     office_city_name: {
         type: String,

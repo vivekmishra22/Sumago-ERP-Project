@@ -72,7 +72,7 @@ const Courses = () => {
       .post("http://localhost:8000/addCourse", newData)
       .then((res) => {
         console.log("Data Added:", res.data);
-        alert("Data Added Successfully!");
+        // alert("Data Added Successfully!");
         setCourse_Name("");
         setCourse_Description("");
         setCourse_Duration("");
@@ -85,9 +85,7 @@ const Courses = () => {
         console.log(err);
         alert("Failed to add data. Please try again.");
       })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+     
   };
 
   // Delete data
@@ -324,7 +322,7 @@ const Courses = () => {
         </Col>
 
         <Col md={12} lg={12} lx={12} lxx={12} className="mt-3">
-        
+        <h1 className="text-center text-primary fw-bold">Course Data</h1>
             <div style={{ overflowX: "auto" }}>
               <Table striped bordered hover>
                 <thead>
@@ -350,11 +348,11 @@ const Courses = () => {
                       <td>{a.status}</td>
                       <td className="d-flex justify-content-evenly">
                       <Button
-                          variant="warning"
-                          onClick={() => navigate(`/Head/UpdateCourse/${a._id}`)}
-                        >
-                          <GrEdit />
-                        </Button>
+                        variant="warning"
+                        onClick={() => navigate(`/Head/UpdateCourse/${a._id}`)}
+                      >
+                        <GrEdit />
+                      </Button>
                         <Button variant="danger" onClick={() => deletedata(a._id)}>
                           <AiFillDelete />
                         </Button>

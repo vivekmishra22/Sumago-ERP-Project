@@ -12,6 +12,7 @@ const data = mongoose.Schema({
     university_name: {
         type: String,
         required: true,
+        unique:true
     },
     status: {
         // type:active/inactive,

@@ -10,6 +10,7 @@
         college_name:{
             type:String,
             required:true,
+            unique:true
         },
         // city_name:{
         //     type:String,

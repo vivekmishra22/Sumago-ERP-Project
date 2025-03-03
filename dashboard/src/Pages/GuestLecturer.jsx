@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button,  Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -12,32 +12,35 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 const GuestLecturer = () => {
-    const navigate = useNavigate();
-    
-  const [show, setShow] = useState(false);
-  
-  const handleClose = () => {
-        setguest_lecturer_name("");
-        setlecture_topic_description("");
-        setguest_lecture_batch("");
-        setguest_lecture_date("");
-        setStatus("active");
-        setShow(false);
-      
-  };
-  const handleShow = () => setShow(true);
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
 
-  const [guest_lecturer_name,  setguest_lecturer_name] = useState("");
+  const [guest_lecturer_name, setguest_lecturer_name] = useState("");
   const [lecture_topic_description, setlecture_topic_description] = useState("");
-  const [guest_lecture_batch,  setguest_lecture_batch] = useState("");
-  const [ guest_lecture_date, setguest_lecture_date] = useState("");
+  const [guest_lecture_batch, setguest_lecture_batch] = useState("");
+  const [guest_lecture_date, setguest_lecture_date] = useState("");
   const [status, setStatus] = useState("active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
+  const [show, setShow] = useState(false);
+
+
+  const handleClose = () => {
+
+    setguest_lecturer_name("");
+    setlecture_topic_description("");
+    setguest_lecture_batch("");
+    setguest_lecture_date("");
+    setStatus("active");
+    setShow(false);
+
+  };
+  const handleShow = () => setShow(true);
+
 
   // Fetch data on component mount
   useEffect(() => {
@@ -46,13 +49,16 @@ const GuestLecturer = () => {
 
   // Fetch data from the API
   const showUsers = () => {
+    setLoading(true);
     axios
       .get("http://localhost:8000/getguestdata")
       .then((res) => {
         setUserData(res.data.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
         alert("Failed to fetch data. Please check your network connection or try again later.");
       });
   };
@@ -63,12 +69,12 @@ const GuestLecturer = () => {
     setIsSubmitting(true);
 
     const newData = {
-      
-        guest_lecturer_name,
-        lecture_topic_description, 
-        guest_lecture_batch,
-         guest_lecture_date,
-         status
+
+      guest_lecturer_name,
+      lecture_topic_description,
+      guest_lecture_batch,
+      guest_lecture_date,
+      status
     };
 
     axios
@@ -95,19 +101,22 @@ const GuestLecturer = () => {
 
   // Delete data
   const deletedata = (_id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
       axios
         .delete(`http://localhost:8000/deleteguest/${_id}`)
         .then((res) => {
           console.log("User Deleted:", res.data);
-          alert("Are you sure you want to delete this record?");
+          alert("User Deleted");
           showUsers();
         })
         .catch((error) => {
           console.error("Error Deleting User:", error);
+          alert("Failed to delete user. Please check your network connection or try again.");
         });
+    }
   };
 
-  
+
 
   // Export to Excel
   const handleExcel = () => {
@@ -115,9 +124,10 @@ const GuestLecturer = () => {
       userData.map((a, index) => ({
         "Sr.No": index + 1,
         "guest_lecturer_name": a.guest_lecturer_name,
-        "lecture_topic_description":a.lecture_topic_description,
-        "guest_lecture_batch":a.guest_lecture_batch,
-        "guest_lecture_date":a.guest_lecture_date,
+        "lecture_topic_description": a.lecture_topic_description,
+        "guest_lecture_batch": a.guest_lecture_batch,
+        "guest_lecture_date": a.guest_lecture_date,
+        "Status": a.status
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -130,12 +140,12 @@ const GuestLecturer = () => {
     const doc = new jsPDF();
     doc.text("Guest Lecturer Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "guest_lecturer_name","lecture_topic_description","guest_lecture_batch","guest_lecture_date"]],
-      body: userData.map((a, index) => [index + 1,  a.guest_lecturer_name,
-        a.lecture_topic_description,
-        a.guest_lecture_batch,
-        a.guest_lecture_date, 
-      ]),
+      head: [["Sr.No", "guest_lecturer_name", "lecture_topic_description", "guest_lecture_batch", "guest_lecture_date", "Status"]],
+      body: userData.map((a, index) => [index + 1, a.guest_lecturer_name,
+      a.lecture_topic_description,
+      a.guest_lecture_batch,
+      a.guest_lecture_date,
+      a.status]),
       startY: 30,
     });
     doc.save("Guest Lecturer-data.pdf");
@@ -145,9 +155,10 @@ const GuestLecturer = () => {
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
     "guest_lecturer_name": a.guest_lecturer_name,
-    "lecture_topic_description":a.lecture_topic_description,
-    "guest_lecture_batch":a.guest_lecture_batch,
-    "guest_lecture_date":a.guest_lecture_date,
+    "lecture_topic_description": a.lecture_topic_description,
+    "guest_lecture_batch": a.guest_lecture_batch,
+    "guest_lecture_date": a.guest_lecture_date,
+    "Status": a.status
   }));
 
   // Pagination logic
@@ -180,12 +191,10 @@ const GuestLecturer = () => {
 
   // Handle search
   const handleSearch = () => {
-    const filteredData = userData.filter((item) =>
-      item.guest_lecturer_name.toLowerCase().includes(searchTerm.toLowerCase())||
-      item.lecture_topic_description.toLowerCase().includes(searchTerm.toLowerCase())||
-      item.guest_lecture_batch.toLowerCase().includes(searchTerm.toLowerCase())||
-      item.guest_lecture_date.toLowerCase().includes(searchTerm.toLowerCase())||
-    item.status.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredData = userData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
   };
@@ -228,17 +237,17 @@ const GuestLecturer = () => {
                     type="text"
                     placeholder="Enter  Name"
                     value={guest_lecturer_name}
-                    onChange={(e) =>  setguest_lecturer_name(e.target.value)}
+                    onChange={(e) => setguest_lecturer_name(e.target.value)}
                     required
                   />
                 </Col>
                 <Col md={12}>
                   <Form.Label>Lecture Description</Form.Label>
                   <Form.Control
-                    type="text"
+                    as="textarea" aria-label="With textarea"
                     placeholder="Enter lecture description"
                     value={lecture_topic_description}
-                    onChange={(e) =>  setlecture_topic_description(e.target.value)}
+                    onChange={(e) => setlecture_topic_description(e.target.value)}
                     required
                   />
                 </Col>
@@ -248,7 +257,7 @@ const GuestLecturer = () => {
                     type="text"
                     placeholder="Enter lecture batch"
                     value={guest_lecture_batch}
-                    onChange={(e) =>  setguest_lecture_batch(e.target.value)}
+                    onChange={(e) => setguest_lecture_batch(e.target.value)}
                     required
                   />
                 </Col>
@@ -258,7 +267,7 @@ const GuestLecturer = () => {
                     type="Date"
                     placeholder="Enter lecture date"
                     value={guest_lecture_date}
-                    onChange={(e) =>  setguest_lecture_date(e.target.value)}
+                    onChange={(e) => setguest_lecture_date(e.target.value)}
                     required
                   />
                 </Col>
@@ -298,36 +307,47 @@ const GuestLecturer = () => {
 
         {/* Export Buttons */}
         <Col md={6} className="">
-            <CSVLink data={csvData} filename={"course-data.csv"} className="">
-              <Button variant="primary">CSV</Button>
-            </CSVLink>
-            <Button variant="primary" onClick={handleExcel} className="ms-1">
-              Excel
-            </Button>
-            <Button variant="primary" onClick={handlePdf} className="ms-1">
-              PDF
-            </Button>
-            <Button variant="primary" onClick={() => window.print()} className="ms-1">
-              Print
-            </Button>
+          {/* <ButtonGroup aria-label="Export Buttons"> */}
+          <CSVLink data={csvData} filename={"course-data.csv"} className="">
+            <Button variant="primary">CSV</Button>
+          </CSVLink>
+          <Button variant="primary" onClick={handleExcel} className="ms-1">
+            Excel
+          </Button>
+          <Button variant="primary" onClick={handlePdf} className="ms-1">
+            PDF
+          </Button>
+          <Button variant="primary" onClick={() => window.print()} className="ms-1">
+            Print
+          </Button>
+          {/* </ButtonGroup> */}
         </Col>
 
         {/* Search Input */}
         <Col md={6} className="mb-3 d-flex">
           <Form.Label>Search:</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder
-              value={searchTerm}
-              className="ms-2"
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleKeyPress}
-              onChangeCapture={handleSearch}
-            />
+          {/* <div className="d-flex"> */}
+          <Form.Control
+            type="text"
+            placeholder
+            value={searchTerm}
+            className="ms-2"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress}
+            onChangeCapture={handleSearch}
+          />
+
+          {/* </div> */}
         </Col>
- 
+        {/* <Button variant="primary" onClick={handleSearch} className="ms-2">
+              Search
+            </Button> */}
+        {/* Table */}
         <Col md={12} lg={12} lx={12} lxx={12} className="mt-3">
-          
+          <h1 className="fw-bold text-center text-primary">Guest Lecturer Data</h1>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
             <div style={{ overflowX: "auto" }}>
               <Table striped bordered hover>
                 <thead>
@@ -337,6 +357,7 @@ const GuestLecturer = () => {
                     <th>Lecture Description</th>
                     <th>Lecture Batch </th>
                     <th>Lecture Date</th>
+
                     <th>Status</th>
                     <th className="text-center">Action</th>
                   </tr>
@@ -366,6 +387,7 @@ const GuestLecturer = () => {
                 </tbody>
               </Table>
             </div>
+          )}
         </Col>
 
         {/* Pagination */}
@@ -401,6 +423,7 @@ const GuestLecturer = () => {
               </Pagination.Next>
             </Pagination>
           </Col>
+
         </Row>
       </Row>
     </Container>
