@@ -4,10 +4,10 @@ const express = require('express');
 
 const route = express.Router()
 
-route.post('/addEducation', add);
-route.get('/getdataEducation', getdata);
-route.get('/getbyIdEducation/:_id', getbyId);
-route.put('/UpdateEducation/:_id', Update);
-route.delete('/deleteEducation/:_id', Delete);
+route.post('/addUniversity', add);
+route.get('/getdataUniversity', getdata);
+route.get('/getbyIdUniversity/:_id', getbyId);
+route.put('/UpdateUniversity/:_id', Update);
+route.delete('/deleteUniversity/:_id', Delete);
 
 module.exports = route
