@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -10,6 +10,7 @@ import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { FaSearch } from "react-icons/fa";
 
 const University = () => {
   const [show, setShow] = useState(false);
@@ -86,7 +87,7 @@ const University = () => {
         // .catch((err) => console.error(err))
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("Technology is already exist.."); // Set error message
+            setErrorMessage("University is already exist.."); // Set error message
           } else {
             console.error(err);
           }
@@ -204,9 +205,11 @@ const University = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-5 pt-5">
+      <Row className="d-flex justify-content-center mt-4 pt-5">
+      <h1 className="fw-bold text-center text-primary mb-3">University</h1>
+
         {/* Add University Button */}
-        <Col md={12} className="d-flex justify-content-end mb-2">
+        <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add University
           </Button>
@@ -298,22 +301,28 @@ const University = () => {
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="mb-3 d-flex">
-          <Form.Label>Search:</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder
-            value={searchTerm}
-            className="ms-2"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={handleKeyPress}
-            onChangeCapture={handleSearch}
-          />
+        <Col md={4} className=" d-flex">
+          <InputGroup className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Search for ...."
+              value={searchTerm}
+              className="ms-2"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+              onChangeCapture={handleSearch}
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+            />
+            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+              <FaSearch className="text-white" />
+            </InputGroup.Text>
+          </InputGroup>
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} className="mt-3">
-          <h1 className="fw-bold text-center text-primary">University Data</h1>
+        <Col md={12} lg={12} lx={12} lxx={12}>
+          {/* <h1 className="fw-bold text-center text-primary">University Data</h1> */}
           {/* {loading ? (
             <p>Loading...</p>
           ) : ( */}

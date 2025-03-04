@@ -4,15 +4,23 @@ const model = require('../Office_City/office_City_Model');
 const add = async(req, res) => {
     const { office_city_name, status} = req.body;
     try {
+        const existingTechnology = await model.findOne({ office_city_name });
+                        if (existingTechnology) {
+                            return res.status(400).json({ message: 'City name already exists' });
+                        }
         const data = new model({
             office_city_name, status
         });
         const userdata = await data.save()
         res.send({userdata});
     }
-    catch (error){
+    catch (error) {
+        if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
+            return res.status(400).json({ message: 'City already exists' });
+        }
+
         console.log(error);
-        return res.status(500).json({ message:'internal servar error'})
+        return res.status(500).json({ message: 'internal servar error' })
     }
 }
 

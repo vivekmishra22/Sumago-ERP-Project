@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -9,6 +9,7 @@ import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { FaSearch } from "react-icons/fa";
 
 const College = () => {
   const [show, setShow] = useState(false);
@@ -28,6 +29,9 @@ const College = () => {
   const [categories, setCategories] = useState([]);
   const [categoriesdata, setCategoriesData] = useState([]);
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+
   // Fetch Data from API
   useEffect(() => {
     showUsers();
@@ -37,7 +41,7 @@ const College = () => {
     axios
       .get("http://localhost:8000/getdataUniversity")
       .then((res) => {
-       const udata = res.data.data.filter( (item) => item.status === 'active' )
+        const udata = res.data.data.filter((item) => item.status === 'active')
         setCategoriesData(udata);
         console.log("Categories fetched:", res.data.data);
       })
@@ -50,7 +54,7 @@ const College = () => {
     axios
       .get("http://localhost:8000/getdataCity")
       .then((res) => {
-        const udata = res.data.data.filter( (item) => item.status === 'active' )
+        const udata = res.data.data.filter((item) => item.status === 'active')
         setCategories(udata); // Assuming the response contains a data array
         console.log("Categories fetched:", res.data.data);
       })
@@ -110,20 +114,27 @@ const College = () => {
           showUsers();
           handleClose();
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("College is already exist.."); // Set error message
+          } else {
+            console.error(err);
+          }
+        })
+        // .catch((err) => console.error(err))
         .finally(() => setIsSubmitting(false));
     }
   };
 
   // Delete data
   const deletedata = (_id) => {
-      axios
-        .delete(`http://localhost:8000/deleteCollege/${_id}`)
-        .then(() => {
-          alert("Are you sure you want to delete this record?");
-          showUsers();
-        })
-        .catch((err) => console.error(err));
+    axios
+      .delete(`http://localhost:8000/deleteCollege/${_id}`)
+      .then(() => {
+        alert("Are you sure you want to delete this record?");
+        showUsers();
+      })
+      .catch((err) => console.error(err));
   };
 
   const handleEdit = (item) => {
@@ -239,9 +250,13 @@ const College = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-5 pt-5">
+      <Row className="d-flex justify-content-center mt-4 pt-5">
+
+      <h1 className="text-center text-primary fw-bold mb-3">College</h1>
+
+
         {/* Add College Button */}
-        <Col md={12} className="d-flex justify-content-end mb-2">
+        <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add College
           </Button>
@@ -287,6 +302,13 @@ const College = () => {
                     required
                   />
                 </Col>
+                {errorMessage && (
+                  <Col md={12} className="mt-2">
+                    <div style={{ color: 'red' }}>
+                      {errorMessage}
+                    </div>
+                  </Col>
+                )}
                 <Col md={12} className="mt-2">
                   <Form.Label className="mt-3">
                     <b>Select city</b>
@@ -370,22 +392,27 @@ const College = () => {
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="mb-3 d-flex">
-          <Form.Label>Search:</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder
-            value={searchTerm}
-            className="ms-2"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={handleKeyPress}
-            onChangeCapture={handleSearch}
-          />
+        <Col md={4} className="d-flex">
+        <InputGroup className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Search for ...."
+              value={searchTerm}
+              className="ms-2"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+              onChangeCapture={handleSearch}
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+            />
+            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+              <FaSearch className="text-white" />
+            </InputGroup.Text>
+          </InputGroup>
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} className="mt-3">
-          <h1 className="text-center text-primary fw-bold">College Data</h1>
+        <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover>
               <thead>

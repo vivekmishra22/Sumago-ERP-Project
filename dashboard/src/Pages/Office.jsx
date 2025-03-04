@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -9,6 +9,7 @@ import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { FaSearch } from "react-icons/fa";
 
 const Office = () => {
   
@@ -86,7 +87,7 @@ const handleSubmit = (e) => {
     axios
       .put(`http://localhost:8000/UpdateOffice/${editingId}`, newData)
       .then(() => {
-        alert("Technology Updated Successfully!");
+        alert("Office Updated Successfully!");
         showUsers();
         handleClose();
       })
@@ -97,7 +98,7 @@ const handleSubmit = (e) => {
     axios
       .post("http://localhost:8000/addOffice", newData)
       .then(() => {
-        alert("Technology Added Successfully!");
+        alert("Office Added Successfully!");
         showUsers();
         handleClose();
       })
@@ -112,7 +113,7 @@ const handleSubmit = (e) => {
       axios
         .delete(`http://localhost:8000/deleteOffice/${_id}`)
         .then(() => {
-          alert("Technology Deleted");
+          alert("Office Deleted");
           showUsers();
         })
         .catch((err) => console.error(err));
@@ -241,9 +242,11 @@ const handleSubmit = (e) => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-5 pt-5">
+      <Row className="d-flex justify-content-center mt-4 pt-5">
+      <h1 className="text-center text-primary fw-bold mb-3">Office Details</h1>
+
         {/* Add Office Button */}
-        <Col md={12} className="d-flex justify-content-end mb-2">
+        <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Office
           </Button>
@@ -261,7 +264,7 @@ const handleSubmit = (e) => {
                   <Form.Label>Office Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter University Name"
+                    placeholder="Enter office name"
                     value={office_name}
                     onChange={(e) => setOfficeName(e.target.value)}
                     required
@@ -350,22 +353,27 @@ const handleSubmit = (e) => {
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="mb-3 d-flex">
-          <Form.Label>Search:</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder
-            value={searchTerm}
-            className="ms-2"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={handleKeyPress}
-            onChangeCapture={handleSearch}
-          />
+        <Col md={4} className="d-flex">
+        <InputGroup className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Search for ...."
+              value={searchTerm}
+              className="ms-2"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+              onChangeCapture={handleSearch}
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+            />
+            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+              <FaSearch className="text-white" />
+            </InputGroup.Text>
+          </InputGroup>
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} className="mt-3">
-          <h1 className="text-center text-primary fw-bold">Office Details</h1>
+        <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover>
               <thead>

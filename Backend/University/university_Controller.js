@@ -16,7 +16,7 @@ const add = async (req, res) => {
     }
     catch (error) {
         if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
-            return res.status(400).json({ message: 'Technology already exists' });
+            return res.status(400).json({ message: 'University already exists' });
         }
 
         console.log(error);

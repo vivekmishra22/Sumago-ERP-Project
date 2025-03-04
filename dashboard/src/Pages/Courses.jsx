@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button,  Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button,  Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -10,6 +10,7 @@ import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { FaSearch } from "react-icons/fa";
 
 const Courses = () => {
   const [show, setShow] = useState(false);
@@ -199,9 +200,12 @@ const Courses = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-5 pt-5">
+      <Row className="d-flex justify-content-center mt-4 pt-5">
+
+      <h1 className="text-center text-primary fw-bold mb-3">Course</h1>
+
         {/* Add Technology Button */}
-        <Col md={12} className="d-flex justify-content-end mb-2">
+        <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Courses
           </Button>
@@ -308,21 +312,27 @@ const Courses = () => {
         </Col>
 
         {/* Search Input */}
-        <Col md={6} className="mb-3 d-flex">
-          <Form.Label>Search:</Form.Label>
+        <Col md={6} className="d-flex">
+        <InputGroup className="mb-3">
             <Form.Control
               type="text"
-              placeholder
+              placeholder="Search for ...."
               value={searchTerm}
               className="ms-2"
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
             />
+            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+              <FaSearch className="text-white" />
+            </InputGroup.Text>
+          </InputGroup>
         </Col>
 
-        <Col md={12} lg={12} lx={12} lxx={12} className="mt-3">
-        <h1 className="text-center text-primary fw-bold">Course Data</h1>
+        <Col md={12} lg={12} lx={12} lxx={12}>
+        {/* <h1 className="text-center text-primary fw-bold">Course Data</h1> */}
             <div style={{ overflowX: "auto" }}>
               <Table striped bordered hover>
                 <thead>

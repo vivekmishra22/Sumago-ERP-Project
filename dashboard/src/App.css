@@ -46,3 +46,7 @@
    overflow-y:auto;
   overflow-x:hidden;
  }
+
+ .no-caret::after {
+  display: none !important;
+}
