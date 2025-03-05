@@ -12,8 +12,8 @@ import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
 const Office = () => {
-  
-   const [show, setShow] = useState(false);
+
+  const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
@@ -64,48 +64,48 @@ const Office = () => {
       });
   };
 
-// Handle Modal Close
-const handleClose = () => {
-  setShow(false);
-  setOfficeName("");
-  setOfficeCityName("");
-  setStatus("active");
-  setEditingId(null); // Reset editing state
-  
-};
+  // Handle Modal Close
+  const handleClose = () => {
+    setShow(false);
+    setOfficeName("");
+    setOfficeCityName("");
+    setStatus("active");
+    setEditingId(null); // Reset editing state
+
+  };
 
 
-// Add or Update Technology
-const handleSubmit = (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  // Add or Update Technology
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const newData = { office_name, office_city_name, status };
+    const newData = { office_name, office_city_name, status };
 
-  if (editingId) {
-    // Update existing technology
-    axios
-      .put(`http://localhost:8000/UpdateOffice/${editingId}`, newData)
-      .then(() => {
-        alert("Office Updated Successfully!");
-        showUsers();
-        handleClose();
-      })
-      .catch((err) => console.error(err))
-      .finally(() => setIsSubmitting(false));
-  } else {
-    // Add new technology
-    axios
-      .post("http://localhost:8000/addOffice", newData)
-      .then(() => {
-        alert("Office Added Successfully!");
-        showUsers();
-        handleClose();
-      })
-      .catch((err) => console.error(err))
-      .finally(() => setIsSubmitting(false));
-  }
-};
+    if (editingId) {
+      // Update existing technology
+      axios
+        .put(`http://localhost:8000/UpdateOffice/${editingId}`, newData)
+        .then(() => {
+          alert("Office Updated Successfully!");
+          showUsers();
+          handleClose();
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setIsSubmitting(false));
+    } else {
+      // Add new technology
+      axios
+        .post("http://localhost:8000/addOffice", newData)
+        .then(() => {
+          alert("Office Added Successfully!");
+          showUsers();
+          handleClose();
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setIsSubmitting(false));
+    }
+  };
 
   // Delete data
   const deletedata = (_id) => {
@@ -210,20 +210,20 @@ const handleSubmit = (e) => {
   // };
 
   const handleSearch = () => {
-  const filteredData = userData.filter((item) => {
-    const OfficeName = item.office_name?.toLowerCase() || "";
-    const cityName = item.office_city_name?.toLowerCase() || "";
-    const statusValue = item.status?.toLowerCase() || "";
+    const filteredData = userData.filter((item) => {
+      const OfficeName = item.office_name?.toLowerCase() || "";
+      const cityName = item.office_city_name?.toLowerCase() || "";
+      const statusValue = item.status?.toLowerCase() || "";
 
-    return (
-      OfficeName.includes(searchTerm.toLowerCase()) ||
-      cityName.includes(searchTerm.toLowerCase()) ||
-      statusValue.includes(searchTerm.toLowerCase())
-    );
-  });
+      return (
+        OfficeName.includes(searchTerm.toLowerCase()) ||
+        cityName.includes(searchTerm.toLowerCase()) ||
+        statusValue.includes(searchTerm.toLowerCase())
+      );
+    });
 
-  setUserData(filteredData);
-};
+    setUserData(filteredData);
+  };
 
 
   // Handle Enter key press
@@ -243,7 +243,7 @@ const handleSubmit = (e) => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-4 pt-5">
-      <h1 className="text-center text-primary fw-bold mb-3">Office Details</h1>
+        <h1 className="text-center text-primary fw-bold mb-3">Office Details</h1>
 
         {/* Add Office Button */}
         <Col md={12} className="d-flex justify-content-end mb-4">
@@ -272,21 +272,21 @@ const handleSubmit = (e) => {
                 </Col>
                 <Col md={12} className="mt-2">
                   <Form.Label className="mt-3">
-                      <b>Select city</b>
-                    </Form.Label>
-                    <Form.Select
-                      aria-label="Select city"
-                      value={office_city_name}
-                      onChange={(e) => setOfficeCityName(e.target.value)}
-                      required
-                    >
-                      <option value="">Choose a city</option>
-                      {categories.map((city) => (
-                        <option key={city._id} value={city.office_city_name}>
-                          {city.office_city_name}
-                        </option>
-                      ))}
-                    </Form.Select>
+                    <b>Select city</b>
+                  </Form.Label>
+                  <Form.Select
+                    aria-label="Select city"
+                    value={office_city_name}
+                    onChange={(e) => setOfficeCityName(e.target.value)}
+                    required
+                  >
+                    <option value="">Choose a city</option>
+                    {categories.map((city) => (
+                      <option key={city._id} value={city.office_city_name}>
+                        {city.office_city_name}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </Col>
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
@@ -354,7 +354,7 @@ const handleSubmit = (e) => {
 
         {/* Search Input */}
         <Col md={4} className="d-flex">
-        <InputGroup className="mb-3">
+          <InputGroup className="mb-3">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -373,20 +373,20 @@ const handleSubmit = (e) => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12}>
+        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
           <div style={{ overflowX: "auto" }}>
-            <Table striped bordered hover>
+            <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
                   <th>Office Name</th>
                   <th>City Name</th>
-                  <th>Status</th>
-                  <th className="text-center">Action</th>
+                  <th className="no-print">Status</th>
+                  <th className="text-center no-print">Action</th>
                 </tr>
               </thead>
               <tbody>
-              {/* {userData.length > 0 ? (
+                {/* {userData.length > 0 ? (
                 currentItems.map((product, index) => {
                   const matchedCategory = categoryData.find((cat) => cat._id === product.office_city_name);
                   const matched = category.find((cat) => cat._id === product.university_name);
@@ -419,28 +419,28 @@ const handleSubmit = (e) => {
                     </td>
                   </tr>
                 )} */}
-{currentItems.map((product, index) => {
-  return (
-<tr key={product._id}>
-                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{product.office_name}</td>
-                    <td>{product.office_city_name} </td>
-                    <td>{product.status}</td>
-                    <td className="d-flex justify-content-evenly">
-                      <Button variant="warning" onClick={() => handleEdit(product)}>
-                        <GrEdit />
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => deletedata(product._id)}
-                      >
-                        <AiFillDelete />
-                      </Button>
-                    </td>
-                  </tr>
+                {currentItems.map((product, index) => {
+                  return (
+                    <tr key={product._id}>
+                      <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                      <td>{product.office_name}</td>
+                      <td>{product.office_city_name} </td>
+                      <td className="no-print">{product.status}</td>
+                      <td className="d-flex justify-content-evenly no-print">
+                        <Button variant="warning" onClick={() => handleEdit(product)}>
+                          <GrEdit />
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => deletedata(product._id)}
+                        >
+                          <AiFillDelete />
+                        </Button>
+                      </td>
+                    </tr>
                   )
                 })
-}
+                }
               </tbody>
             </Table>
           </div>

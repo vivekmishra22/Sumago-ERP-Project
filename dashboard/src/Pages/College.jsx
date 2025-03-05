@@ -166,9 +166,7 @@ const College = () => {
     const doc = new jsPDF();
     doc.text("College Data", 14, 22);
     doc.autoTable({
-      head: [
-        ["Sr.No", "University Name", "College Name", "City Name"],
-      ],
+      head: [["Sr.No", "University Name", "College Name", "City Name"]],
       body: userData.map((a, index) => [
         index + 1,
         a.university_name,
@@ -412,17 +410,17 @@ const College = () => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12}>
+        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
           <div style={{ overflowX: "auto" }}>
-            <Table striped bordered hover>
+            <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
                   <th>College Name</th>
                   <th>University Name</th>
                   <th>City Name</th>
-                  <th>Status</th>
-                  <th className="text-center">Action</th>
+                  <th className="no-print">Status</th>
+                  <th className="text-center no-print">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -433,8 +431,8 @@ const College = () => {
                       <td>{product.college_name}</td>
                       <td>{product.university_name} </td>
                       <td>{product.city_name} </td>
-                      <td>{product.status}</td>
-                      <td className="d-flex justify-content-evenly">
+                      <td className="no-print">{product.status}</td>
+                      <td className="no-print d-flex justify-content-evenly">
                         <Button
                           variant="warning"
                           onClick={() => handleEdit(product)}

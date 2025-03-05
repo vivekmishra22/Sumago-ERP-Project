@@ -1,11 +1,11 @@
 import React from 'react'
-import { Container, Form, Nav, Navbar, Image, Dropdown, Button } from 'react-bootstrap';
+import { Container, Form, Nav, Navbar, Image, Dropdown } from 'react-bootstrap';
 // import { AiOutlineLogout } from 'react-icons/ai';
 import { TbBellRingingFilled } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import image1 from "../Assets/Images/SUMAGO Logo (1).png";
 import { FaCircleUser } from "react-icons/fa6";
-import "../App.css";
+// import "../App.css";
 
 // style={{ backgroundColor:"rgb(12, 36, 100)"}}
 
@@ -34,7 +34,7 @@ const Home = () => {
                 <TbBellRingingFilled size={29} className="me-3 text-white" />
               </Link>
 
-              <Dropdown className='me-4 border border-0'>
+              <Dropdown className='me-4'>
                 <Dropdown.Toggle variant="" id="dropdown-basic" className='border border-0 no-caret'>
                   <span d-flex align-items-center>
                     <FaCircleUser className='fs-4 text-light' />
@@ -43,7 +43,7 @@ const Home = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                  <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
                   <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                   <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                   {/* <hr /> */}

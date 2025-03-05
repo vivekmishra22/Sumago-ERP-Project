@@ -13,6 +13,7 @@ import GuestLecturer from "./GuestLecturer";
 import UpdateGuest from "./UpdateGuest";
 import City from "./City";
 import Courses from "./Courses";
+import Fee from "./Fee";
 
 const Head = () => {
   return (
@@ -37,6 +38,7 @@ const Head = () => {
               <Route path ="/Courses" element={<Courses/>} />
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
               <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />        
+              <Route path="/fee" element={<Fee />} />        
             </Routes>
           </Container>
         </div>

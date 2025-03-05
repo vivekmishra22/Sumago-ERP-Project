@@ -331,10 +331,10 @@ const Courses = () => {
           </InputGroup>
         </Col>
 
-        <Col md={12} lg={12} lx={12} lxx={12}>
+        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
         {/* <h1 className="text-center text-primary fw-bold">Course Data</h1> */}
             <div style={{ overflowX: "auto" }}>
-              <Table striped bordered hover>
+              <Table striped bordered hover id="printable-table">
                 <thead>
                   <tr>
                     <th>Sr.No</th>
@@ -343,8 +343,8 @@ const Courses = () => {
                     <th>Course Duration</th>
                     <th>Course Fees</th>
                     
-                    <th>Status</th>
-                    <th className="text-center">Action</th>
+                    <th className="no-print" >Status</th>
+                    <th className="text-center no-print">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -355,8 +355,8 @@ const Courses = () => {
                       <td>{a.course_description}</td>
                       <td>{a.course_duration}</td>
                       <td>{a.course_fees}</td>
-                      <td>{a.status}</td>
-                      <td className="d-flex justify-content-evenly">
+                      <td className="no-print">{a.status}</td>
+                      <td className="no-print d-flex justify-content-evenly">
                       <Button
                         variant="warning"
                         onClick={() => navigate(`/Head/UpdateCourse/${a._id}`)}

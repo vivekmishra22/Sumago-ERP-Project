@@ -349,12 +349,12 @@ const GuestLecturer = () => {
               Search
             </Button> */}
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12}>
+        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
           {loading ? (
             <p>Loading...</p>
           ) : (
             <div style={{ overflowX: "auto" }}>
-              <Table striped bordered hover>
+              <Table striped bordered hover id="printable-table">
                 <thead>
                   <tr>
                     <th>Sr.No</th>
@@ -363,8 +363,8 @@ const GuestLecturer = () => {
                     <th>Lecture Batch </th>
                     <th>Lecture Date</th>
 
-                    <th>Status</th>
-                    <th className="text-center">Action</th>
+                    <th className="no-print">Status</th>
+                    <th className="text-center no-print">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -375,8 +375,8 @@ const GuestLecturer = () => {
                       <td>{a.lecture_topic_description}</td>
                       <td>{a.guest_lecture_batch}</td>
                       <td>{a.guest_lecture_date}</td>
-                      <td>{a.status}</td>
-                      <td className="d-flex justify-content-evenly">
+                      <td className="no-print">{a.status}</td>
+                      <td className="d-flex justify-content-evenly no-print">
                         <Button
                           variant="warning"
                           onClick={() => navigate(`/Head/UpdateGuest/${a._id}`)}

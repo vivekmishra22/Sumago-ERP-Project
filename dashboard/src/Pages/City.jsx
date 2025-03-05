@@ -63,7 +63,11 @@ const City = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const newData = { city_name, status };
+    // const newData = { city_name, status };
+    const newData = {
+      city_name: capitalizeFirstLetter(city_name),
+      status: capitalizeFirstLetter(status) 
+    };
 
     if (editingId) {
       // Update existing City
@@ -106,6 +110,14 @@ const City = () => {
         showUsers();
       })
       .catch((err) => console.error(err));
+  };
+
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(' ') // Split the string into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(' '); // Join them back together
   };
 
   // Handle Edit Click
@@ -324,18 +336,18 @@ const City = () => {
               Search
             </Button> */}
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12}>
+        <Col md={12} lg={12} lx={12} lxx={12} id="printable" >
           {/* {loading ? (
             <p>Loading...</p>
           ) : ( */}
           <div style={{ overflowX: "auto" }}>
-            <Table striped bordered hover>
+            <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
                   <th>City Name</th>
-                  <th>Status</th>
-                  <th className="text-center">Action</th>
+                  <th className="no-print">Status</th>
+                  <th className="text-center no-print">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -343,16 +355,18 @@ const City = () => {
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>{a.city_name}</td>
-                    <td>{a.status}</td>
-                    <td className="d-flex justify-content-evenly">
+                    <td className="no-print">{a.status}</td>
+                    <td className="no-print d-flex justify-content-evenly">
                       <Button
                         variant="warning"
+                        // className="no-print" // Hide this during printing
                         onClick={() => handleEdit(a)}
                       >
                         <GrEdit />
                       </Button>
                       <Button
                         variant="danger"
+                        // className="no-print" // Hide this during printing
                         onClick={() => deletedata(a._id)}
                       >
                         <AiFillDelete />

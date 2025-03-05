@@ -50,3 +50,59 @@
  .no-caret::after {
   display: none !important;
 }
+
+/* print css */
+/* Hide everything by default when printing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the table and its data (except the Action column) */
+  #printable-table,
+  #printable-table * {
+    visibility: visible;
+  }
+
+
+  @media print {
+    #printable-table th.no-print,
+    #printable-table td.no-print {
+      display: none !important;
+    }
+  }
+
+  /* Ensure the table takes full width */
+  #printable-table {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    width: 100%;
+  }
+
+  /* Add borders to the table for better readability */
+  #printable-table {
+    border-collapse: collapse;
+  }
+  #printable-table th,
+  #printable-table td {
+    border: 1px solid black;
+  }
+
+  /* Remove padding and margin for the body */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@media print {
+  #printable::before {
+    content: "City Data Report";
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+}

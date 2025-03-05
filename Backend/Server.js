@@ -14,6 +14,7 @@ const education_route = require('./Education/education_Route');
 const office_city_route = require('./Office_City/office_City_Route');
 const course_route =require('./Courses/course_Route');
 const guest_lecturer_route = require('./Guest_lecturer/guestlecturer_Route');  
+const fee_route = require('./Fees/fee_Route');  
 
 app.use(express.json())
 app.use(cors());
@@ -27,6 +28,7 @@ app.use('/',education_route);
 app.use('/',office_city_route);
 app.use('/',course_route);
 app.use('/',guest_lecturer_route);
+app.use('/',fee_route);
 
 app.get(('/'),(req,res) =>
     res.send("database canected ERP system"));

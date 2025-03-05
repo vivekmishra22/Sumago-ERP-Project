@@ -161,6 +161,11 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className="nav-item">
+            <Link to="/Head/fee" className=" d-flex text-decoration-none link ps-3 py-2">
+              <SiCoursera size={23} className="me-3"/> Fees
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link to="/Head/GuestLecturer" className=" d-flex text-decoration-none link ps-3 py-2">
               <IoPersonAddSharp size={23} className="me-3"/>  Guest Lecturer
             </Link>
