@@ -212,25 +212,19 @@ const Fee = () => {
     const showingTo = Math.min(indexOfLastItem, userData.length);
     const totalEntries = userData.length;
 
-    const handleSearch = () => {
-        const filteredData = userData.filter((item) => {
-            const courseName = item.course_name?.toLowerCase() || "";
-            const feeDate = item.fee_date?.toLowerCase() || "";
-            const course_duration = item.course_duration?.toLowerCase() || "";
-            const amount = item.amount?.toLowerCase() || "";
-            const statusValue = item.status?.toLowerCase() || "";
+    // Handle search
+  const handleSearch = () => {
+    const filteredData = userData.filter(
+      (item) =>         // course_name, fee_date, course_duration, amount, status
+        item.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.fee_date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.course_duration.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.amount.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setUserData(filteredData); // Update the table data
+  };
 
-            return (
-                courseName.includes(searchTerm.toLowerCase()) ||
-                feeDate.includes(searchTerm.toLowerCase()) ||
-                course_duration.includes(searchTerm.toLowerCase()) ||
-                amount.includes(searchTerm.toLowerCase()) ||
-                statusValue.includes(searchTerm.toLowerCase())
-            );
-        });
-
-        setUserData(filteredData);
-    };
 
     // Handle Enter key press
     const handleKeyPress = (e) => {

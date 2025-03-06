@@ -1,6 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -11,62 +19,41 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
-const College = () => {
+const WelcomeKit = () => {
   const [show, setShow] = useState(false);
+
   const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
 
-  const [university_name, setUniversityName] = useState("");
-  const [college_name, setCollegeName] = useState("");
-  const [city_name, setCityName] = useState("");
+  const [welcome_kit, setwelcome_kit] = useState("");
   const [status, setStatus] = useState("active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
-  const [categories, setCategories] = useState([]);
-  const [categoriesdata, setCategoriesData] = useState([]);
-
   const [errorMessage, setErrorMessage] = useState("");
 
 
+  
   // Fetch Data from API
   useEffect(() => {
     showUsers();
   }, []);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/getdataUniversity")
-      .then((res) => {
-        const udata = res.data.data.filter((item) => item.status === 'active')
-        setCategoriesData(udata);
-        console.log("Categories fetched:", res.data.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching categories:", err);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/getdataCity")
-      .then((res) => {
-        const udata = res.data.data.filter((item) => item.status === 'active')
-        setCategories(udata); // Assuming the response contains a data array
-        console.log("Categories fetched:", res.data.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching categories:", err);
-      });
-  }, []);
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(' ') // Split the string into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(' '); // Join them back together
+  };
 
   const showUsers = () => {
     // setLoading(true);
     axios
-      .get("http://localhost:8000/getdataCollege")
+      .get("http://localhost:8000/getkititem")
       .then((res) => {
         setUserData(res.data.data);
         // setLoading(false);
@@ -80,84 +67,79 @@ const College = () => {
   // Handle Modal Close
   const handleClose = () => {
     setShow(false);
-    setUniversityName("");
-    setCollegeName("");
-    setCityName("");
+    setwelcome_kit("");
     setStatus("active");
     setEditingId(null); // Reset editing state
   };
 
-  // Add or Update Technology
+  // const handleShow = () => setShow(true);
+
+  // Add or Update City
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // const newData = { university_name, college_name, city_name, status };
+    
     const newData = {
-      university_name: capitalizeFirstLetter( university_name ),
-      college_name: capitalizeFirstLetter( college_name ),
-      city_name: capitalizeFirstLetter( city_name ),
-      status: capitalizeFirstLetter(status) 
-    };
+        welcome_kit: capitalizeFirstLetter(welcome_kit),
+        status: capitalizeFirstLetter(status) 
+      };
+    
 
     if (editingId) {
-      // Update existing technology
+      // Update existing kit Item
       axios
-        .put(`http://localhost:8000/UpdateCollege/${editingId}`, newData)
+        .put(`http://localhost:8000/Updatekititem/${editingId}`, newData)
         .then(() => {
-          alert("College Updated Successfully!");
-          showUsers();
-          handleClose();
-        })
-        .catch((err) => console.error(err))
-        .finally(() => setIsSubmitting(false));
-    } else {
-      // Add new technology
-      axios
-        .post("http://localhost:8000/addCollege", newData)
-        .then(() => {
-          alert("College Added Successfully!");
+          alert("Kit item Updated Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("College is already exist.."); // Set error message
+            setErrorMessage("Kit Item is already exist.."); // Set error message
           } else {
             console.error(err);
           }
         })
-        // .catch((err) => console.error(err))
+        .finally(() => setIsSubmitting(false));
+    } else {
+      // Add new Item
+      axios
+        .post("http://localhost:8000/addkititem", newData)
+        .then(() => {
+          alert("Welcome Kit item Added Successfully!");
+          showUsers();
+          handleClose();
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("Kit Item is already exist.."); // Set error message
+          } else {
+            console.error(err);
+          }
+        })
         .finally(() => setIsSubmitting(false));
     }
   };
 
-  // Delete data
+  // Delete City
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deleteCollege/${_id}`)
+      .delete(`http://localhost:8000/deletekititem/${_id}`)
       .then(() => {
-        alert("Are you sure you want to delete this record?");
+        alert("Are you sure you want to delete this Item?");
         showUsers();
       })
       .catch((err) => console.error(err));
   };
 
-  const capitalizeFirstLetter = (str) => {
-    if (!str) return str;
-    return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
-  }
-
+  // Handle Edit Click
   const handleEdit = (item) => {
     setEditingId(item._id);
-    setUniversityName(item.university_name);
-    setCollegeName(item.college_name);
-    setCityName(item.city_name);
+    setwelcome_kit(item.welcome_kit);
     setStatus(item.status);
     setShow(true);
+    setErrorMessage("");
   };
 
   // Export to Excel
@@ -165,39 +147,30 @@ const College = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "University Name": a.university_name,
-        "College Name": a.college_name,
-        "City Name": a.city_name,
+        "Welcome kit Item": a.welcome_kit,
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "College Data");
-    XLSX.writeFile(workbook, "College-data.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Welcome kit Data");
+    XLSX.writeFile(workbook, "Welcome Kit-data.xlsx");
   };
 
   // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
-    doc.text("College Data", 14, 22);
+    doc.text("Welcome Kit Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "University Name", "College Name", "City Name"]],
-      body: userData.map((a, index) => [
-        index + 1,
-        a.university_name,
-        a.college_name,
-        a.city_name,
-      ]),
+      head: [["Sr.No", "Welcome kit Item"]],
+      body: userData.map((a, index) => [index + 1, a.welcome_kit]),
       startY: 30,
     });
-    doc.save("College-data.pdf");
+    doc.save("Welcomekit-data.pdf");
   };
 
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "University Name": a.university_name,
-    "College Name": a.college_name,
-    "City Name": a.city_name,
+    "City Name": a.welcome_kit,
   }));
 
   // Pagination logic
@@ -228,22 +201,14 @@ const College = () => {
   const showingTo = Math.min(indexOfLastItem, userData.length);
   const totalEntries = userData.length;
 
+  // Handle search
   const handleSearch = () => {
-    const filteredData = userData.filter((item) => {
-      const universityName = item.university_name?.toLowerCase() || "";
-      const collegeName = item.college_name?.toLowerCase() || "";
-      const cityName = item.city_name?.toLowerCase() || "";
-      const statusValue = item.status?.toLowerCase() || "";
-
-      return (
-        universityName.includes(searchTerm.toLowerCase()) ||
-        collegeName.includes(searchTerm.toLowerCase()) ||
-        cityName.includes(searchTerm.toLowerCase()) ||
-        statusValue.includes(searchTerm.toLowerCase())
-      );
-    });
-
-    setUserData(filteredData);
+    const filteredData = userData.filter(
+      (item) =>
+        item.welcome_kit.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setUserData(filteredData); // Update the table data
   };
 
   // Handle Enter key press
@@ -262,83 +227,40 @@ const College = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-
-      <h1 className="text-center text-primary fw-bold mb-3">College</h1>
-
-
-        {/* Add College Button */}
+      <Row className="d-flex justify-content-center mt-2 pt-5">
+        {/* Add City Button */}
+        <h1 className="fw-bold text-center text-primary ">Welcome Kit</h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add College
+            Add Welcomkit
           </Button>
         </Col>
 
-        {/* Add College Modal */}
+        {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add College</Modal.Title>
+            <Modal.Title>Add Item</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={12}>
-                  <Form.Label className="mt-3">
-                    <b>Select university</b>
-                  </Form.Label>
-                  <Form.Select
-                    aria-label="Select university"
-                    value={university_name}
-                    onChange={(e) => setUniversityName(e.target.value)}
-                    required
-                  >
-                    <option value="">Choose a university</option>
-                    {categoriesdata.map((university) => (
-                      <option
-                        key={university._id}
-                        value={university.university_name}
-                      >
-                        {university.university_name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Col>
-
-                <Col md={12} className="mt-2">
-                  <Form.Label>College Name</Form.Label>
+                  <Form.Label>Item Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter College Name"
-                    value={college_name}
-                    onChange={(e) => setCollegeName(e.target.value)}
+                    placeholder="Enter welcome kit item Name"
+                    value={welcome_kit}
+                    onChange={(e) => setwelcome_kit(e.target.value)}
                     required
                   />
                 </Col>
+                {/* Display Error Message */}
                 {errorMessage && (
                   <Col md={12} className="mt-2">
-                    <div style={{ color: 'red' }}>
-                      {errorMessage}
-                    </div>
+                    <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
-                <Col md={12} className="mt-2">
-                  <Form.Label className="mt-3">
-                    <b>Select city</b>
-                  </Form.Label>
-                  <Form.Select
-                    aria-label="Select city"
-                    value={city_name}
-                    onChange={(e) => setCityName(e.target.value)}
-                    required
-                  >
-                    <option value="">Choose a city</option>
-                    {categories.map((city) => (
-                      <option key={city._id} value={city.city_name}>
-                        {city.city_name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Col>
+
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
@@ -380,32 +302,24 @@ const College = () => {
         {/* Export Buttons */}
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink
-            data={csvData}
-            filename={"College-data.csv"}
-            className="ms-1"
-          >
-            <Button variant="primary">CSV</Button>
+          <CSVLink data={csvData} filename={"City-data.csv"}>
+            <Button className="">CSV</Button>
           </CSVLink>
-          <Button variant="primary" onClick={handleExcel} className="ms-1">
+          <Button onClick={handleExcel} className="ms-1 ">
             Excel
           </Button>
-          <Button variant="primary" onClick={handlePdf} className="ms-1">
+          <Button onClick={handlePdf} className="ms-1 ">
             PDF
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => window.print()}
-            className="ms-1"
-          >
+          <Button onClick={() => window.print()} className="ms-1 ">
             Print
           </Button>
           {/* </ButtonGroup> */}
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="d-flex">
-        <InputGroup className="mb-3">
+        <Col md={4} className=" d-flex">
+          <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -424,50 +338,45 @@ const College = () => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
+        <Col md={12} lg={12} xl={12} xxl={12}  id="printable">
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
-                  <th>College Name</th>
-                  <th>University Name</th>
-                  <th>City Name</th>
+                  <th>Welcome Kit Item Name</th>
                   <th className="no-print">Status</th>
-                  <th className="text-center no-print">Action</th>
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((product, index) => {
-                  return (
-                    <tr key={product._id}>
-                      <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                      <td>{product.college_name}</td>
-                      <td>{product.university_name} </td>
-                      <td>{product.city_name} </td>
-                      <td className="no-print">{product.status}</td>
-                      <td className="no-print d-flex justify-content-evenly">
-                        <Button
-                          variant="warning"
-                          onClick={() => handleEdit(product)}
-                        >
-                          <GrEdit />
-                        </Button>
-                        <Button
-                          variant="danger"
-                          onClick={() => deletedata(product._id)}
-                        >
-                          <AiFillDelete />
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {currentItems.map((a, index) => (
+                  <tr key={index}>
+                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                    <td>{a.welcome_kit}</td>
+                    <td className="no-print">{a.status}</td>
+                    <td className="no-print d-flex justify-content-evenly">
+                      <Button
+                        variant="warning"
+                        className="no-print" // Hide this during printing
+                        onClick={() => handleEdit(a)}
+                      >
+                        <GrEdit />
+                      </Button>
+                      <Button
+                        variant="danger"
+                        className="no-print" // Hide this during printing
+                        onClick={() => deletedata(a._id)}
+                      >
+                        <AiFillDelete />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>
         </Col>
-
         {/* Pagination */}
         <Row>
           <Col md={6}>
@@ -507,4 +416,4 @@ const College = () => {
   );
 };
 
-export default College;
+export default WelcomeKit;

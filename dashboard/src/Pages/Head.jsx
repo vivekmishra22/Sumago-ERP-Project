@@ -14,6 +14,7 @@ import UpdateGuest from "./UpdateGuest";
 import City from "./City";
 import Courses from "./Courses";
 import Fee from "./Fee";
+import WelcomeKit from "./WelcomeKit";
 
 const Head = () => {
   return (
@@ -39,6 +40,7 @@ const Head = () => {
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
               <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />        
               <Route path="/fee" element={<Fee />} />        
+              <Route path="/welcomekit" element={<WelcomeKit />} />        
             </Routes>
           </Container>
         </div>

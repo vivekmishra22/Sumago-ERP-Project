@@ -106,3 +106,8 @@
     margin-bottom: 10px;
   }
 }
+
+.rotate-90 {
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}

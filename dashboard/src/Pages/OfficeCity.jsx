@@ -13,26 +13,20 @@ import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
 const OfficeCity = () => {
-  const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
 
+  const [show, setShow] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
-
   const [office_city_name, setOfficeCityName] = useState("");
   const [status, setStatus] = useState("active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
-
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Fetch data on component mount
-  useEffect(() => {
-    showUsers();
-  }, []);
 
   // Fetch Data from API
   useEffect(() => {
@@ -45,11 +39,12 @@ const OfficeCity = () => {
       .get("http://localhost:8000/getdataOfficeCity")
       .then((res) => {
         setUserData(res.data.data);
+        setFilteredData(res.data.data);
         // setLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        // setLoading(false);
+        alert("An error occurred while fetching data.");
       });
   };
 
@@ -59,9 +54,8 @@ const OfficeCity = () => {
     setOfficeCityName("");
     setStatus("active");
     setEditingId(null); // Reset editing state
+    setErrorMessage("");
   };
-
-  // const handleShow = () => setShow(true);
 
   // Add or Update City
   const handleSubmit = (e) => {
@@ -129,6 +123,13 @@ const OfficeCity = () => {
   };
 
   // Export to Excel
+  // const handleExcel = () => {
+  //   const worksheet = XLSX.utils.json_to_sheet(filteredData);
+  //   const workbook = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(workbook, worksheet, "City Data");
+  //   XLSX.writeFile(workbook, "City-data.xlsx");
+  // };
+
   const handleExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
@@ -143,6 +144,7 @@ const OfficeCity = () => {
   };
 
   // Export to PDF
+
   const handlePdf = () => {
     const doc = new jsPDF();
     doc.text("City Data", 14, 22);
@@ -194,6 +196,13 @@ const OfficeCity = () => {
   const totalEntries = userData.length;
 
   // Handle search
+
+  // const handleSearch = (e) => {
+  //   const value = e.target.value.toLowerCase();
+  //   setSearchTerm(value);
+  //   setFilteredData(userData.filter(item => item.office_city_name.toLowerCase().includes(value) || item.status.toLowerCase().includes(value)));
+  // };
+
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
@@ -201,16 +210,24 @@ const OfficeCity = () => {
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
+    setCurrentPage(1);
   };
 
   // Handle Enter key press
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
+  // const handleKeyPress = (e) => {
+  //   if (e.key === "Enter") {
+  //     handleSearch();
+  //   }
+  // };
 
   // Reset search when the input is cleared
+
+  // useEffect(() => {
+  //   if (searchTerm === "") {
+  //     setFilteredData(userData);
+  //   }
+  // }, [searchTerm, userData]);
+
   useEffect(() => {
     if (searchTerm === "") {
       showUsers(); // Reset the table data to the original data
@@ -220,7 +237,7 @@ const OfficeCity = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-4 pt-5">
-      <h1 className="fw-bold text-center text-primary mb-3">Office City</h1>
+        <h1 className="fw-bold text-center text-primary mb-3">Office City</h1>
         {/* Add City Button */}
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
@@ -315,14 +332,14 @@ const OfficeCity = () => {
 
         {/* Search Input */}
         <Col md={4} className="d-flex">
-        <InputGroup className="mb-3">
+          <InputGroup className="mb-3">
             <Form.Control
               type="text"
               placeholder="Search for ...."
               value={searchTerm}
               className="ms-2"
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleKeyPress}
+              // onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
