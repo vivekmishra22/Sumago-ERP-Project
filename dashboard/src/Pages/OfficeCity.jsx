@@ -1,6 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -13,20 +21,33 @@ import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
 const OfficeCity = () => {
+  const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
 
-  const [show, setShow] = useState(false);
   const [userData, setUserData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
+
   const [office_city_name, setOfficeCityName] = useState("");
-  const [status, setStatus] = useState("active"); // Default status
+  const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
   const [errorMessage, setErrorMessage] = useState("");
+
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(' ') // Split the string into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(' '); // Join them back together
+  };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    showUsers();
+  }, []);
 
   // Fetch Data from API
   useEffect(() => {
@@ -39,12 +60,11 @@ const OfficeCity = () => {
       .get("http://localhost:8000/getdataOfficeCity")
       .then((res) => {
         setUserData(res.data.data);
-        setFilteredData(res.data.data);
         // setLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        alert("An error occurred while fetching data.");
+        // setLoading(false);
       });
   };
 
@@ -52,17 +72,22 @@ const OfficeCity = () => {
   const handleClose = () => {
     setShow(false);
     setOfficeCityName("");
-    setStatus("active");
+    setStatus("Active");
     setEditingId(null); // Reset editing state
     setErrorMessage("");
   };
+
+  // const handleShow = () => setShow(true);
 
   // Add or Update City
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const newData = { office_city_name, status };
+    const newData = {
+      office_city_name: capitalizeFirstLetter(office_city_name),
+      status: capitalizeFirstLetter(status),
+    };
 
     if (editingId) {
       // Update existing City
@@ -123,19 +148,11 @@ const OfficeCity = () => {
   };
 
   // Export to Excel
-  // const handleExcel = () => {
-  //   const worksheet = XLSX.utils.json_to_sheet(filteredData);
-  //   const workbook = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, "City Data");
-  //   XLSX.writeFile(workbook, "City-data.xlsx");
-  // };
-
   const handleExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
         "City Name": a.office_city_name,
-        Status: a.status,
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -144,17 +161,12 @@ const OfficeCity = () => {
   };
 
   // Export to PDF
-
   const handlePdf = () => {
     const doc = new jsPDF();
     doc.text("City Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No",  "City Name", "Status"]],
-      body: userData.map((a, index) => [
-        index + 1,
-        a.office_city_name,
-        a.status,
-      ]),
+      head: [["Sr.No", "City Name"]],
+      body: userData.map((a, index) => [index + 1, a.office_city_name]),
       startY: 30,
     });
     doc.save("City-data.pdf");
@@ -164,7 +176,6 @@ const OfficeCity = () => {
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
     "City Name": a.office_city_name,
-    Status: a.status,
   }));
 
   // Pagination logic
@@ -196,38 +207,25 @@ const OfficeCity = () => {
   const totalEntries = userData.length;
 
   // Handle search
-
-  // const handleSearch = (e) => {
-  //   const value = e.target.value.toLowerCase();
-  //   setSearchTerm(value);
-  //   setFilteredData(userData.filter(item => item.office_city_name.toLowerCase().includes(value) || item.status.toLowerCase().includes(value)));
-  // };
-
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.office_city_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.office_city_name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
-    setCurrentPage(1);
   };
 
   // Handle Enter key press
-  // const handleKeyPress = (e) => {
-  //   if (e.key === "Enter") {
-  //     handleSearch();
-  //   }
-  // };
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   // Reset search when the input is cleared
-
-  // useEffect(() => {
-  //   if (searchTerm === "") {
-  //     setFilteredData(userData);
-  //   }
-  // }, [searchTerm, userData]);
-
   useEffect(() => {
     if (searchTerm === "") {
       showUsers(); // Reset the table data to the original data
@@ -236,19 +234,19 @@ const OfficeCity = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-        <h1 className="fw-bold text-center text-primary mb-3">Office City</h1>
+      <Row className="d-flex justify-content-center mt-2 pt-5">
         {/* Add City Button */}
+        <h1 className="fw-bold text-center text-primary ">Office City </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add City
+            Add Office City
           </Button>
         </Col>
 
         {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add City</Modal.Title>
+            <Modal.Title>Add Office City</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
@@ -263,31 +261,31 @@ const OfficeCity = () => {
                     required
                   />
                 </Col>
+                {/* Display Error Message */}
                 {errorMessage && (
                   <Col md={12} className="mt-2">
-                    <div style={{ color: 'red' }}>
-                      {errorMessage}
-                    </div>
+                    <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
+
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -331,15 +329,15 @@ const OfficeCity = () => {
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="d-flex">
-          <InputGroup className="mb-3">
+        <Col md={4} className=" d-flex">
+          <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
               placeholder="Search for ...."
               value={searchTerm}
               className="ms-2"
               onChange={(e) => setSearchTerm(e.target.value)}
-              // onKeyPress={handleKeyPress}
+              onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
@@ -350,14 +348,8 @@ const OfficeCity = () => {
           </InputGroup>
         </Col>
 
-        {/* <Button variant="primary" onClick={handleSearch} className="ms-2">
-              Search
-            </Button> */}
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
-          {/* {loading ? (
-            <p>Loading...</p>
-          ) : ( */}
+        <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
@@ -365,7 +357,7 @@ const OfficeCity = () => {
                   <th>Sr.No</th>
                   <th>City Name</th>
                   <th className="no-print">Status</th>
-                  <th className="text-center no-print">Action</th>
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -374,11 +366,8 @@ const OfficeCity = () => {
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>{a.office_city_name}</td>
                     <td className="no-print">{a.status}</td>
-                    <td className="d-flex justify-content-evenly no-print">
-                      <Button
-                        variant="warning"
-                        onClick={() => handleEdit(a)}
-                      >
+                    <td className="no-print d-flex justify-content-evenly">
+                      <Button variant="warning" onClick={() => handleEdit(a)}>
                         <GrEdit />
                       </Button>
                       <Button
@@ -393,7 +382,6 @@ const OfficeCity = () => {
               </tbody>
             </Table>
           </div>
-          {/* )} */}
         </Col>
 
         {/* Pagination */}

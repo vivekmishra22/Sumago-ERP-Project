@@ -15,6 +15,8 @@ import City from "./City";
 import Courses from "./Courses";
 import Fee from "./Fee";
 import WelcomeKit from "./WelcomeKit";
+import Dashboard from "./Dashboard";
+import UpdateCourse from "./UpdateCourse";
 
 const Head = () => {
   return (
@@ -39,8 +41,10 @@ const Head = () => {
               <Route path ="/Courses" element={<Courses/>} />
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
               <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />        
+              <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />        
               <Route path="/fee" element={<Fee />} />        
-              <Route path="/welcomekit" element={<WelcomeKit />} />        
+              <Route path="/welcomekit" element={<WelcomeKit />} />  
+              <Route path="/dashboard" element={<Dashboard />}></Route>      
             </Routes>
           </Container>
         </div>

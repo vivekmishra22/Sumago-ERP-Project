@@ -1,6 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -15,18 +23,25 @@ import { FaSearch } from "react-icons/fa";
 const University = () => {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
 
   const [university_name, setUniversityName] = useState("");
-  const [status, setStatus] = useState("active"); // Default status
+  const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
-  const [errorMessage, setErrorMessage] = useState("");
 
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(' ') // Split the string into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(' '); // Join them back together
+  };
 
   // Fetch Data from API
   useEffect(() => {
@@ -51,18 +66,24 @@ const University = () => {
   const handleClose = () => {
     setShow(false);
     setUniversityName("");
-    setStatus("active");
+    setStatus("Active");
     setEditingId(null); // Reset editing state
-    setErrorMessage('');
+    setErrorMessage("");
   };
-
 
   // Add or Update University
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const newData = { university_name, status };
+    // const newData = {
+    //   university_name,  status
+    // }
+
+    const newData = {
+      university_name: capitalizeFirstLetter(university_name),
+      status: capitalizeFirstLetter(status),
+    };
 
     if (editingId) {
       // Update existing University
@@ -73,7 +94,13 @@ const University = () => {
           showUsers();
           handleClose();
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("University is already exist.."); // Set error message
+          } else {
+            console.error(err);
+          }
+        })
         .finally(() => setIsSubmitting(false));
     } else {
       // Add new University
@@ -84,7 +111,6 @@ const University = () => {
           showUsers();
           handleClose();
         })
-        // .catch((err) => console.error(err))
         .catch((err) => {
           if (err.response && err.response.status === 400) {
             setErrorMessage("University is already exist.."); // Set error message
@@ -115,8 +141,6 @@ const University = () => {
     setShow(true);
   };
 
-
-
   // Export to Excel
   const handleExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
@@ -136,10 +160,7 @@ const University = () => {
     doc.text("University Data", 14, 22);
     doc.autoTable({
       head: [["Sr.No", "University Name"]],
-      body: userData.map((a, index) => [
-        index + 1,
-        a.university_name,
-      ]),
+      body: userData.map((a, index) => [index + 1, a.university_name]),
       startY: 30,
     });
     doc.save("University-data.pdf");
@@ -205,9 +226,8 @@ const University = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-      <h1 className="fw-bold text-center text-primary mb-3">University</h1>
-
+      <Row className="d-flex justify-content-center mt-2 pt-5">
+        <h1 className="fw-bold text-center text-primary mb-3">University </h1>
         {/* Add University Button */}
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
@@ -235,9 +255,7 @@ const University = () => {
                 </Col>
                 {errorMessage && (
                   <Col md={12} className="mt-2">
-                    <div style={{ color: 'red' }}>
-                      {errorMessage}
-                    </div>
+                    <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
                 <Col md={12} className="d-flex mt-3">
@@ -246,18 +264,18 @@ const University = () => {
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -279,7 +297,7 @@ const University = () => {
         </Modal>
 
         {/* Export Buttons */}
-        <Col md={8} className="">
+        <Col md={8}>
           {/* <ButtonGroup aria-label="Export Buttons"> */}
           <CSVLink data={csvData} filename={"University-data.csv"} className="">
             <Button variant="primary">CSV</Button>
@@ -302,7 +320,7 @@ const University = () => {
 
         {/* Search Input */}
         <Col md={4} className=" d-flex">
-          <InputGroup className="mb-3">
+          <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -321,11 +339,7 @@ const University = () => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
-          {/* <h1 className="fw-bold text-center text-primary">University Data</h1> */}
-          {/* {loading ? (
-            <p>Loading...</p>
-          ) : ( */}
+        <Col md={12} lg={12} lx={12} lxx={12} >
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
@@ -333,7 +347,7 @@ const University = () => {
                   <th>Sr.No</th>
                   <th>University Name</th>
                   <th className="no-print">Status</th>
-                  <th className="text-center no-print">Action</th>
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -341,12 +355,9 @@ const University = () => {
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>{a.university_name}</td>
-                    <td className="no-print">{a.status}</td>
-                    <td className="d-flex justify-content-evenly no-print">
-                      <Button
-                        variant="warning"
-                        onClick={() => handleEdit(a)}
-                      >
+                    <td className="no-print ">{a.status}</td>
+                    <td className="no-print  d-flex justify-content-evenly">
+                      <Button variant="warning" onClick={() => handleEdit(a)}>
                         <GrEdit />
                       </Button>
                       <Button
@@ -361,7 +372,6 @@ const University = () => {
               </tbody>
             </Table>
           </div>
-          {/* )} */}
         </Col>
 
         {/* Pagination */}
@@ -372,7 +382,7 @@ const University = () => {
             </div>
           </Col>
 
-          <Col md={6} className="d-flex justify-content-end">
+          <Col md={6} className="d-flex justify-content-end ">
             <Pagination>
               <Pagination.Prev
                 disabled={currentPage === 1}

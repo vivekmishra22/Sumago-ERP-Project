@@ -1,6 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -22,15 +30,21 @@ const College = () => {
   const [university_name, setUniversityName] = useState("");
   const [college_name, setCollegeName] = useState("");
   const [city_name, setCityName] = useState("");
-  const [status, setStatus] = useState("active"); // Default status
+  const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
   const [categories, setCategories] = useState([]);
   const [categoriesdata, setCategoriesData] = useState([]);
-
   const [errorMessage, setErrorMessage] = useState("");
 
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(' ') // Split the string into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(' '); // Join them back together
+  };  
 
   // Fetch Data from API
   useEffect(() => {
@@ -38,11 +52,20 @@ const College = () => {
   }, []);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/getdataUniversity")
+    axios.get("http://localhost:8000/getdataUniversity")
       .then((res) => {
-        const udata = res.data.data.filter((item) => item.status === 'active')
+        const udata = res.data.data.filter((item) => item.status === "Active");
         setCategoriesData(udata);
+        console.log("Categories fetched:", res.data.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+      });
+
+    axios.get("http://localhost:8000/getdataCity")
+      .then((res) => {
+        const cdata = res.data.data.filter((item) => item.status === "Active");
+        setCategories(cdata); // Assuming the response contains a `data` array
         console.log("Categories fetched:", res.data.data);
       })
       .catch((err) => {
@@ -50,18 +73,6 @@ const College = () => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/getdataCity")
-      .then((res) => {
-        const udata = res.data.data.filter((item) => item.status === 'active')
-        setCategories(udata); // Assuming the response contains a data array
-        console.log("Categories fetched:", res.data.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching categories:", err);
-      });
-  }, []);
 
   const showUsers = () => {
     // setLoading(true);
@@ -83,8 +94,9 @@ const College = () => {
     setUniversityName("");
     setCollegeName("");
     setCityName("");
-    setStatus("active");
+    setStatus("Active");
     setEditingId(null); // Reset editing state
+    setErrorMessage("");
   };
 
   // Add or Update Technology
@@ -92,11 +104,14 @@ const College = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // const newData = { university_name, college_name, city_name, status };
+    // const newData = {
+    //   college_name, university_name, city_name, status
+    // }
+
     const newData = {
-      university_name: capitalizeFirstLetter( university_name ),
-      college_name: capitalizeFirstLetter( college_name ),
-      city_name: capitalizeFirstLetter( city_name ),
+      college_name: capitalizeFirstLetter(college_name),
+      university_name: capitalizeFirstLetter(university_name),
+      city_name: capitalizeFirstLetter(city_name),
       status: capitalizeFirstLetter(status) 
     };
 
@@ -109,7 +124,13 @@ const College = () => {
           showUsers();
           handleClose();
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("College is already exist.."); // Set error message
+          } else {
+            console.error(err);
+          }
+        })
         .finally(() => setIsSubmitting(false));
     } else {
       // Add new technology
@@ -127,7 +148,6 @@ const College = () => {
             console.error(err);
           }
         })
-        // .catch((err) => console.error(err))
         .finally(() => setIsSubmitting(false));
     }
   };
@@ -142,14 +162,6 @@ const College = () => {
       })
       .catch((err) => console.error(err));
   };
-
-  const capitalizeFirstLetter = (str) => {
-    if (!str) return str;
-    return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
-  }
 
   const handleEdit = (item) => {
     setEditingId(item._id);
@@ -247,11 +259,7 @@ const College = () => {
   };
 
   // Handle Enter key press
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
+  
 
   // Reset search when the input is cleared
   useEffect(() => {
@@ -262,12 +270,9 @@ const College = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-
-      <h1 className="text-center text-primary fw-bold mb-3">College</h1>
-
-
-        {/* Add College Button */}
+      <Row className="d-flex justify-content-center mt-2 pt-5">
+        {/* Add City Button */}
+        <h1 className="fw-bold text-center text-primary ">College </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add College
@@ -303,24 +308,25 @@ const College = () => {
                     ))}
                   </Form.Select>
                 </Col>
+               
 
                 <Col md={12} className="mt-2">
                   <Form.Label>College Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter College Name"
+                    placeholder="Enter University Name"
                     value={college_name}
                     onChange={(e) => setCollegeName(e.target.value)}
                     required
                   />
                 </Col>
-                {errorMessage && (
+                 {/* Display Error Message */}
+                 {errorMessage && (
                   <Col md={12} className="mt-2">
-                    <div style={{ color: 'red' }}>
-                      {errorMessage}
-                    </div>
+                    <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
+                
                 <Col md={12} className="mt-2">
                   <Form.Label className="mt-3">
                     <b>Select city</b>
@@ -345,18 +351,18 @@ const College = () => {
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -404,15 +410,14 @@ const College = () => {
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="d-flex">
-        <InputGroup className="mb-3">
+        <Col md={4} className=" d-flex">
+          <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
               placeholder="Search for ...."
               value={searchTerm}
               className="ms-2"
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
@@ -424,7 +429,7 @@ const College = () => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
+        <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
@@ -434,7 +439,7 @@ const College = () => {
                   <th>University Name</th>
                   <th>City Name</th>
                   <th className="no-print">Status</th>
-                  <th className="text-center no-print">Action</th>
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>

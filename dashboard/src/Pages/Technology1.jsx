@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {Button,Col,Container,Form,InputGroup,Row,Table,} from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
+// import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
@@ -11,41 +12,47 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
-const WelcomeKit = () => {
+const Technology = () => {
   const [show, setShow] = useState(false);
-
+  // const handleClose = () => {
+  //   if ( name || status !== "active") {
+  //     if (window.confirm("Are you sure you want to discard changes?")) {
+  //       setName("");
+  //       setStatus("active");
+  //       setShow(false);
+  //     }
+  //   } else {
+  //     setShow(false);
+  //   }
+  // };
   const handleShow = () => setShow(true);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [userData, setUserData] = useState([]);
+  // const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
+  // const navigate = useNavigate();
 
-  const [welcome_kit, setwelcome_kit] = useState("");
-  const [status, setStatus] = useState("Active"); // Default status
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState("active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
-  const [errorMessage, setErrorMessage] = useState("");
 
+  // Fetch data on component mount
+  useEffect(() => {
+    showUsers();
+  }, []);
 
-  
   // Fetch Data from API
   useEffect(() => {
     showUsers();
   }, []);
 
-  const capitalizeFirstLetter = (str) => {
-    if (!str) return str;
-    return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
-  };
-
   const showUsers = () => {
     // setLoading(true);
     axios
-      .get("http://localhost:8000/getkititem")
+      .get("http://localhost:8000/getdata")
       .then((res) => {
         setUserData(res.data.data);
         // setLoading(false);
@@ -59,53 +66,44 @@ const WelcomeKit = () => {
   // Handle Modal Close
   const handleClose = () => {
     setShow(false);
-    setwelcome_kit("");
-    setStatus("Active");
+    setName("");
+    setStatus("active");
     setEditingId(null); // Reset editing state
+    setErrorMessage('');
   };
 
   // const handleShow = () => setShow(true);
 
-  // Add or Update City
+  // Add or Update Technology
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    const newData = {
-        welcome_kit: capitalizeFirstLetter(welcome_kit),
-        status: capitalizeFirstLetter(status) 
-      };
-    
+
+    const newData = { name, status };
 
     if (editingId) {
-      // Update existing kit Item
+      // Update existing technology
       axios
-        .put(`http://localhost:8000/Updatekititem/${editingId}`, newData)
+        .put(`http://localhost:8000/UpdateTechnology/${editingId}`, newData)
         .then(() => {
-          alert("Kit item Updated Successfully!");
+          alert("Technology Updated Successfully!");
           showUsers();
           handleClose();
         })
-        .catch((err) => {
-          if (err.response && err.response.status === 400) {
-            setErrorMessage("Kit Item is already exist.."); // Set error message
-          } else {
-            console.error(err);
-          }
-        })
+        .catch((err) => console.error(err))
         .finally(() => setIsSubmitting(false));
     } else {
-      // Add new Item
+      // Add new technology
       axios
-        .post("http://localhost:8000/addkititem", newData)
+        .post("http://localhost:8000/technologypost", newData)
         .then(() => {
-          alert("Welcome Kit item Added Successfully!");
+          alert("Technology Added Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("Kit Item is already exist.."); // Set error message
+            setErrorMessage("Technology is already exist.."); // Set error message
           } else {
             console.error(err);
           }
@@ -114,12 +112,12 @@ const WelcomeKit = () => {
     }
   };
 
-  // Delete City
+  // Delete Technology
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deletekititem/${_id}`)
+      .delete(`http://localhost:8000/deleteTechnology/${_id}`)
       .then(() => {
-        alert("Are you sure you want to delete this Item?");
+        alert("Are you sure you want to delete this record?");
         showUsers();
       })
       .catch((err) => console.error(err));
@@ -128,10 +126,9 @@ const WelcomeKit = () => {
   // Handle Edit Click
   const handleEdit = (item) => {
     setEditingId(item._id);
-    setwelcome_kit(item.welcome_kit);
+    setName(item.name);
     setStatus(item.status);
     setShow(true);
-    setErrorMessage("");
   };
 
   // Export to Excel
@@ -139,30 +136,33 @@ const WelcomeKit = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "Welcome kit Item": a.welcome_kit,
+        "Technology Name": a.name,
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Welcome kit Data");
-    XLSX.writeFile(workbook, "Welcome Kit-data.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Technology Data");
+    XLSX.writeFile(workbook, "technology-data.xlsx");
   };
 
   // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
-    doc.text("Welcome Kit Data", 14, 22);
+    doc.text("Technology Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Welcome kit Item"]],
-      body: userData.map((a, index) => [index + 1, a.welcome_kit]),
+      head: [["Sr.No", "Technology Name"]],
+      body: userData.map((a, index) => [
+        index + 1,
+        a.name,
+      ]),
       startY: 30,
     });
-    doc.save("Welcomekit-data.pdf");
+    doc.save("technology-data.pdf");
   };
 
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "City Name": a.welcome_kit,
+    "Technology Name": a.name,
   }));
 
   // Pagination logic
@@ -197,7 +197,7 @@ const WelcomeKit = () => {
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.welcome_kit.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
@@ -219,40 +219,41 @@ const WelcomeKit = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button */}
-        <h1 className="fw-bold text-center text-primary ">Welcome Kit Item</h1>
+      <Row className="d-flex justify-content-center mt-4 pt-5">
+      <h1 className="fw-bold text-center text-primary mb-3">Technology</h1>
+
+        {/* Add Technology Button */}
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add Kit Item
+            Add Technology
           </Button>
         </Col>
 
-        {/* Add City Modal */}
+        {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Kit Item</Modal.Title>
+            <Modal.Title>Add Technology</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={12}>
-                  <Form.Label>Item Name</Form.Label>
+                  <Form.Label>Technology Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter welcome kit item Name"
-                    value={welcome_kit}
-                    onChange={(e) => setwelcome_kit(e.target.value)}
+                    placeholder="Enter Technology Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </Col>
-                {/* Display Error Message */}
                 {errorMessage && (
                   <Col md={12} className="mt-2">
-                    <div style={{ color: "red" }}>{errorMessage}</div>
+                    <div style={{ color: 'red' }}>
+                      {errorMessage}
+                    </div>
                   </Col>
                 )}
-
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
@@ -261,7 +262,7 @@ const WelcomeKit = () => {
                     name="status"
                     value="active"
                     className="ps-5"
-                    checked={status === "Active"}
+                    checked={status === "active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
@@ -270,7 +271,7 @@ const WelcomeKit = () => {
                     name="status"
                     value="inactive"
                     className="ps-5"
-                    checked={status === "Inactive"}
+                    checked={status === "inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -294,24 +295,28 @@ const WelcomeKit = () => {
         {/* Export Buttons */}
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink data={csvData} filename={"City-data.csv"}>
-            <Button className="">CSV</Button>
+          <CSVLink data={csvData} filename={"technology-data.csv"} className="">
+            <Button variant="primary">CSV</Button>
           </CSVLink>
-          <Button onClick={handleExcel} className="ms-1 ">
+          <Button variant="primary" onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button onClick={handlePdf} className="ms-1 ">
+          <Button variant="primary" onClick={handlePdf} className="ms-1">
             PDF
           </Button>
-          <Button onClick={() => window.print()} className="ms-1 ">
+          <Button
+            variant="primary"
+            onClick={() => window.print()}
+            className="ms-1"
+          >
             Print
           </Button>
           {/* </ButtonGroup> */}
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className=" d-flex">
-          <InputGroup className="mb-3  ">
+        <Col md={4} className="d-flex">
+        <InputGroup className="mb-3">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -329,35 +334,39 @@ const WelcomeKit = () => {
           </InputGroup>
         </Col>
 
+        {/* <Button variant="primary" onClick={handleSearch} className="ms-2">
+              Search
+            </Button> */}
         {/* Table */}
-        <Col md={12} lg={12} xl={12} xxl={12}  id="printable">
+        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
+          {/* {loading ? (
+            <p>Loading...</p>
+          ) : ( */}
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
-                  <th>Welcome Kit Item Name</th>
+                  <th>Technology Name</th>
                   <th className="no-print">Status</th>
-                  <th className="no-print text-center">Action</th>
+                  <th className="text-center no-print">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.welcome_kit}</td>
+                    <td>{a.name}</td>
                     <td className="no-print">{a.status}</td>
-                    <td className="no-print d-flex justify-content-evenly">
+                    <td className="d-flex justify-content-evenly no-print">
                       <Button
                         variant="warning"
-                        className="no-print" // Hide this during printing
                         onClick={() => handleEdit(a)}
                       >
                         <GrEdit />
                       </Button>
                       <Button
                         variant="danger"
-                        className="no-print" // Hide this during printing
                         onClick={() => deletedata(a._id)}
                       >
                         <AiFillDelete />
@@ -368,7 +377,9 @@ const WelcomeKit = () => {
               </tbody>
             </Table>
           </div>
+          {/* )} */}
         </Col>
+
         {/* Pagination */}
         <Row>
           <Col md={6}>
@@ -408,4 +419,4 @@ const WelcomeKit = () => {
   );
 };
 
-export default WelcomeKit;
+export default Technology;

@@ -50,20 +50,21 @@ const Sidebar = () => {
                             {/* Dashboard Link */}
                             <Link
                                 to="/Head/dashboard"
-                                className="text-decoration-none link ps-3 py-2"
+                                className="text-decoration-none link ps-3 py-2 d-flex align-items-center"
                             >
-                                <MdSpaceDashboard size={25} className="me-2" /> Dashboard
+                                <MdSpaceDashboard size={25} className="me-2" /> 
+                                <span>Dashboard</span>
                             </Link>
 
                             {/* Masters Dropdown */}
                             <div className="nav-item">
                                 <div
-                                    className="d-flex text-decoration-none link ps-3 py-2"
+                                    className="d-flex text-decoration-none link ps-3 py-2 d-flex align-items-center"
                                     onClick={toggleMastersMenu} // Toggle dropdown on click
                                     style={{ cursor: "pointer" }}
                                 >
                                     <GrDocumentStore size={23} className="me-3" />
-                                    Masters
+                                    <span>Masters</span>
                                     <i
                                         className={`fas ${isMastersOpen ? "fa-angle-up" : "fa-angle-down"} right ms-5`}
                                         style={{ transition: "transform 0.2s ease" }} // Smooth transition
@@ -76,76 +77,88 @@ const Sidebar = () => {
                                 >
                                     <Link
                                         to="/Head/university"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <FaUniversity size={23} className="me-3" /> University
+                                        <FaUniversity size={23} className="me-3" /> 
+                                        <span>University</span>
                                     </Link>
                                     <Link
                                         to="/Head/college"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <LiaUniversitySolid size={23} className="me-3" /> College
+                                        <LiaUniversitySolid size={23} className="me-3" /> 
+                                        <span>College</span>
                                     </Link>
                                     <Link
                                         to="/Head/city"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <FaMountainCity size={23} className="me-3" /> City
+                                        <FaMountainCity size={23} className="me-3" /> 
+                                        <span>City</span>
                                     </Link>
                                     <Link
                                         to="/Head/officecity"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <MdLocationCity size={23} className="me-3" /> Office City
+                                        <MdLocationCity size={23} className="me-3" /> 
+                                        <span>Office City</span>
                                     </Link>
                                     <Link
                                         to="/Head/office"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <HiMiniBuildingOffice2 size={23} className="me-3" /> Office
+                                        <HiMiniBuildingOffice2 size={23} className="me-3" /> 
+                                        <span>Office</span>
                                     </Link>
                                     <Link
                                         to="/Head/education"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <FaUserGraduate size={23} className="me-3" /> Education
+                                        <FaUserGraduate size={23} className="me-3" /> 
+                                        <span>Education</span>
                                     </Link>
                                     <Link
                                         to="/Head/technology"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <TbBulbFilled size={23} className="me-3" /> Technology
+                                        <TbBulbFilled size={23} className="me-3" /> 
+                                        <span>Technology</span>
                                     </Link>
                                     <Link
                                         to="/Head/Courses"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <MdLibraryBooks size={23} className="me-3" /> Courses
+                                        <MdLibraryBooks size={23} className="me-3" /> 
+                                        <span>Courses</span>
                                     </Link>
                                     <Link
                                         to="/Head/welcomekit"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <IoBagCheckSharp size={23} className="me-3" /> Welcome Kit
+                                        <IoBagCheckSharp size={23} className="me-3" /> 
+                                        <span>Welcome Kit</span>
                                     </Link>
                                     <Link
                                         to="/Head/fee"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <RiMoneyRupeeCircleFill size={23} className="me-3" /> Fees
+                                        <RiMoneyRupeeCircleFill size={23} className="me-3" /> 
+                                        <span>Fees</span>
                                     </Link>
                                     <Link
                                         to="/Head/GuestLecturer"
-                                        className="d-flex text-decoration-none link ps-5 py-2"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <GiTeacher size={23} className="me-3" /> Guest Lecturer
+                                        <GiTeacher size={23} className="me-3" />
+                                        <span>Guest Lecturer</span>
                                     </Link>
                                 </div>
                             </div>
 
                             {/* Logout Link */}
-                            <Link to="/" className="text-decoration-none link ps-3 py-2">
-                                <LuLogIn size={25} className="me-2" /> Logout
+                            <Link to="/" className="text-decoration-none link ps-3 py-2 d-flex align-items-center">
+                                <LuLogIn size={25} className="me-2" /> 
+                                <span>Logout</span>
                             </Link>
                         </Nav>
                     </Col>

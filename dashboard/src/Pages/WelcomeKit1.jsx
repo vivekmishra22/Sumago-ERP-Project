@@ -1,6 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {Button,Col,Container,Form,InputGroup,Row,Table,} from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -21,7 +29,7 @@ const WelcomeKit = () => {
   const [itemsPerPage] = useState(10); // Adjust as needed
 
   const [welcome_kit, setwelcome_kit] = useState("");
-  const [status, setStatus] = useState("Active"); // Default status
+  const [status, setStatus] = useState("active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
@@ -60,7 +68,7 @@ const WelcomeKit = () => {
   const handleClose = () => {
     setShow(false);
     setwelcome_kit("");
-    setStatus("Active");
+    setStatus("active");
     setEditingId(null); // Reset editing state
   };
 
@@ -221,17 +229,17 @@ const WelcomeKit = () => {
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
         {/* Add City Button */}
-        <h1 className="fw-bold text-center text-primary ">Welcome Kit Item</h1>
+        <h1 className="fw-bold text-center text-primary ">Welcome Kit</h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add Kit Item
+            Add Welcomkit
           </Button>
         </Col>
 
         {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Kit Item</Modal.Title>
+            <Modal.Title>Add Item</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
@@ -261,7 +269,7 @@ const WelcomeKit = () => {
                     name="status"
                     value="active"
                     className="ps-5"
-                    checked={status === "Active"}
+                    checked={status === "active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
@@ -270,7 +278,7 @@ const WelcomeKit = () => {
                     name="status"
                     value="inactive"
                     className="ps-5"
-                    checked={status === "Inactive"}
+                    checked={status === "inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>

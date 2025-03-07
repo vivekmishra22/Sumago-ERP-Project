@@ -1,6 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -26,7 +34,7 @@ const Technology = () => {
   //   }
   // };
   const handleShow = () => setShow(true);
-  const [errorMessage, setErrorMessage] = useState("");
+
   const [userData, setUserData] = useState([]);
   // const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,10 +42,19 @@ const Technology = () => {
   // const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [status, setStatus] = useState("active"); // Default status
+  const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(' ') // Split the string into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(' '); // Join them back together
+  };
 
   // Fetch data on component mount
   useEffect(() => {
@@ -67,9 +84,9 @@ const Technology = () => {
   const handleClose = () => {
     setShow(false);
     setName("");
-    setStatus("active");
+    setStatus("Active");
     setEditingId(null); // Reset editing state
-    setErrorMessage('');
+    setErrorMessage("");
   };
 
   // const handleShow = () => setShow(true);
@@ -79,7 +96,10 @@ const Technology = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const newData = { name, status };
+    const newData = {
+      name: capitalizeFirstLetter(name),
+      status: capitalizeFirstLetter(status),
+    };
 
     if (editingId) {
       // Update existing technology
@@ -90,7 +110,13 @@ const Technology = () => {
           showUsers();
           handleClose();
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("College is already exist.."); // Set error message
+          } else {
+            console.error(err);
+          }
+        })
         .finally(() => setIsSubmitting(false));
     } else {
       // Add new technology
@@ -103,7 +129,7 @@ const Technology = () => {
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("Technology is already exist.."); // Set error message
+            setErrorMessage("College is already exist.."); // Set error message
           } else {
             console.error(err);
           }
@@ -150,10 +176,7 @@ const Technology = () => {
     doc.text("Technology Data", 14, 22);
     doc.autoTable({
       head: [["Sr.No", "Technology Name"]],
-      body: userData.map((a, index) => [
-        index + 1,
-        a.name,
-      ]),
+      body: userData.map((a, index) => [index + 1, a.name]),
       startY: 30,
     });
     doc.save("technology-data.pdf");
@@ -219,10 +242,9 @@ const Technology = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-      <h1 className="fw-bold text-center text-primary mb-3">Technology</h1>
-
-        {/* Add Technology Button */}
+      <Row className="d-flex justify-content-center mt-2 pt-5">
+        {/* Add City Button */}
+        <h1 className="fw-bold text-center text-primary ">Technology </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Technology
@@ -247,31 +269,32 @@ const Technology = () => {
                     required
                   />
                 </Col>
+
+                {/* Display Error Message */}
                 {errorMessage && (
                   <Col md={12} className="mt-2">
-                    <div style={{ color: 'red' }}>
-                      {errorMessage}
-                    </div>
+                    <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
+
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -293,7 +316,7 @@ const Technology = () => {
         </Modal>
 
         {/* Export Buttons */}
-        <Col md={8} className="">
+        <Col md={8} className=" button  ">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
           <CSVLink data={csvData} filename={"technology-data.csv"} className="">
             <Button variant="primary">CSV</Button>
@@ -315,8 +338,8 @@ const Technology = () => {
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="d-flex">
-        <InputGroup className="mb-3">
+        <Col md={4} className=" d-flex">
+          <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -334,14 +357,8 @@ const Technology = () => {
           </InputGroup>
         </Col>
 
-        {/* <Button variant="primary" onClick={handleSearch} className="ms-2">
-              Search
-            </Button> */}
-        {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
-          {/* {loading ? (
-            <p>Loading...</p>
-          ) : ( */}
+        {/* table */}
+        <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
@@ -349,7 +366,7 @@ const Technology = () => {
                   <th>Sr.No</th>
                   <th>Technology Name</th>
                   <th className="no-print">Status</th>
-                  <th className="text-center no-print">Action</th>
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -358,11 +375,8 @@ const Technology = () => {
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>{a.name}</td>
                     <td className="no-print">{a.status}</td>
-                    <td className="d-flex justify-content-evenly no-print">
-                      <Button
-                        variant="warning"
-                        onClick={() => handleEdit(a)}
-                      >
+                    <td className="no-print d-flex justify-content-evenly">
+                      <Button variant="warning" onClick={() => handleEdit(a)}>
                         <GrEdit />
                       </Button>
                       <Button
@@ -377,7 +391,6 @@ const Technology = () => {
               </tbody>
             </Table>
           </div>
-          {/* )} */}
         </Col>
 
         {/* Pagination */}

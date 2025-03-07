@@ -12,8 +12,8 @@ import { FaCircleUser } from "react-icons/fa6";
 const Home = () => {
   return (
     <>
-      <Navbar expand="lg" className="bg-primary" fixed='top' 
-      // style={{ backgroundColor: "rgb(77, 88, 117)" }}
+      <Navbar expand="lg" className="bg-body-tertiary"  fixed='top' //className="bg-body-tertiary"
+      // style={{ backgroundColor: "rgb(99, 206, 255)" }}    
       >
         <Container fluid>
           {/* <Navbar.Brand href="#" className='text-white fw-bold fs-2 ps-5 ' >Products</Navbar.Brand> */}
@@ -31,13 +31,13 @@ const Home = () => {
             </Nav>
             <Form className="d-flex">
               <Link className="text-decoration-none ps-3 py-2">
-                <TbBellRingingFilled size={29} className="me-3 text-white" />
+                <TbBellRingingFilled size={29} className="me-3 text-dark" />
               </Link>
 
               <Dropdown className='me-4'>
                 <Dropdown.Toggle variant="" id="dropdown-basic" className='border border-0 no-caret'>
                   <span d-flex align-items-center>
-                    <FaCircleUser className='fs-4 text-light' />
+                    <FaCircleUser className='fs-4 text-dark' />
                     {/* <span className=''>Profile</span> */}
                   </span>
                 </Dropdown.Toggle>

@@ -1,6 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -12,7 +20,6 @@ import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
 const Office = () => {
-
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
 
@@ -22,15 +29,19 @@ const Office = () => {
 
   const [office_name, setOfficeName] = useState("");
   const [office_city_name, setOfficeCityName] = useState("");
-  const [status, setStatus] = useState("active"); // Default status
+  const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
   const [categories, setCategories] = useState([]);
-  // const [categoriesdata, setCategoriesData] = useState([]);
-  // const [categoryData, setCategoryData] = useState([]);
-  // const [category, setCategory] = useState([]);
 
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(' ') // Split the string into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(' '); // Join them back together
+  };
 
   // Fetch Data from API
   useEffect(() => {
@@ -41,8 +52,8 @@ const Office = () => {
     axios
       .get("http://localhost:8000/getdataOfficeCity")
       .then((res) => {
-        setCategories(res.data.data); // Assuming the response contains a `data` array
-        // setCategoryData(res.data.data);
+        const udata = res.data.data.filter((item) => item.status === "Active");
+        setCategories(udata); // Assuming the response contains a `data` array
         console.log("Categories fetched:", res.data.data);
       })
       .catch((err) => {
@@ -69,25 +80,27 @@ const Office = () => {
     setShow(false);
     setOfficeName("");
     setOfficeCityName("");
-    setStatus("active");
+    setStatus("Active");
     setEditingId(null); // Reset editing state
-
   };
-
 
   // Add or Update Technology
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const newData = { office_name, office_city_name, status };
+    const newData = {
+      office_name: capitalizeFirstLetter(office_name),
+      office_city_name: capitalizeFirstLetter(office_city_name),
+      status: capitalizeFirstLetter(status),
+    };
 
     if (editingId) {
       // Update existing technology
       axios
         .put(`http://localhost:8000/UpdateOffice/${editingId}`, newData)
         .then(() => {
-          alert("Office Updated Successfully!");
+          alert("Technology Updated Successfully!");
           showUsers();
           handleClose();
         })
@@ -98,7 +111,7 @@ const Office = () => {
       axios
         .post("http://localhost:8000/addOffice", newData)
         .then(() => {
-          alert("Office Added Successfully!");
+          alert("Technology Added Successfully!");
           showUsers();
           handleClose();
         })
@@ -113,13 +126,12 @@ const Office = () => {
       axios
         .delete(`http://localhost:8000/deleteOffice/${_id}`)
         .then(() => {
-          alert("Office Deleted");
+          alert("Technology Deleted");
           showUsers();
         })
         .catch((err) => console.error(err));
     }
   };
-
 
   const handleEdit = (item) => {
     setEditingId(item._id);
@@ -136,7 +148,6 @@ const Office = () => {
         "Sr.No": index + 1,
         "Office Name": a.office_name,
         "City Name": a.office_city_name,
-        Status: a.status,
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -149,12 +160,11 @@ const Office = () => {
     const doc = new jsPDF();
     doc.text("Office Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Office Name", "City Name", "Status"]],
+      head: [["Sr.No", "Office Name", "City Name"]],
       body: userData.map((a, index) => [
         index + 1,
         a.office_name,
         a.office_city_name,
-        a.status,
       ]),
       startY: 30,
     });
@@ -166,7 +176,6 @@ const Office = () => {
     "Sr.No": index + 1,
     "Office Name": a.office_name,
     "City Name": a.office_city_name,
-    Status: a.status,
   }));
 
   // Pagination logic
@@ -197,34 +206,21 @@ const Office = () => {
   const showingTo = Math.min(indexOfLastItem, userData.length);
   const totalEntries = userData.length;
 
-  // Handle search
-  // const handleSearch = () => {
-  //   const filteredData = userData.filter(
-  //     (item) =>
-  //       item.university_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       item.office_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       item.office_city_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       item.status.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  //   setUserData(filteredData); // Update the table data
-  // };
-
   const handleSearch = () => {
     const filteredData = userData.filter((item) => {
       const OfficeName = item.office_name?.toLowerCase() || "";
       const cityName = item.office_city_name?.toLowerCase() || "";
-      const statusValue = item.status?.toLowerCase() || "";
+      const status = item.status?.toLowerCase() || "";
 
       return (
         OfficeName.includes(searchTerm.toLowerCase()) ||
         cityName.includes(searchTerm.toLowerCase()) ||
-        statusValue.includes(searchTerm.toLowerCase())
+        status.includes(searchTerm.toLowerCase())
       );
     });
 
     setUserData(filteredData);
   };
-
 
   // Handle Enter key press
   const handleKeyPress = (e) => {
@@ -242,10 +238,9 @@ const Office = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-        <h1 className="text-center text-primary fw-bold mb-3">Office Details</h1>
-
-        {/* Add Office Button */}
+      <Row className="d-flex justify-content-center mt-2 pt-5">
+        {/* Add City Button */}
+        <h1 className="fw-bold text-center text-primary ">Office </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Office
@@ -264,7 +259,7 @@ const Office = () => {
                   <Form.Label>Office Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter office name"
+                    placeholder="Enter University Name"
                     value={office_name}
                     onChange={(e) => setOfficeName(e.target.value)}
                     required
@@ -294,18 +289,18 @@ const Office = () => {
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -329,11 +324,7 @@ const Office = () => {
         {/* Export Buttons */}
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink
-            data={csvData}
-            filename={"Office-data.csv"}
-            className="ms-1"
-          >
+          <CSVLink data={csvData} filename={"Office-data.csv"} className="ms-1">
             <Button variant="primary">CSV</Button>
           </CSVLink>
           <Button variant="primary" onClick={handleExcel} className="ms-1">
@@ -353,8 +344,8 @@ const Office = () => {
         </Col>
 
         {/* Search Input */}
-        <Col md={4} className="d-flex">
-          <InputGroup className="mb-3">
+        <Col md={4} className=" d-flex">
+          <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -373,7 +364,7 @@ const Office = () => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
+        <Col md={12} lg={12} lx={12} lxx={12} >
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
@@ -382,43 +373,10 @@ const Office = () => {
                   <th>Office Name</th>
                   <th>City Name</th>
                   <th className="no-print">Status</th>
-                  <th className="text-center no-print">Action</th>
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {/* {userData.length > 0 ? (
-                currentItems.map((product, index) => {
-                  const matchedCategory = categoryData.find((cat) => cat._id === product.office_city_name);
-                  const matched = category.find((cat) => cat._id === product.university_name);
-                  return (
-                    
-                  <tr key={product._id}>
-                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{matched ? matched.university_name : "No Category"}</td>
-                    <td>{product.office_name}</td>
-                    <td>{matchedCategory ? matchedCategory.office_city_name : "No Category"}</td>
-                    <td>{product.status}</td>
-                    <td className="d-flex justify-content-evenly">
-                      <Button variant="warning" onClick={() => handleEdit(product)}>
-                        <GrEdit />
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => deletedata(product._id)}
-                      >
-                        <AiFillDelete />
-                      </Button>
-                    </td>
-                  </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center">
-                      No products found.
-                    </td>
-                  </tr>
-                )} */}
                 {currentItems.map((product, index) => {
                   return (
                     <tr key={product._id}>
@@ -426,8 +384,11 @@ const Office = () => {
                       <td>{product.office_name}</td>
                       <td>{product.office_city_name} </td>
                       <td className="no-print">{product.status}</td>
-                      <td className="d-flex justify-content-evenly no-print">
-                        <Button variant="warning" onClick={() => handleEdit(product)}>
+                      <td className="no-print d-flex justify-content-evenly">
+                        <Button
+                          variant="warning"
+                          onClick={() => handleEdit(product)}
+                        >
                           <GrEdit />
                         </Button>
                         <Button
@@ -438,9 +399,8 @@ const Office = () => {
                         </Button>
                       </td>
                     </tr>
-                  )
-                })
-                }
+                  );
+                })}
               </tbody>
             </Table>
           </div>

@@ -1,6 +1,5 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {Button, Col, Container, Form, InputGroup, Row, Table,} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -10,67 +9,63 @@ import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
+import axios from "axios";
 
 const City = () => {
   const [show, setShow] = useState(false);
-
-  const handleShow = () => setShow(true);
-
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Adjust as needed
-
+  const [itemsPerPage] = useState(10);
   const [city_name, setCityName] = useState("");
-  const [status, setStatus] = useState("active"); // Default status
+  const [status, setStatus] = useState("Active");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Search input value
-  const [editingId, setEditingId] = useState(null); // Track which ID is being edited
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [editingId, setEditingId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(" ") // Split the string into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join them back together
+  };
 
-  // Fetch Data from API
   useEffect(() => {
     showUsers();
   }, []);
 
   const showUsers = () => {
-    // setLoading(true);
     axios
       .get("http://localhost:8000/getdataCity")
       .then((res) => {
         setUserData(res.data.data);
-        // setLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        // setLoading(false);
       });
   };
 
-  // Handle Modal Close
   const handleClose = () => {
     setShow(false);
     setCityName("");
-    setStatus("active");
-    setEditingId(null); // Reset editing state
+    setStatus("Active");
+    setEditingId(null);
+    setErrorMessage("");
   };
 
-  // const handleShow = () => setShow(true);
-
-  // Add or Update City
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     // const newData = { city_name, status };
+
     const newData = {
       city_name: capitalizeFirstLetter(city_name),
-      status: capitalizeFirstLetter(status) 
+      status: capitalizeFirstLetter(status),
     };
 
     if (editingId) {
-      // Update existing City
       axios
         .put(`http://localhost:8000/UpdateCity/${editingId}`, newData)
         .then(() => {
@@ -78,10 +73,15 @@ const City = () => {
           showUsers();
           handleClose();
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          if (err.response && err.response.status === 400) {
+            setErrorMessage("City already exists.");
+          } else {
+            console.error(err);
+          }
+        })
         .finally(() => setIsSubmitting(false));
     } else {
-      // Add new City
       axios
         .post("http://localhost:8000/addCity", newData)
         .then(() => {
@@ -91,17 +91,15 @@ const City = () => {
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("City is already exist.."); // Set error message
+            setErrorMessage("City already exists.");
           } else {
             console.error(err);
           }
         })
-        // .catch((err) => console.error(err))
         .finally(() => setIsSubmitting(false));
     }
   };
 
-  // Delete City
   const deletedata = (_id) => {
     axios
       .delete(`http://localhost:8000/deleteCity/${_id}`)
@@ -112,23 +110,14 @@ const City = () => {
       .catch((err) => console.error(err));
   };
 
-  const capitalizeFirstLetter = (str) => {
-    if (!str) return str;
-    return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
-  };
-
-  // Handle Edit Click
   const handleEdit = (item) => {
     setEditingId(item._id);
     setCityName(item.city_name);
     setStatus(item.status);
     setShow(true);
+    setErrorMessage("");
   };
 
-  // Export to Excel
   const handleExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
@@ -141,28 +130,22 @@ const City = () => {
     XLSX.writeFile(workbook, "City-data.xlsx");
   };
 
-  // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
     doc.text("City Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "City Name",]],
-      body: userData.map((a, index) => [
-        index + 1,
-        a.city_name,
-      ]),
+      head: [["Sr.No", "City Name"]],
+      body: userData.map((a, index) => [index + 1, a.city_name]),
       startY: 30,
     });
     doc.save("City-data.pdf");
   };
 
-  // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
     "City Name": a.city_name,
   }));
 
-  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = userData.slice(indexOfFirstItem, indexOfLastItem);
@@ -190,44 +173,37 @@ const City = () => {
   const showingTo = Math.min(indexOfLastItem, userData.length);
   const totalEntries = userData.length;
 
-  // Handle search
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
         item.city_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setUserData(filteredData); // Update the table data
+    setUserData(filteredData);
   };
 
-  // Handle Enter key press
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  // Reset search when the input is cleared
   useEffect(() => {
     if (searchTerm === "") {
-      showUsers(); // Reset the table data to the original data
+      showUsers();
     }
   }, [searchTerm]);
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-
-      <h1 className="fw-bold text-center text-primary mb-3">City</h1>
-
-        {/* Add City Button */}
+      <Row className="d-flex justify-content-center mt-2 pt-5">
+        <h1 className="fw-bold text-center text-primary">City</h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
+          <Button variant="primary" onClick={() => setShow(true)}>
             Add City
           </Button>
         </Col>
 
-        {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Add City</Modal.Title>
@@ -247,9 +223,7 @@ const City = () => {
                 </Col>
                 {errorMessage && (
                   <Col md={12} className="mt-2">
-                    <div style={{ color: 'red' }}>
-                      {errorMessage}
-                    </div>
+                    <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
                 <Col md={12} className="d-flex mt-3">
@@ -258,18 +232,18 @@ const City = () => {
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -290,31 +264,23 @@ const City = () => {
           </Modal.Footer>
         </Modal>
 
-        {/* Export Buttons */}
-        <Col md={8} className="">
-          {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink data={csvData} filename={"City-data.csv"} className="">
-            <Button variant="primary">CSV</Button>
+        <Col md={8}>
+          <CSVLink data={csvData} filename={"City-data.csv"}>
+            <Button>CSV</Button>
           </CSVLink>
-          <Button variant="primary" onClick={handleExcel} className="ms-1">
+          <Button onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button variant="primary" onClick={handlePdf} className="ms-1">
+          <Button onClick={handlePdf} className="ms-1">
             PDF
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => window.print()}
-            className="ms-1"
-          >
+          <Button onClick={() => window.print()} className="ms-1">
             Print
           </Button>
-          {/* </ButtonGroup> */}
         </Col>
 
-        {/* Search Input */}
         <Col md={4} className="d-flex">
-        <InputGroup className="mb-3">
+          <InputGroup className="mb-3">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -323,23 +289,15 @@ const City = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
-              aria-label="Recipient's username"
-              aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className="bg-primary">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>
         </Col>
 
-        {/* <Button variant="primary" onClick={handleSearch} className="ms-2">
-              Search
-            </Button> */}
-        {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable" >
-          {/* {loading ? (
-            <p>Loading...</p>
-          ) : ( */}
+        
+        <Col md={12} lg={12} xl={12} xxl={12}  id="printable">
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
@@ -347,7 +305,7 @@ const City = () => {
                   <th>Sr.No</th>
                   <th>City Name</th>
                   <th className="no-print">Status</th>
-                  <th className="text-center no-print">Action</th>
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -359,14 +317,14 @@ const City = () => {
                     <td className="no-print d-flex justify-content-evenly">
                       <Button
                         variant="warning"
-                        // className="no-print" // Hide this during printing
+                        className="no-print" // Hide this during printing
                         onClick={() => handleEdit(a)}
                       >
                         <GrEdit />
                       </Button>
                       <Button
                         variant="danger"
-                        // className="no-print" // Hide this during printing
+                        className="no-print" // Hide this during printing
                         onClick={() => deletedata(a._id)}
                       >
                         <AiFillDelete />
@@ -377,17 +335,14 @@ const City = () => {
               </tbody>
             </Table>
           </div>
-          {/* )} */}
         </Col>
 
-        {/* Pagination */}
         <Row>
           <Col md={6}>
             <div className="dataTables_info" aria-live="polite" role="status">
               Showing {showingFrom} to {showingTo} of {totalEntries} entries
             </div>
           </Col>
-
           <Col md={6} className="d-flex justify-content-end">
             <Pagination>
               <Pagination.Prev
