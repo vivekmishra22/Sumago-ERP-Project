@@ -1,3 +1,8 @@
+.dashboarde-color{
+  color:rgb(209, 209, 209);
+  /* color:rgb(191, 192, 192); */
+}
+
 .sidebar{
   position: fixed;
   background-color:rgb(46, 46, 46);
@@ -14,14 +19,21 @@
   overflow-x:hidden;
   }
 
-  /* .sidebar1{
+  /* .sidebar3{
+    height: 100%;
+  width: 250px;
+    overflow-y:auto;
+    overflow-x:hidden;
+  } */
+
+  .sidebar1{
   background-color:rgb(86, 133, 141);
   }
 
   .sidebar2{
     color:rgb(86, 133, 141);
     font-size:50px;
-    } */
+    }
 
   .link{
   color: rgb(255, 255, 255);
@@ -121,4 +133,52 @@
 .rotate-90 {
   transform: rotate(90deg);
   transition: transform 0.2s ease;
+}
+
+/* Home */
+/* Container for the bell icon */
+.bell-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Bell icon styling */
+.bell-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Animation for the bell */
+.bell-icon.ring {
+  animation: ring 0.5s ease-in-out;
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(15deg);
+  }
+  50% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* Notification badge */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
 }
