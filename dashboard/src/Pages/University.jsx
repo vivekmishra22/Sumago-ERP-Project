@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Button,
   Col,
   Container,
@@ -22,7 +23,7 @@ import { FaSearch } from "react-icons/fa";
 
 const University = () => {
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [userData, setUserData] = useState([]);
@@ -227,13 +228,27 @@ const University = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        <h1 className="fw-bold text-center text-primary mb-3">University </h1>
-        {/* Add University Button */}
+        {/* <h1 className="fw-bold text-center text-primary mb-3">University </h1>
+        Add University Button
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add University
           </Button>
-        </Col>
+        </Col> */}
+
+        <Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>University</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add University
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add University Modal */}
         <Modal show={show} onHide={handleClose}>
@@ -300,16 +315,16 @@ const University = () => {
         <Col md={8}>
           {/* <ButtonGroup aria-label="Export Buttons"> */}
           <CSVLink data={csvData} filename={"University-data.csv"} className="">
-            <Button variant="primary">CSV</Button>
+            <Button variant="secondary">CSV</Button>
           </CSVLink>
-          <Button variant="primary" onClick={handleExcel} className="ms-1">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button variant="primary" onClick={handlePdf} className="ms-1">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1">
             PDF
           </Button>
           <Button
-            variant="primary"
+            variant="secondary"
             onClick={() => window.print()}
             className="ms-1"
           >
@@ -332,7 +347,7 @@ const University = () => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className=" bg-secondary ">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {Button,Col,Container,Form,InputGroup,Row,Table,} from "react-bootstrap";
+import {Breadcrumb, Button,Col,Container,Form,InputGroup,Row,Table,} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -14,7 +14,7 @@ import { FaSearch } from "react-icons/fa";
 const WelcomeKit = () => {
   const [show, setShow] = useState(false);
 
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -220,13 +220,27 @@ const WelcomeKit = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button */}
+        {/* Add City Button
         <h1 className="fw-bold text-center text-primary ">Welcome Kit Item</h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Kit Item
           </Button>
-        </Col>
+        </Col> */}
+
+<Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>WelcomeKit</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add WelcomeKit
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
@@ -295,15 +309,15 @@ const WelcomeKit = () => {
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
           <CSVLink data={csvData} filename={"City-data.csv"}>
-            <Button className="">CSV</Button>
+            <Button variant="secondary" className="">CSV</Button>
           </CSVLink>
-          <Button onClick={handleExcel} className="ms-1 ">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1 ">
             Excel
           </Button>
-          <Button onClick={handlePdf} className="ms-1 ">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1 ">
             PDF
           </Button>
-          <Button onClick={() => window.print()} className="ms-1 ">
+          <Button variant="secondary" onClick={() => window.print()} className="ms-1 ">
             Print
           </Button>
           {/* </ButtonGroup> */}
@@ -323,7 +337,7 @@ const WelcomeKit = () => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className=" bg-secondary ">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>

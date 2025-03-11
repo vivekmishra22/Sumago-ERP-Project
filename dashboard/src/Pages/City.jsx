@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Button, Col, Container, Form, InputGroup, Row, Table,} from "react-bootstrap";
+import {Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table,} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -197,12 +197,20 @@ const City = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        <h1 className="fw-bold text-center text-primary">City</h1>
-        <Col md={12} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={() => setShow(true)}>
-            Add City
-          </Button>
-        </Col>
+        {/* <h1 className="fw-bold text-center text-primary">City</h1> */}
+        <Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>City</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add City
+            </Button>
+          </Col>
+        </Row>
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -266,15 +274,15 @@ const City = () => {
 
         <Col md={8}>
           <CSVLink data={csvData} filename={"City-data.csv"}>
-            <Button>CSV</Button>
+            <Button variant="secondary">CSV</Button>
           </CSVLink>
-          <Button onClick={handleExcel} className="ms-1">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button onClick={handlePdf} className="ms-1">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1">
             PDF
           </Button>
-          <Button onClick={() => window.print()} className="ms-1">
+          <Button variant="secondary" onClick={() => window.print()} className="ms-1">
             Print
           </Button>
         </Col>
@@ -290,7 +298,7 @@ const City = () => {
               onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
             />
-            <InputGroup.Text id="basic-addon2" className="bg-primary">
+            <InputGroup.Text id="basic-addon2" className="bg-secondary">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>

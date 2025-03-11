@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Button,
   Col,
   Container,
@@ -23,7 +24,7 @@ import { FaSearch } from "react-icons/fa";
 const OfficeCity = () => {
   const [show, setShow] = useState(false);
 
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -235,13 +236,27 @@ const OfficeCity = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button */}
+        {/* Add City Button
         <h1 className="fw-bold text-center text-primary ">Office City </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Office City
           </Button>
-        </Col>
+        </Col> */}
+
+        <Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>OfficeCity</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add OfficeCity
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
@@ -310,16 +325,16 @@ const OfficeCity = () => {
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
           <CSVLink data={csvData} filename={"City-data.csv"} className="">
-            <Button variant="primary">CSV</Button>
+            <Button variant="secondary">CSV</Button>
           </CSVLink>
-          <Button variant="primary" onClick={handleExcel} className="ms-1">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button variant="primary" onClick={handlePdf} className="ms-1">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1">
             PDF
           </Button>
           <Button
-            variant="primary"
+            variant="secondary"
             onClick={() => window.print()}
             className="ms-1"
           >
@@ -342,7 +357,7 @@ const OfficeCity = () => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className=" bg-secondary ">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>

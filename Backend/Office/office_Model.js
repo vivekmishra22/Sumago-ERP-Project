@@ -18,6 +18,10 @@ const data = mongoose.Schema({
         type: String,
         required: true,
     },
+    office_city_address: {
+        type: String,
+        required: true,
+    },
     status: {
         // type:active/inactive,
         type: String,

@@ -26,7 +26,7 @@ type:String,
 required:true,
 },
 course_fees:{
-type:String,
+type:Number,
 required:true,
 },
 status:{

@@ -10,7 +10,7 @@ import OfficeCity from "./OfficeCity";
 import Office from "./Office";
 import Education from "./Education";
 import GuestLecturer from "./GuestLecturer";
-import UpdateGuest from "./UpdateGuest";
+// import UpdateGuest from "./UpdateGuest";
 import City from "./City";
 import Courses from "./Courses";
 import Fee from "./Fee";
@@ -40,7 +40,7 @@ const Head = () => {
               <Route path="/office" element={<Office />} />
               <Route path ="/Courses" element={<Courses/>} />
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
-              <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />        
+              {/* <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />         */}
               <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />        
               <Route path="/fee" element={<Fee />} />        
               <Route path="/welcomekit" element={<WelcomeKit />} />  

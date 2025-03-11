@@ -4,8 +4,8 @@ const model = require('../University/university_Model')
 const add = async (req, res) => {
     const { university_name, status } = req.body;
     try {
-        const existingTechnology = await model.findOne({ university_name });
-        if (existingTechnology) {
+        const existingUniversity = await model.findOne({ university_name });
+        if (existingUniversity) {
             return res.status(400).json({ message: 'Technology name already exists' });
         }
         const data = new model({
@@ -65,6 +65,10 @@ const Delete = async (req, res) => {
 const Update = async (req, res) => {
     const { university_name, status } = req.body;
     try {
+        const existingUniversity = await model.findOne({ university_name });
+        if (existingUniversity) {
+            return res.status(400).json({ message: 'University name already exists' });
+        }
         const data = await model.updateOne(
             { _id: req.params._id },
             {

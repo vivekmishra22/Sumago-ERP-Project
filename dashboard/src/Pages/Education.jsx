@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import { Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -25,7 +25,7 @@ const Education = () => {
   //     setShow(false);
   //   }
   // };
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,7 +68,7 @@ const Education = () => {
   const handleClose = () => {
     setShow(false);
     setEducationName("");
-    setStatus("active");
+    setStatus("Active");
     setEditingId(null); // Reset editing state
   };
 
@@ -227,14 +227,27 @@ const Education = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-4 pt-5">
-      <h1 className="fw-bold text-center text-primary mb-3">Education</h1>
+      {/* <h1 className="fw-bold text-center text-primary mb-3">Education</h1>
 
-        {/* Add Education Button */}
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Education
           </Button>
-        </Col>
+        </Col> */}
+
+<Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>Education</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Education
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add Education Modal */}
         <Modal show={show} onHide={handleClose}>
@@ -267,18 +280,18 @@ const Education = () => {
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -303,16 +316,16 @@ const Education = () => {
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
           <CSVLink data={csvData} filename={"Education-data.csv"} className="">
-            <Button variant="primary">CSV</Button>
+            <Button variant="secondary">CSV</Button>
           </CSVLink>
-          <Button variant="primary" onClick={handleExcel} className="ms-1">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button variant="primary" onClick={handlePdf} className="ms-1">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1">
             PDF
           </Button>
           <Button
-            variant="primary"
+            variant="secondary"
             onClick={() => window.print()}
             className="ms-1"
           >
@@ -335,7 +348,7 @@ const Education = () => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className=" bg-secondary ">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>

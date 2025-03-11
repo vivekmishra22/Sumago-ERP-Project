@@ -1,49 +1,49 @@
 const model = require('./guestlecturer_Model')
 
 // post API
-const add = async(req, res) => {
-    const {  guest_lecturer_name,lecture_topic_description, guest_lecture_batch, guest_lecture_date, status} = req.body;
+const add = async (req, res) => {
+    const { guest_lecturer_name, lecture_topic_description, guest_lecture_batch, guest_lecture_date, status } = req.body;
     try {
         const data = new model({
-            guest_lecturer_name,lecture_topic_description, guest_lecture_batch, guest_lecture_date, status
+            guest_lecturer_name, lecture_topic_description, guest_lecture_batch, guest_lecture_date, status
         });
         const userdata = await data.save()
-        res.send({userdata});
+        res.send({ userdata });
     }
-    catch (error){
+    catch (error) {
         console.log(error);
-        return res.status(500).json({ message:'Internal Servar Error'})
+        return res.status(500).json({ message: 'Internal Servar Error' })
     }
 }
 
 // Get API
-const getdata = async(req, res) => {
-    try{
+const getdata = async (req, res) => {
+    try {
         const data = await model.find()
-        res.status(200).send({data});
-    }catch(err){
+        res.status(200).send({ data });
+    } catch (err) {
         console.log(err);
-        return res.status(500).json({message : "Internal Server Error"})
+        return res.status(500).json({ message: "Internal Server Error" })
     }
 }
 
 // getById API
 const getbyId = async (req, res) => {
     // const { _id } = req.params;
-    try{
-        const data = await model.findOne({_id: req.params})
-        res.status(200).send({data});
-    }catch (error) {
+    try {
+        const data = await model.findOne({ _id: req.params })
+        res.status(200).send({ data });
+    } catch (error) {
         console.log(error);
     }
 }
 
 // Delete API
 const Delete = async (req, res) => {
-    try{
-        const userdata = await model.deleteOne({_id: req.params._id})
-        res.status(200).send({userdata});
-    }catch (error) {
+    try {
+        const userdata = await model.deleteOne({ _id: req.params._id })
+        res.status(200).send({ userdata });
+    } catch (error) {
         // console.log(err);
         res.status(500).send(err);
     }
@@ -52,26 +52,35 @@ const Delete = async (req, res) => {
 
 //Update API
 const Update = async (req, res) => {
-    const {guest_lecturer_name,lecture_topic_description, guest_lecture_batch, guest_lecture_date, status} = req.body;
-    try{
+    const { guest_lecturer_name, lecture_topic_description, guest_lecture_batch, guest_lecture_date, status } = req.body;
+    try {
         const data = await model.updateOne(
-            {_id: req.params._id},
-            { $set: {
-                guest_lecturer_name,lecture_topic_description, guest_lecture_batch, guest_lecture_date, status
-            },}
-            
-        );
-        if (data) {
-            res.status(200).send({message: " Updated Successfully"});
-        }
-    
+            { _id: req.params._id },
+            {
+                $set: {
+                    guest_lecturer_name, lecture_topic_description, guest_lecture_batch, guest_lecture_date, status
+                },
+            }
 
-    }catch (error) {
+        );
+        //     if (data) {
+        //         res.status(200).send({ message: " Updated Successfully" });
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        //     res.status(500).send({ message: " Internal Server Error" })
+        // }
+        if (data.modifiedCount > 0) {
+            res.status(200).send({ success: true, message: "Data updated successfully" });
+        } else {
+            res.status(400).send({ success: false, message: "No changes made or guest lecturer not found" });
+        }
+    } catch (error) {
         console.log(error);
-        res.status(500).send({message: " Internal Server Error"})
+        res.status(500).send({ message: "Internal Server Error" });
     }
 };
 
 
-module.exports = {add, getdata, getbyId, Delete , Update}
+module.exports = { add, getdata, getbyId, Delete, Update }
 

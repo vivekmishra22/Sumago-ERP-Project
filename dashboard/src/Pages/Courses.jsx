@@ -1,10 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button,  Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+  Table,
+  Breadcrumb
+} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
@@ -15,27 +24,37 @@ import { FaSearch } from "react-icons/fa";
 const Courses = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
-        setCourse_Name("");
-        setCourse_Description("");
-        setCourse_Duration("");
-        setCourse_Fees("");
-        setStatus("active");
-        setShow(false);
+    setCourse_Name("");
+    setCourse_Description("");
+    setCourse_Duration("");
+    setCourse_Fees("");
+    setStatus("Active");
+    setShow(false);
   };
-  const handleShow = () => setShow(true);
+
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [course_name, setCourse_Name] = useState("");
   const [course_description, setCourse_Description] = useState("");
   const [course_duration, setCourse_Duration] = useState("");
   const [course_fees, setCourse_Fees] = useState("");
-  const [status, setStatus] = useState("active"); // Default status
+  const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
+  const [editingId, setEditingId] = useState(null); // Track which ID is being edited
+
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(" ") // Split the string into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join them back together
+  };
 
   // Fetch data on component mount
   useEffect(() => {
@@ -51,8 +70,21 @@ const Courses = () => {
       })
       .catch((err) => {
         console.log(err);
-        alert("Failed to fetch data. Please check your network connection or try again later.");
+        alert(
+          "Failed to fetch data. Please check your network connection or try again later."
+        );
       });
+  };
+
+  // Handle Edit Click
+  const handleEdit = (course) => {
+    setEditingId(course._id);
+    setCourse_Name(course.course_name);
+    setCourse_Description(course.course_description);
+    setCourse_Duration(course.course_duration);
+    setCourse_Fees(course.course_fees);
+    setStatus(course.status);
+    setShow(true);
   };
 
   // Handle form submission
@@ -61,47 +93,56 @@ const Courses = () => {
     setIsSubmitting(true);
 
     const newData = {
-      
-        course_name,
-        course_description,
-        course_duration,
-        course_fees,
-        status,
+      course_name: capitalizeFirstLetter(course_name),
+      course_description: capitalizeFirstLetter(course_description),
+      course_duration: capitalizeFirstLetter(course_duration),
+      course_fees,
+      status: capitalizeFirstLetter(status),
     };
 
-    axios
-      .post("http://localhost:8000/addCourse", newData)
-      .then((res) => {
-        console.log("Data Added:", res.data);
-        // alert("Data Added Successfully!");
-        setCourse_Name("");
-        setCourse_Description("");
-        setCourse_Duration("");
-        setCourse_Fees("");
-        setStatus("active");
-        handleClose();
-        showUsers(); // Refresh the table
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("Failed to add data. Please try again.");
-      })
-     
+    if (editingId) {
+      axios
+        .put(`http://localhost:8000/UpdateCourse/${editingId}`, newData)
+        .then((res) => {
+          // console.log(res.data);
+          alert("Data updated successfully");
+          showUsers();
+          handleClose();
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setIsSubmitting(false));
+    } else {
+      axios
+        .post("http://localhost:8000/addCourse", newData)
+        .then((res) => {
+          // console.log("Data Added:", res.data);
+          alert("Course Added Successfully!");
+          setCourse_Name("");
+          setCourse_Description("");
+          setCourse_Duration("");
+          setCourse_Fees("");
+          setStatus("Active");
+          handleClose();
+          showUsers(); // Refresh the table
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Failed to add data. Please try again.");
+        });
+    }
   };
 
   // Delete data
   const deletedata = (_id) => {
-      axios
-        .delete(`http://localhost:8000/deleteCourse/${_id}`)
-        .then((res) => {
-          console.log("User Deleted:", res.data);
-          alert("Are you sure you want to delete this record?");
-          showUsers();
-        })
-        .catch((err) => console.error(err));
+    axios
+      .delete(`http://localhost:8000/deleteCourse/${_id}`)
+      .then((res) => {
+        console.log("course Deleted:", res.data);
+        alert("Course deleted");
+        showUsers();
+      })
+      .catch((err) => console.error(err));
   };
-
-  
 
   // Export to Excel
   const handleExcel = () => {
@@ -109,9 +150,9 @@ const Courses = () => {
       userData.map((a, index) => ({
         "Sr.No": index + 1,
         "Course Name": a.course_name,
-        "Course Description":a.course_description,
-        "Course Duration":a.course_duration,
-        "Course Fees":a.course_fees,
+        "Course Description": a.course_description,
+        "Course Duration": a.course_duration,
+        "Course Fees": a.course_fees,
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -124,11 +165,21 @@ const Courses = () => {
     const doc = new jsPDF();
     doc.text("Courses Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Course Name","Course Description","Course Duration","Course Fees"]],
-      body: userData.map((a, index) => [index + 1, a.course_name,
+      head: [
+        [
+          "Sr.No",
+          "Course Name",
+          "Course Description",
+          "Course Duration",
+          "Course Fees",
+        ],
+      ],
+      body: userData.map((a, index) => [
+        index + 1,
+        a.course_name,
         a.course_description,
         a.course_duration,
-        a.course_fees, 
+        a.course_fees,
       ]),
       startY: 30,
     });
@@ -139,9 +190,9 @@ const Courses = () => {
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
     "Course Name": a.course_name,
-    "Course Description":a.course_description,
-    "Course Duration":a.course_duration,
-    "Course Fees":a.course_fees,
+    "Course Description": a.course_description,
+    "Course Duration": a.course_duration,
+    "Course Fees": a.course_fees,
   }));
 
   // Pagination logic
@@ -174,12 +225,15 @@ const Courses = () => {
 
   // Handle search
   const handleSearch = () => {
-    const filteredData = userData.filter((item) =>
-      item.course_name.toLowerCase().includes(searchTerm.toLowerCase())||
-      item.course_description.toLowerCase().includes(searchTerm.toLowerCase())||
-      item.course_duration.toLowerCase().includes(searchTerm.toLowerCase())||
-      item.course_fees.toLowerCase().includes(searchTerm.toLowerCase())||
-    item.status.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredData = userData.filter(
+      (item) =>
+        item.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.course_description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        item.course_duration.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.course_fees.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
   };
@@ -200,16 +254,20 @@ const Courses = () => {
 
   return (
     <Container className="d-flex justify-content-end">
-      <Row className="d-flex justify-content-center mt-4 pt-5">
-
-      <h1 className="text-center text-primary fw-bold mb-3">Course</h1>
-
-        {/* Add Technology Button */}
-        <Col md={12} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add Courses
-          </Button>
-        </Col>
+      <Row className="d-flex justify-content-center mt-2 pt-5">
+        <Row>
+                 <Col md={4}>
+                   <Breadcrumb>
+                     <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+                     <Breadcrumb.Item active>Courses</Breadcrumb.Item>
+                   </Breadcrumb>
+                 </Col>
+                 <Col md={8} className="d-flex justify-content-end mb-4">
+                   <Button variant="primary" onClick={() => setShow(true)}>
+                     Add Course
+                   </Button>
+                 </Col>
+               </Row>
 
         {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
@@ -232,7 +290,7 @@ const Courses = () => {
                 <Col md={12}>
                   <Form.Label>Course Description</Form.Label>
                   <Form.Control
-                    type="text"
+                    as="textarea"
                     placeholder="Enter course description"
                     value={course_description}
                     onChange={(e) => setCourse_Description(e.target.value)}
@@ -265,18 +323,18 @@ const Courses = () => {
                     type="radio"
                     label="Active"
                     name="status"
-                    value="active"
+                    value="Active"
                     className="ps-5"
-                    checked={status === "active"}
+                    checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                   <Form.Check
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="inactive"
+                    value="Inactive"
                     className="ps-5"
-                    checked={status === "inactive"}
+                    checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
                   />
                 </Col>
@@ -287,33 +345,47 @@ const Courses = () => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
+            <Button
+              variant="primary"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </Modal.Footer>
         </Modal>
 
         {/* Export Buttons */}
-        <Col md={6} className="">
-          {/* <ButtonGroup aria-label="Export Buttons"> */}
-            <CSVLink data={csvData} filename={"course-data.csv"} className="">
-              <Button variant="primary">CSV</Button>
-            </CSVLink>
-            <Button variant="primary" onClick={handleExcel} className="ms-1">
-              Excel
-            </Button>
-            <Button variant="primary" onClick={handlePdf} className="ms-1">
-              PDF
-            </Button>
-            <Button variant="primary" onClick={() => window.print()} className="ms-1">
-              Print
-            </Button>
-          {/* </ButtonGroup> */}
+        <Col md={8} className="">
+          <CSVLink data={csvData} filename={"course-data.csv"}>
+            <Button className=" btn-secondary">CSV</Button>
+          </CSVLink>
+          <Button
+            variant="primary"
+            onClick={handleExcel}
+            className="ms-1 btn-secondary"
+          >
+            Excel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handlePdf}
+            className="ms-1 btn-secondary"
+          >
+            PDF
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => window.print()}
+            className="ms-1 btn-secondary"
+          >
+            Print
+          </Button>
         </Col>
 
         {/* Search Input */}
-        <Col md={6} className="d-flex">
-        <InputGroup className="mb-3">
+        <Col md={4} className=" d-flex">
+          <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -325,53 +397,51 @@ const Courses = () => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className=" bg-secondary ">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>
         </Col>
 
-        <Col md={12} lg={12} lx={12} lxx={12} id="printable">
-        {/* <h1 className="text-center text-primary fw-bold">Course Data</h1> */}
-            <div style={{ overflowX: "auto" }}>
-              <Table striped bordered hover id="printable-table">
-                <thead>
-                  <tr>
-                    <th>Sr.No</th>
-                    <th>Course Name</th>
-                    <th>Course Description</th>
-                    <th>Course Duration</th>
-                    <th>Course Fees</th>
-                    
-                    <th className="no-print" >Status</th>
-                    <th className="text-center no-print">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentItems.map((a, index) => (
-                    <tr key={index}>
-                      <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                      <td>{a.course_name}</td>
-                      <td>{a.course_description}</td>
-                      <td>{a.course_duration}</td>
-                      <td>{a.course_fees}</td>
-                      <td className="no-print">{a.status}</td>
-                      <td className="no-print d-flex justify-content-evenly">
-                      <Button
-                        variant="warning"
-                        onClick={() => navigate(`/Head/UpdateCourse/${a._id}`)}
-                      >
+        <Col md={12} lg={12} lx={12} lxx={12}>
+          <div style={{ overflowX: "auto" }}>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Sr.No</th>
+                  <th>Course Name</th>
+                  <th>Course Description</th>
+                  <th>Course Duration</th>
+                  <th>Course Fees</th>
+                  <th>Status</th>
+                  <th className="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentItems.map((a, index) => (
+                  <tr key={index}>
+                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                    <td>{a.course_name}</td>
+                    <td>{a.course_description}</td>
+                    <td>{a.course_duration}</td>
+                    <td>{a.course_fees}</td>
+                    <td>{a.status}</td>
+                    <td className="d-flex justify-content-evenly">
+                      <Button variant="warning" onClick={() => handleEdit(a)}>
                         <GrEdit />
                       </Button>
-                        <Button variant="danger" onClick={() => deletedata(a._id)}>
-                          <AiFillDelete />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
+                      <Button
+                        variant="danger"
+                        onClick={() => deletedata(a._id)}
+                      >
+                        <AiFillDelete />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </Col>
 
         {/* Pagination */}

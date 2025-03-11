@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Button,
   Col,
   Container,
@@ -21,7 +22,7 @@ import { FaSearch } from "react-icons/fa";
 
 const College = () => {
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,7 +45,7 @@ const College = () => {
       .split(' ') // Split the string into words
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
       .join(' '); // Join them back together
-  };  
+  };
 
   // Fetch Data from API
   useEffect(() => {
@@ -112,7 +113,7 @@ const College = () => {
       college_name: capitalizeFirstLetter(college_name),
       university_name: capitalizeFirstLetter(university_name),
       city_name: capitalizeFirstLetter(city_name),
-      status: capitalizeFirstLetter(status) 
+      status: capitalizeFirstLetter(status)
     };
 
     if (editingId) {
@@ -259,7 +260,7 @@ const College = () => {
   };
 
   // Handle Enter key press
-  
+
 
   // Reset search when the input is cleared
   useEffect(() => {
@@ -272,12 +273,26 @@ const College = () => {
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
         {/* Add City Button */}
-        <h1 className="fw-bold text-center text-primary ">College </h1>
+        {/* <h1 className="fw-bold text-center text-primary ">College </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add College
           </Button>
-        </Col>
+        </Col> */}
+
+        <Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>College</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add College
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add College Modal */}
         <Modal show={show} onHide={handleClose}>
@@ -308,7 +323,7 @@ const College = () => {
                     ))}
                   </Form.Select>
                 </Col>
-               
+
 
                 <Col md={12} className="mt-2">
                   <Form.Label>College Name</Form.Label>
@@ -320,13 +335,13 @@ const College = () => {
                     required
                   />
                 </Col>
-                 {/* Display Error Message */}
-                 {errorMessage && (
+                {/* Display Error Message */}
+                {errorMessage && (
                   <Col md={12} className="mt-2">
                     <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
-                
+
                 <Col md={12} className="mt-2">
                   <Form.Label className="mt-3">
                     <b>Select city</b>
@@ -386,21 +401,21 @@ const College = () => {
         {/* Export Buttons */}
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink
+          <CSVLink variant="secondary"
             data={csvData}
             filename={"College-data.csv"}
             className="ms-1"
           >
-            <Button variant="primary">CSV</Button>
+            <Button variant="secondary">CSV</Button>
           </CSVLink>
-          <Button variant="primary" onClick={handleExcel} className="ms-1">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button variant="primary" onClick={handlePdf} className="ms-1">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1">
             PDF
           </Button>
           <Button
-            variant="primary"
+            variant="secondary"
             onClick={() => window.print()}
             className="ms-1"
           >
@@ -422,7 +437,7 @@ const College = () => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className=" bg-secondary ">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>

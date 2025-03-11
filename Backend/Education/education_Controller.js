@@ -4,8 +4,8 @@ const model = require('../Education/education_Model')
 const add = async (req, res) => {
     const { education_name, status } = req.body;
     try {
-        const existingTechnology = await model.findOne({ education_name });
-        if (existingTechnology) {
+        const existingEducation = await model.findOne({ education_name });
+        if (existingEducation) {
             return res.status(400).json({ message: 'Education name already exists' });
         }
         const data = new model({
@@ -61,6 +61,10 @@ const Delete = async (req, res) => {
 const Update = async (req, res) => {
     const { education_name, status } = req.body;
     try {
+        const existingEducation = await model.findOne({ education_name });
+        if (existingEducation) {
+            return res.status(400).json({ message: 'Education name already exists' });
+        }
         const data = await model.updateOne(
             { _id: req.params._id },
             {
@@ -76,10 +80,18 @@ const Update = async (req, res) => {
             res.status(300).send({ message: "user update not found" });
         }
 
-    } catch (error) {
+    } 
+    catch (error) {
+        if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
+            return res.status(400).json({ message: 'Education already exists' });
+        }
         console.log(error);
-        res.status(500).send({ message: " Internal server error" })
+        return res.status(500).json({ message: 'internal server error' })
     }
+    // catch (error) {
+    //     console.log(error);
+    //     res.status(500).send({ message: " Internal server error" })
+    // }
 };
 
 

@@ -75,8 +75,12 @@ const deleteTechnology = async (req, res) => {
 
 //Update API
 const UpdateTechnology = async (req, res) => {
-    const { technologyid, name, status } = req.body;
+    const { name, status } = req.body;
     try {
+        const existingTechnology = await model.findOne({ name });
+        if (existingTechnology) {
+            return res.status(400).json({ message: 'Technology name already exists' });
+        }
         const data = await model.updateOne(
             { _id: req.params._id },
             {
@@ -92,10 +96,19 @@ const UpdateTechnology = async (req, res) => {
             res.status(300).send({ message: "user update not found" });
         }
 
-    } catch (error) {
+    } 
+    catch (error) {
+        if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
+            return res.status(400).json({ message: 'Technology already exists' });
+        }
+
         console.log(error);
-        res.status(500).send({ message: " Internal server error" })
+        return res.status(500).json({ message: 'internal servar error' })
     }
+    // catch (error) {
+    //     console.log(error);
+    //     res.status(500).send({ message: " Internal server error" })
+    // }
 };
 
 

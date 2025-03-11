@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+  Breadcrumb,
   Button,
   Col,
   Container,
@@ -21,7 +22,7 @@ import { FaSearch } from "react-icons/fa";
 
 const Office = () => {
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +30,7 @@ const Office = () => {
 
   const [office_name, setOfficeName] = useState("");
   const [office_city_name, setOfficeCityName] = useState("");
+  const [office_city_address, setOfficeCityAddress] = useState("");
   const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
@@ -80,6 +82,7 @@ const Office = () => {
     setShow(false);
     setOfficeName("");
     setOfficeCityName("");
+    setOfficeCityAddress("");
     setStatus("Active");
     setEditingId(null); // Reset editing state
   };
@@ -92,6 +95,7 @@ const Office = () => {
     const newData = {
       office_name: capitalizeFirstLetter(office_name),
       office_city_name: capitalizeFirstLetter(office_city_name),
+      office_city_address: capitalizeFirstLetter(office_city_address),
       status: capitalizeFirstLetter(status),
     };
 
@@ -111,7 +115,7 @@ const Office = () => {
       axios
         .post("http://localhost:8000/addOffice", newData)
         .then(() => {
-          alert("Technology Added Successfully!");
+          alert("Office Added Successfully!");
           showUsers();
           handleClose();
         })
@@ -126,7 +130,7 @@ const Office = () => {
       axios
         .delete(`http://localhost:8000/deleteOffice/${_id}`)
         .then(() => {
-          alert("Technology Deleted");
+          alert("Office Deleted");
           showUsers();
         })
         .catch((err) => console.error(err));
@@ -137,6 +141,7 @@ const Office = () => {
     setEditingId(item._id);
     setOfficeName(item.office_name);
     setOfficeCityName(item.office_city_name);
+    setOfficeCityAddress(item.office_city_address);
     setStatus(item.status);
     setShow(true);
   };
@@ -148,6 +153,7 @@ const Office = () => {
         "Sr.No": index + 1,
         "Office Name": a.office_name,
         "City Name": a.office_city_name,
+        "City Address": a.office_city_address,
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -165,6 +171,7 @@ const Office = () => {
         index + 1,
         a.office_name,
         a.office_city_name,
+        a.office_city_address
       ]),
       startY: 30,
     });
@@ -176,6 +183,7 @@ const Office = () => {
     "Sr.No": index + 1,
     "Office Name": a.office_name,
     "City Name": a.office_city_name,
+    "Office Address": a.office_city_address
   }));
 
   // Pagination logic
@@ -210,11 +218,13 @@ const Office = () => {
     const filteredData = userData.filter((item) => {
       const OfficeName = item.office_name?.toLowerCase() || "";
       const cityName = item.office_city_name?.toLowerCase() || "";
+      const office_city_address = item.office_city_address?.toLowerCase() || "";
       const status = item.status?.toLowerCase() || "";
 
       return (
         OfficeName.includes(searchTerm.toLowerCase()) ||
         cityName.includes(searchTerm.toLowerCase()) ||
+        office_city_address.includes(searchTerm.toLowerCase()) ||
         status.includes(searchTerm.toLowerCase())
       );
     });
@@ -239,13 +249,27 @@ const Office = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button */}
+        {/* Add City Button
         <h1 className="fw-bold text-center text-primary ">Office </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add Office
           </Button>
-        </Col>
+        </Col> */}
+
+        <Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>Office</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Office
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add Office Modal */}
         <Modal show={show} onHide={handleClose}>
@@ -259,7 +283,7 @@ const Office = () => {
                   <Form.Label>Office Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter University Name"
+                    placeholder="Enter Office Name"
                     value={office_name}
                     onChange={(e) => setOfficeName(e.target.value)}
                     required
@@ -282,6 +306,17 @@ const Office = () => {
                       </option>
                     ))}
                   </Form.Select>
+                </Col>
+
+                <Col md={12} className="mt-3">
+                  <Form.Label>Office Address</Form.Label>
+                  <Form.Control
+                    as="textarea" ria-label="With textarea" rows={3}
+                    placeholder="Enter office address"
+                    value={office_city_address}
+                    onChange={(e) => setOfficeCityAddress(e.target.value)}
+                    required
+                  />
                 </Col>
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
@@ -325,16 +360,16 @@ const Office = () => {
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
           <CSVLink data={csvData} filename={"Office-data.csv"} className="ms-1">
-            <Button variant="primary">CSV</Button>
+            <Button variant="secondary">CSV</Button>
           </CSVLink>
-          <Button variant="primary" onClick={handleExcel} className="ms-1">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1">
             Excel
           </Button>
-          <Button variant="primary" onClick={handlePdf} className="ms-1">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1">
             PDF
           </Button>
           <Button
-            variant="primary"
+            variant="secondary"
             onClick={() => window.print()}
             className="ms-1"
           >
@@ -357,7 +392,7 @@ const Office = () => {
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-primary ">
+            <InputGroup.Text id="basic-addon2" className="bg-secondary">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>
@@ -372,6 +407,7 @@ const Office = () => {
                   <th>Sr.No</th>
                   <th>Office Name</th>
                   <th>City Name</th>
+                  <th>Address</th>
                   <th className="no-print">Status</th>
                   <th className="no-print text-center">Action</th>
                 </tr>
@@ -383,6 +419,7 @@ const Office = () => {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{product.office_name}</td>
                       <td>{product.office_city_name} </td>
+                      <td>{product.office_city_address} </td>
                       <td className="no-print">{product.status}</td>
                       <td className="no-print d-flex justify-content-evenly">
                         <Button
