@@ -271,7 +271,10 @@ const Fee = () => {
                 {/* Add Fee Modal */}
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Add Fee</Modal.Title>
+                        <Modal.Title>
+                            {editingId ? "Update Fee" : "Add Fee"} {/* Conditional title */}
+                        </Modal.Title>
+                        {/* <Modal.Title>Add Fee</Modal.Title> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>

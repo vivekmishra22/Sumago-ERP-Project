@@ -261,7 +261,10 @@ const OfficeCity = () => {
         {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Office City</Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update City" : "Add City"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Office City</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

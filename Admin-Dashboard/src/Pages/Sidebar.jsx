@@ -9,7 +9,7 @@ import { IoBagCheckSharp } from "react-icons/io5";
 import { GrDocumentStore } from "react-icons/gr";
 import { LiaUniversitySolid } from "react-icons/lia";
 import { HiMiniBuildingOffice2 } from "react-icons/hi2";
-import { FaMountainCity } from "react-icons/fa6";
+import { FaMountainCity, FaUserGroup } from "react-icons/fa6";
 import { TbBulbFilled } from "react-icons/tb";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { GiTeacher } from "react-icons/gi";
@@ -76,6 +76,13 @@ const Sidebar = () => {
                                     style={{ display: isMastersOpen ? "block" : "none" }}
                                 >
                                     <Link
+                                        to="/Head/users"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                    >
+                                        <FaUserGroup size={23} className="me-3" /> 
+                                        <span>Users</span>
+                                    </Link>
+                                    <Link
                                         to="/Head/university"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
@@ -138,13 +145,13 @@ const Sidebar = () => {
                                         <IoBagCheckSharp size={23} className="me-3" /> 
                                         <span>Welcome Kit</span>
                                     </Link>
-                                    <Link
-                                        to="/Head/fee"
+                                    {/* <Link
+                                        to="/Head/d"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
                                         <RiMoneyRupeeCircleFill size={23} className="me-3" /> 
-                                        <span>Fees</span>
-                                    </Link>
+                                        <span>Demo</span>
+                                    </Link> */}
                                     <Link
                                         to="/Head/GuestLecturer"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"

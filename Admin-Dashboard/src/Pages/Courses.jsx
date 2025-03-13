@@ -256,23 +256,26 @@ const Courses = () => {
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
         <Row>
-                 <Col md={4}>
-                   <Breadcrumb>
-                     <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
-                     <Breadcrumb.Item active>Courses</Breadcrumb.Item>
-                   </Breadcrumb>
-                 </Col>
-                 <Col md={8} className="d-flex justify-content-end mb-4">
-                   <Button variant="primary" onClick={() => setShow(true)}>
-                     Add Course
-                   </Button>
-                 </Col>
-               </Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>Courses</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Course
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Course</Modal.Title>
+            <Modal.Title>
+              {editingId ? "Update Course" : "Add Course"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Course</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

@@ -16,6 +16,10 @@ const course_route =require('./Courses/course_Route');
 const guest_lecturer_route = require('./Guest_lecturer/guestlecturer_Route');  
 const fee_route = require('./Fees/fee_Route');  
 const welcomekit = require('./Welcomekit/welcomekit_Route');  
+const bde = require('./BDE/bde_Route');  
+const hr = require('./HR/hr_Route');  
+const trainer = require('./Trainer/trainer_Route');  
+const user = require('./Users/user_Route');  
 
 app.use(express.json())
 app.use(cors());
@@ -31,6 +35,10 @@ app.use('/',course_route);
 app.use('/',guest_lecturer_route);
 app.use('/',fee_route);
 app.use('/',welcomekit);
+app.use('/',bde);
+app.use('/',hr);
+app.use('/',trainer);
+app.use('/',user);
 
 app.get(('/'),(req,res) =>
     res.send("database canected ERP system"));

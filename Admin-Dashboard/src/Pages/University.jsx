@@ -253,7 +253,10 @@ const University = () => {
         {/* Add University Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add University</Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update University" : "Add University"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add University</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

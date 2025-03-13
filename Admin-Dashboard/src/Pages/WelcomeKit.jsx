@@ -245,7 +245,10 @@ const WelcomeKit = () => {
         {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Kit Item</Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update Kit Item" : "Add Kit Item"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Kit Item</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

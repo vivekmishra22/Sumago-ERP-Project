@@ -1,15 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Button,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-  Table,
-} from "react-bootstrap";
+import { Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -40,9 +31,9 @@ const Office = () => {
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
     return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
+      .split(" ") // Split the string into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join them back together
   };
 
   // Fetch Data from API
@@ -171,7 +162,7 @@ const Office = () => {
         index + 1,
         a.office_name,
         a.office_city_name,
-        a.office_city_address
+        a.office_city_address,
       ]),
       startY: 30,
     });
@@ -183,7 +174,7 @@ const Office = () => {
     "Sr.No": index + 1,
     "Office Name": a.office_name,
     "City Name": a.office_city_name,
-    "Office Address": a.office_city_address
+    "Office Address": a.office_city_address,
   }));
 
   // Pagination logic
@@ -274,7 +265,10 @@ const Office = () => {
         {/* Add Office Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Office</Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update Office" : "Add Office"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Office</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
@@ -311,7 +305,9 @@ const Office = () => {
                 <Col md={12} className="mt-3">
                   <Form.Label>Office Address</Form.Label>
                   <Form.Control
-                    as="textarea" ria-label="With textarea" rows={3}
+                    as="textarea"
+                    ria-label="With textarea"
+                    rows={3}
                     placeholder="Enter office address"
                     value={office_city_address}
                     onChange={(e) => setOfficeCityAddress(e.target.value)}
@@ -399,7 +395,7 @@ const Office = () => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} >
+        <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>

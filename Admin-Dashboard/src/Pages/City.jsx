@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table,} from "react-bootstrap";
+import { Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table, } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -214,7 +214,9 @@ const City = () => {
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add City</Modal.Title>
+            <Modal.Title>
+              {editingId ? "Update City" : "Add City"} {/* Conditional title */}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
@@ -272,6 +274,66 @@ const City = () => {
           </Modal.Footer>
         </Modal>
 
+        {/* <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add City</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={handleSubmit}>
+              <Row>
+                <Col md={12}>
+                  <Form.Label>City Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter City Name"
+                    value={city_name}
+                    onChange={(e) => setCityName(e.target.value)}
+                    required
+                  />
+                </Col>
+                {errorMessage && (
+                  <Col md={12} className="mt-2">
+                    <div style={{ color: "red" }}>{errorMessage}</div>
+                  </Col>
+                )}
+                <Col md={12} className="d-flex mt-3">
+                  <Form.Label>Status</Form.Label>
+                  <Form.Check
+                    type="radio"
+                    label="Active"
+                    name="status"
+                    value="Active"
+                    className="ps-5"
+                    checked={status === "Active"}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
+                  <Form.Check
+                    type="radio"
+                    label="Inactive"
+                    name="status"
+                    value="Inactive"
+                    className="ps-5"
+                    checked={status === "Inactive"}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
+                </Col>
+              </Row>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Saving..." : "Save Changes"}
+            </Button>
+          </Modal.Footer>
+        </Modal> */}
+
         <Col md={8}>
           <CSVLink data={csvData} filename={"City-data.csv"}>
             <Button variant="secondary">CSV</Button>
@@ -304,8 +366,8 @@ const City = () => {
           </InputGroup>
         </Col>
 
-        
-        <Col md={12} lg={12} xl={12} xxl={12}  id="printable">
+
+        <Col md={12} lg={12} xl={12} xxl={12} id="printable">
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>

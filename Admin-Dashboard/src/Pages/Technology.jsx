@@ -269,7 +269,10 @@ const Technology = () => {
         {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Technology</Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update Technology" : "Add Technology"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Technology</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

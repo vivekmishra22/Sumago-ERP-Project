@@ -13,10 +13,11 @@ import GuestLecturer from "./GuestLecturer";
 // import UpdateGuest from "./UpdateGuest";
 import City from "./City";
 import Courses from "./Courses";
-import Fee from "./Fee";
+// import Fee from "./Fee";
 import WelcomeKit from "./WelcomeKit";
 import Dashboard from "./Dashboard";
 import UpdateCourse from "./UpdateCourse";
+import Users from "./Users";
 
 const Head = () => {
   return (
@@ -42,8 +43,9 @@ const Head = () => {
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
               {/* <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />         */}
               <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />        
-              <Route path="/fee" element={<Fee />} />        
+              {/* <Route path="/fee" element={<Fee />} />         */}
               <Route path="/welcomekit" element={<WelcomeKit />} />  
+              <Route path="/users" element={<Users />} />  
               <Route path="/dashboard" element={<Dashboard />}></Route>      
             </Routes>
           </Container>
