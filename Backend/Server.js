@@ -20,6 +20,7 @@ const bde = require('./BDE/bde_Route');
 const hr = require('./HR/hr_Route');  
 const trainer = require('./Trainer/trainer_Route');  
 const user = require('./Users/user_Route');  
+const feedback_route = require('./Feedback/feedback_Route');
 
 app.use(express.json())
 app.use(cors());
@@ -39,9 +40,10 @@ app.use('/',bde);
 app.use('/',hr);
 app.use('/',trainer);
 app.use('/',user);
+app.use('/', feedback_route);
 
 app.get(('/'),(req,res) =>
-    res.send("database canected ERP system"));
+    res.send("Database connected to ERP System"));
 
 app.listen(8000, () => {
     console.log(`app listening on port 8000`)

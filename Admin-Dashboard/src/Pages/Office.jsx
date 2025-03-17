@@ -78,7 +78,7 @@ const Office = () => {
     setEditingId(null); // Reset editing state
   };
 
-  // Add or Update Technology
+  // Add or Update Office
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -91,18 +91,18 @@ const Office = () => {
     };
 
     if (editingId) {
-      // Update existing technology
+      // Update existing Office
       axios
         .put(`http://localhost:8000/UpdateOffice/${editingId}`, newData)
         .then(() => {
-          alert("Technology Updated Successfully!");
+          alert("Office Updated Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => console.error(err))
         .finally(() => setIsSubmitting(false));
     } else {
-      // Add new technology
+      // Add new Office
       axios
         .post("http://localhost:8000/addOffice", newData)
         .then(() => {

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Button,Col,Container, Form,InputGroup,Row,Table,Breadcrumb} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
@@ -45,7 +44,7 @@ const Users = () => {
       .get("http://localhost:8000/getusers",
         {
           headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
+              Authorization:` Bearer ${localStorage.getItem('token')}`
           }
       }
 
@@ -111,7 +110,7 @@ const Users = () => {
 
           {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+                Authorization:` Bearer ${localStorage.getItem('token')}`
             }
         }
         )
@@ -245,7 +244,7 @@ const Users = () => {
         <Row>
           <Col md={4}>
             <Breadcrumb>
-              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
               <Breadcrumb.Item active>Users</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
