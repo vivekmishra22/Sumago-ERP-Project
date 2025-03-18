@@ -1,21 +1,17 @@
-const {regi_user,loginuser,getuser,getbyId,Delete,Update} = require('../Users/user_Controller');
-
 const express = require('express');
-
-const route = express.Router();
+const router = express.Router();
+const { regi_user, loginuser, getuser, getbyId, Delete, Update, change } = require('../Users/user_Controller');
 const auth = require('../Middleware/Authentication');
-// const {photoUpload} = require('./fileUpload')
 
-// route.post('/add',addexpense)
+// Public routes
+router.post('/add', regi_user);
+router.post('/login', loginuser);
 
-route.post('/add',regi_user);
-route.post('/login', loginuser);
+// Protected routes
+router.post('/change_password', auth, change);
+router.get('/getusers', auth, getuser);
+router.get('/getById/:id', auth, getbyId);
+router.put('/update/:id', auth, Update);
+router.delete('/delete/:id', auth, Delete);
 
-route.get('/getusers',auth,getuser);
-
-route.get('/getById/:_id',getbyId)
- route.put('/update/:_id',auth,Update)
-
-route.delete('/delete/:_id',auth,Delete)
-
-module.exports = route;
+module.exports = router;

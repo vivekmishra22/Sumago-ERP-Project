@@ -10,7 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
-import Feedback from "react-bootstrap/esm/Feedback";
+// import Feedback from "react-bootstrap/esm/Feedback";
 
 const Feedback = () => {
     const [show, setShow] = useState(false);
@@ -24,6 +24,16 @@ const Feedback = () => {
     const [course_name, setCourseName] = useState("");
     const [trainer_name, setTrainerName] = useState("");
     const [current_date, setCurrentDate] = useState("");
+    const [training_rating, setTrainingRating] = useState("");
+    const [trainer_explanation, setTrainerExplanation] = useState("");
+    const [materials_helpful, setMaterialsHelpful] = useState("");
+    const [practical_exercises, setPracticalExercises] = useState("");
+    const [confidence_using_skills, setConfidenceUsingSkills] = useState("");
+    const [learning_expectations_met, setLearningExpectationsMet] = useState("");
+    const [liked_most, setLikedMost] = useState("");
+    const [improvements, setImprovements] = useState("");
+    const [other_comments, setOtherComments] = useState("");
+
     //   const [trainer_name, setTrainerName] = useState("");
     //   const [trainer_name, setTrainerName] = useState("");
     //   const [trainer_name, setTrainerName] = useState("");
@@ -41,28 +51,36 @@ const Feedback = () => {
             .join(" "); // Join them back together
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
+        const month = String(date.getMonth() + 1); // Months are zero-based
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
+
     // Fetch Data from API
     useEffect(() => {
         showUsers();
     }, []);
 
-    useEffect(() => {
-        axios
-            .get("http://localhost:8000/getdataOfficeCity")
-            .then((res) => {
-                const udata = res.data.data.filter((item) => item.status === "Active");
-                setCategories(udata); // Assuming the response contains a `data` array
-                console.log("Categories fetched:", res.data.data);
-            })
-            .catch((err) => {
-                console.error("Error fetching categories:", err);
-            });
-    }, []);
+    // useEffect(() => {
+    //     axios
+    //         .get("http://localhost:8000/getdataFeedbackCity")
+    //         .then((res) => {
+    //             const udata = res.data.data.filter((item) => item.status === "Active");
+    //             setCategories(udata); // Assuming the response contains a `data` array
+    //             console.log("Categories fetched:", res.data.data);
+    //         })
+    //         .catch((err) => {
+    //             console.error("Error fetching categories:", err);
+    //         });
+    // }, []);
 
     const showUsers = () => {
         // setLoading(true);
         axios
-            .get("http://localhost:8000/getdataOffice")
+            .get("http://localhost:8000/getFeedback")
             .then((res) => {
                 setUserData(res.data.data);
                 // setLoading(false);
@@ -80,40 +98,62 @@ const Feedback = () => {
         setCourseName("");
         setTrainerName("");
         setCurrentDate("");
+        setTrainingRating("");
+        setTrainerExplanation("");
+        setMaterialsHelpful("");
+        setPracticalExercises("");
+        setConfidenceUsingSkills("");
+        setLearningExpectationsMet("");
+        setLikedMost("");
+        setImprovements("");
+        setOtherComments("");
         // setStatus("Active");
         setEditingId(null); // Reset editing state
     };
 
-    // Add or Update Office
+    // Add or Update Feedback
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+
+        // Convert the date back to an ISO string format before submitting
+        const updatedDate = new Date(current_date).toISOString(); // Convert date to ISO string
 
         const newData = {
             user_name: capitalizeFirstLetter(user_name),
             course_name: capitalizeFirstLetter(course_name),
             trainer_name: capitalizeFirstLetter(trainer_name),
-            current_date: capitalizeFirstLetter(current_date),
+            // current_date: capitalizeFirstLetter(current_date),
+            current_date: updatedDate,
+            training_rating: capitalizeFirstLetter(training_rating),
+            trainer_explanation: capitalizeFirstLetter(trainer_explanation),
+            materials_helpful: capitalizeFirstLetter(materials_helpful),
+            practical_exercises: capitalizeFirstLetter(practical_exercises),
+            confidence_using_skills: capitalizeFirstLetter(confidence_using_skills),
+            learning_expectations_met: capitalizeFirstLetter(learning_expectations_met),
+            liked_most: capitalizeFirstLetter(liked_most),
+            improvements: capitalizeFirstLetter(improvements),
+            other_comments: capitalizeFirstLetter(other_comments),
             // status: capitalizeFirstLetter(status),
         };
 
         if (editingId) {
-            // Update existing Office
+            // Update existing Feedback
             axios
-                .put(`http://localhost:8000/UpdateOffice/${editingId}`, newData)
+                .put(`http://localhost:8000/updateFeedback/${editingId}`, newData)
                 .then(() => {
-                    alert("Office Updated Successfully!");
+                    alert("Feedback Updated Successfully!");
                     showUsers();
                     handleClose();
                 })
                 .catch((err) => console.error(err))
                 .finally(() => setIsSubmitting(false));
         } else {
-            // Add new Office
+            // Add new Feedback
             axios
-                .post("http://localhost:8000/addOffice", newData)
+                .post("http://localhost:8000/addFeedback", newData)
                 .then(() => {
-                    alert("Office Added Successfully!");
+                    alert("Feedback Added Successfully!");
                     showUsers();
                     handleClose();
                 })
@@ -126,9 +166,9 @@ const Feedback = () => {
     const deletedata = (_id) => {
         if (window.confirm("Are you sure you want to delete this record?")) {
             axios
-                .delete(`http://localhost:8000/deleteOffice/${_id}`)
+                .delete(`http://localhost:8000/deleteFeedback/${_id}`)
                 .then(() => {
-                    alert("Office Deleted");
+                    alert("Feedback Deleted");
                     showUsers();
                 })
                 .catch((err) => console.error(err));
@@ -140,7 +180,21 @@ const Feedback = () => {
         setUserName(item.user_name);
         setCourseName(item.course_name);
         setTrainerName(item.trainer_name);
-        setCurrentDate(item.current_date);
+        // setCurrentDate(item.current_date);
+
+        const date = new Date(item.current_date);
+        const formattedDate = date.toISOString().split('T')[0];
+        setCurrentDate(formattedDate);
+
+        setTrainingRating(item.training_rating);
+        setTrainerExplanation(item.trainer_explanation);
+        setMaterialsHelpful(item.materials_helpful);
+        setPracticalExercises(item.practical_exercises);
+        setConfidenceUsingSkills(item.confidence_using_skills);
+        setLearningExpectationsMet(item.learning_expectations_met);
+        setLikedMost(item.liked_most);
+        setImprovements(item.improvements);
+        setOtherComments(item.other_comments);
         // setStatus(item.status);
         setShow(true);
     };
@@ -153,30 +207,48 @@ const Feedback = () => {
                 "User Name": a.user_name,
                 "Course Name": a.course_name,
                 "Trainer Name": a.trainer_name,
-                "Current Date": a.current_date
+                "Current Date": a.current_date,
+                "Training Rating": a.training_rating,
+                "Trainer Explaination": a.trainer_explanation,
+                "Materials Helpful": a.materials_helpful,
+                "Practical Exercises": a.practical_exercises,
+                "Confidence using Skills": a.confidence_using_skills,
+                "Learning Expections Met": a.learning_expectations_met,
+                "Liked Most": a.liked_most,
+                "Improvements": a.improvements,
+                "Other Comments": a.other_comments
             }))
         );
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Office Data");
-        XLSX.writeFile(workbook, "Office-data.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Feedback Data");
+        XLSX.writeFile(workbook, "Feedback-data.xlsx");
     };
 
     // Export to PDF
     const handlePdf = () => {
         const doc = new jsPDF();
-        doc.text("Office Data", 14, 22);
+        doc.text("Feedback Data", 14, 22);
         doc.autoTable({
-            head: [["Sr.No", "Office Name", "City Name"]],
+            head: [["Sr.No", "Feedback Name", "City Name"]],
             body: userData.map((a, index) => [
                 index + 1,
                 a.user_name,
                 a.course_name,
                 a.trainer_name,
-                a.current_date
+                a.current_date,
+                a.training_rating,
+                a.trainer_explanation,
+                a.materials_helpful,
+                a.practical_exercises,
+                a.confidence_using_skills,
+                a.learning_expectations_met,
+                a.liked_most,
+                a.improvements,
+                a.other_comments
             ]),
             startY: 30,
         });
-        doc.save("Office-data.pdf");
+        doc.save("Feedback-data.pdf");
     };
 
     // CSV data for export
@@ -185,7 +257,16 @@ const Feedback = () => {
         "User Name": a.user_name,
         "Course Name": a.course_name,
         "Trainer Name": a.trainer_name,
-        "Current Date": a.current_date
+        "Current Date": a.current_date,
+        "Training Rating": a.training_rating,
+        "Trainer Explaination": a.trainer_explanation,
+        "Materials Helpful": a.materials_helpful,
+        "Practical Exercises": a.practical_exercises,
+        "Confidence using Skills": a.confidence_using_skills,
+        "Learning Expections Met": a.learning_expectations_met,
+        "Liked Most": a.liked_most,
+        "Improvements": a.improvements,
+        "Other Comments": a.other_comments
     }));
 
     // Pagination logic
@@ -218,16 +299,36 @@ const Feedback = () => {
 
     const handleSearch = () => {
         const filteredData = userData.filter((item) => {
-            const OfficeName = item.user_name?.toLowerCase() || "";
-            const cityName = item.course_name?.toLowerCase() || "";
+            const user_name = item.user_name?.toLowerCase() || "";
+            const course_name = item.course_name?.toLowerCase() || "";
             const trainer_name = item.trainer_name?.toLowerCase() || "";
-            const status = item.status?.toLowerCase() || "";
+            const current_date = item.current_date?.toLowerCase() || "";
+            const training_rating = item.training_rating?.toLowerCase() || "";
+            const trainer_explanation = item.trainer_explanation?.toLowerCase() || "";
+            const materials_helpful = item.materials_helpful?.toLowerCase() || "";
+            const practical_exercises = item.practical_exercises?.toLowerCase() || "";
+            const confidence_using_skills = item.confidence_using_skills?.toLowerCase() || "";
+            const learning_expectations_met = item.learning_expectations_met?.toLowerCase() || "";
+            const liked_most = item.liked_most?.toLowerCase() || "";
+            const improvements = item.improvements?.toLowerCase() || "";
+            const other_comments = item.other_comments?.toLowerCase() || "";
+            // const status = item.status?.toLowerCase() || "";
 
             return (
-                OfficeName.includes(searchTerm.toLowerCase()) ||
-                cityName.includes(searchTerm.toLowerCase()) ||
+                user_name.includes(searchTerm.toLowerCase()) ||
+                course_name.includes(searchTerm.toLowerCase()) ||
                 trainer_name.includes(searchTerm.toLowerCase()) ||
-                status.includes(searchTerm.toLowerCase())
+                current_date.includes(searchTerm.toLowerCase()) ||
+                training_rating.includes(searchTerm.toLowerCase()) ||
+                trainer_explanation.includes(searchTerm.toLowerCase()) ||
+                materials_helpful.includes(searchTerm.toLowerCase()) ||
+                practical_exercises.includes(searchTerm.toLowerCase()) ||
+                confidence_using_skills.includes(searchTerm.toLowerCase()) ||
+                learning_expectations_met.includes(searchTerm.toLowerCase()) ||
+                liked_most.includes(searchTerm.toLowerCase()) ||
+                improvements.includes(searchTerm.toLowerCase()) ||
+                other_comments.includes(searchTerm.toLowerCase())
+                // status.includes(searchTerm.toLowerCase())
             );
         });
 
@@ -252,10 +353,10 @@ const Feedback = () => {
         <Container className="d-flex justify-content-end">
             <Row className="d-flex justify-content-center mt-2 pt-5">
                 {/* Add City Button
-        <h1 className="fw-bold text-center text-primary ">Office </h1>
+        <h1 className="fw-bold text-center text-primary ">Feedback </h1>
         <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add Office
+            Add Feedback
           </Button>
         </Col> */}
 
@@ -263,87 +364,104 @@ const Feedback = () => {
                     <Col md={4}>
                         <Breadcrumb>
                             <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
-                            <Breadcrumb.Item active>Office</Breadcrumb.Item>
+                            <Breadcrumb.Item active>Feedback</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
                     <Col md={8} className="d-flex justify-content-end mb-4">
                         <Button variant="primary" onClick={() => setShow(true)}>
-                            Add Office
+                            Add Feedback
                         </Button>
                     </Col>
                 </Row>
 
-                {/* Add Office Modal */}
+                {/* Add Feedback Modal */}
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            {editingId ? "Update Office" : "Add Office"} {/* Conditional title */}
+                            {editingId ? "Update Feedback" : "Add Feedback"} {/* Conditional title */}
                         </Modal.Title>
-                        {/* <Modal.Title>Add Office</Modal.Title> */}
+                        {/* <Modal.Title>Add Feedback</Modal.Title> */}
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
                             <Row>
                                 <Col md={12} className="mt-2">
-                                    <Form.Label>Office Name</Form.Label>
+                                    <Form.Label>Name</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        placeholder="Enter Office Name"
+                                        placeholder="Enter your Name"
                                         value={user_name}
                                         onChange={(e) => setUserName(e.target.value)}
                                         required
                                     />
                                 </Col>
                                 <Col md={12} className="mt-2">
-                                    <Form.Label className="mt-3">
-                                        <b>Select city</b>
-                                    </Form.Label>
-                                    <Form.Select
-                                        aria-label="Select city"
+                                    <Form.Label>Course Name</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter course Name"
                                         value={course_name}
                                         onChange={(e) => setCourseName(e.target.value)}
                                         required
-                                    >
-                                        <option value="">Choose a city</option>
-                                        {categories.map((city) => (
-                                            <option key={city._id} value={city.course_name}>
-                                                {city.course_name}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
+                                    />
                                 </Col>
-
-                                <Col md={12} className="mt-3">
-                                    <Form.Label>Office Address</Form.Label>
+                                <Col md={12} className="mt-2">
+                                    <Form.Label>Trainer Name</Form.Label>
                                     <Form.Control
-                                        as="textarea"
-                                        ria-label="With textarea"
-                                        rows={3}
-                                        placeholder="Enter office address"
+                                        type="text"
+                                        placeholder="Enter trainer Name"
                                         value={trainer_name}
                                         onChange={(e) => setTrainerName(e.target.value)}
                                         required
                                     />
                                 </Col>
+                                <Col md={12}>
+                                    <Form.Label>Current Date</Form.Label>
+                                    <Form.Control
+                                        type="Date"
+                                        placeholder="Enter current date"
+                                        value={current_date}
+                                        onChange={(e) => setCurrentDate(e.target.value)}
+                                        required
+                                    />
+                                </Col>
                                 <Col md={12} className="d-flex mt-3">
-                                    <Form.Label>Status</Form.Label>
+                                    <Form.Label>How would you rate the overall training session?</Form.Label>
                                     <Form.Check
                                         type="radio"
-                                        label="Active"
-                                        name="status"
-                                        value="Active"
+                                        label="Excellent"
+                                        name="training_rating"
+                                        value="Excellent"
                                         className="ps-5"
-                                        checked={status === "Active"}
-                                        onChange={(e) => setStatus(e.target.value)}
+                                        checked={training_rating === "Excellent"}
+                                        onChange={(e) => setTrainingRating(e.target.value)}
                                     />
                                     <Form.Check
                                         type="radio"
-                                        label="Inactive"
-                                        name="status"
-                                        value="Inactive"
+                                        label="Good"
+                                        name="training_rating"
+                                        value="Good"
                                         className="ps-5"
-                                        checked={status === "Inactive"}
-                                        onChange={(e) => setStatus(e.target.value)}
+                                        checked={training_rating === "Good"}
+                                        onChange={(e) => setTrainingRating(e.target.value)}
+                                    />
+                                    <Form.Check
+                                        type="radio"
+                                        label="Average"
+                                        name="training_rating"
+                                        value="Average"
+                                        className="ps-5"
+                                        checked={training_rating === "Average"}
+                                        onChange={(e) => setTrainingRating(e.target.value)}
+                                    />
+                                    <Form.Check
+                                        type="radio"
+                                        label="Poor"
+                                        name="training_rating"
+                                        value="Poor"
+                                        className="ps-5"
+                                        checked={training_rating === "Poor"}
+                                        onChange={(e) => setTrainingRating(e.target.value)}
                                     />
                                 </Col>
                             </Row>
@@ -366,7 +484,7 @@ const Feedback = () => {
                 {/* Export Buttons */}
                 <Col md={8} className="">
                     {/* <ButtonGroup aria-label="Export Buttons"> */}
-                    <CSVLink data={csvData} filename={"Office-data.csv"} className="ms-1">
+                    <CSVLink data={csvData} filename={"Feedback-data.csv"} className="ms-1">
                         <Button variant="secondary">CSV</Button>
                     </CSVLink>
                     <Button variant="secondary" onClick={handleExcel} className="ms-1">
@@ -412,7 +530,7 @@ const Feedback = () => {
                             <thead>
                                 <tr>
                                     <th>Sr.No</th>
-                                    <th>Office Name</th>
+                                    <th>Feedback Name</th>
                                     <th>City Name</th>
                                     <th>Address</th>
                                     <th className="no-print">Status</th>

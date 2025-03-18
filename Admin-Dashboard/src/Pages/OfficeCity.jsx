@@ -45,10 +45,6 @@ const OfficeCity = () => {
       .join(' '); // Join them back together
   };
 
-  // Fetch data on component mount
-  useEffect(() => {
-    showUsers();
-  }, []);
 
   // Fetch Data from API
   useEffect(() => {

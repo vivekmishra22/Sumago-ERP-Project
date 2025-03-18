@@ -18,6 +18,7 @@ import WelcomeKit from "./WelcomeKit";
 import Dashboard from "./Dashboard";
 import UpdateCourse from "./UpdateCourse";
 import Users from "./Users";
+import Feedback from "./Feedback";
 
 const Head = () => {
   return (
@@ -46,6 +47,7 @@ const Head = () => {
               {/* <Route path="/fee" element={<Fee />} />         */}
               <Route path="/welcomekit" element={<WelcomeKit />} />  
               <Route path="/users" element={<Users />} />  
+              <Route path="/feedback" element={<Feedback />} />  
               <Route path="/dashboard" element={<Dashboard />}></Route>      
             </Routes>
           </Container>

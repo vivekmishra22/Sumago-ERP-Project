@@ -159,6 +159,13 @@ const Sidebar = () => {
                                         <GiTeacher size={23} className="me-3" />
                                         <span>Guest Lecturer</span>
                                     </Link>
+                                    <Link
+                                        to="/Head/feedback"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                    >
+                                        <GiTeacher size={23} className="me-3" />
+                                        <span>Feedback</span>
+                                    </Link>
                                 </div>
                             </div>
 

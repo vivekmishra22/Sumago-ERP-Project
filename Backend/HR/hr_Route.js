@@ -8,14 +8,14 @@ const route = express.Router()
 
 // route.post('/add',addexpense)
 
-route.post('/add',regi_user);
-route.post('/login', loginuser);
+route.post('/addhr',regi_user);
+route.post('/loginhr', loginuser);
 
-route.get('/getusers',auth,getuser);
+route.get('/gethr',auth,getuser);
 
-route.get('/getById/:_id',getbyId)
- route.put('/update/:_id',auth,Update)
+route.get('/getByIdhr/:_id',getbyId)
+ route.put('/updatehr/:_id',auth,Update)
 
-route.delete('/delete/:_id',auth,Delete)
+route.delete('/deletehr/:_id',auth,Delete)
 
 module.exports = route
