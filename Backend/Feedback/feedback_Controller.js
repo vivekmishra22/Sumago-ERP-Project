@@ -4,14 +4,14 @@ const Feedback = require('./feedback_Model'); // Make sure the correct model is 
 const add = async (req, res) => {
     const {
         user_name, course_name, trainer_name, current_date, training_rating, trainer_explanation,
-        materials_helpful, practical_exercises, confidence_using_skills, learning_expectations_met,
+        materials_helpful, practical_exercises, confidence_using_skills, trainer_approachability, trainer_pacing, confidence_in_computer_skills, learning_expectations_met,
         liked_most, improvements, other_comments
     } = req.body;
     
     try {
         const data = new Feedback({
             user_name, course_name, trainer_name, current_date, training_rating, trainer_explanation,
-            materials_helpful, practical_exercises, confidence_using_skills, learning_expectations_met,
+            materials_helpful, practical_exercises, confidence_using_skills, trainer_approachability, trainer_pacing, confidence_in_computer_skills, learning_expectations_met,
             liked_most, improvements, other_comments
         });
 
@@ -66,7 +66,7 @@ const Delete = async (req, res) => {
 const Update = async (req, res) => {
     const {
         user_name, course_name, trainer_name, current_date, training_rating, trainer_explanation,
-        materials_helpful, practical_exercises, confidence_using_skills, learning_expectations_met,
+        materials_helpful, practical_exercises, confidence_using_skills, trainer_approachability, trainer_pacing, confidence_in_computer_skills, learning_expectations_met,
         liked_most, improvements, other_comments
     } = req.body;
     
@@ -75,7 +75,7 @@ const Update = async (req, res) => {
             req.params.id,
             {
                 user_name, course_name, trainer_name, current_date, training_rating, trainer_explanation,
-                materials_helpful, practical_exercises, confidence_using_skills, learning_expectations_met,
+                materials_helpful, practical_exercises, confidence_using_skills, trainer_approachability, trainer_pacing, confidence_in_computer_skills, learning_expectations_met,
                 liked_most, improvements, other_comments
             },
             { new: true } // Returns updated document

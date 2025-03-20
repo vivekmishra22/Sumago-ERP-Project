@@ -19,7 +19,9 @@ const office_Route = require('./Office/office_Route');
 const education_Route = require('./Education/education_Route');
 const office_City_Route = require('./Office_City/office_City_Route'); 
 const welcomekit_Route = require('./Welcomekit/welcomekit_Route');
+const Feedback_Route = require('./Feedback/feedback_Route');
 const user_Route = require ('./Users/user_Route');
+const feedback_Model = require('./Feedback/feedback_Model');
 
 app.use(express.json())
 app.use(cors());
@@ -34,6 +36,7 @@ app.use('/', office_Route);
 app.use('/', education_Route);
 app.use('/', office_City_Route);
 app.use('/', welcomekit_Route);
+app.use('/', Feedback_Route);
 app.use('/', user_Route);
 
   // Refresh token endpoint

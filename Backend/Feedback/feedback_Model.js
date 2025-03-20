@@ -38,8 +38,24 @@ const data = mongoose.Schema({
     },
     confidence_using_skills: {
         type: String,
-        enum: ['Yes', 'No', 'Somewhat'],
+        enum: ['Excellent', 'Good', 'Average', 'Poor'], 
+        // enum: ['Yes', 'No', 'Somewhat'],
         required: true
+    },
+    trainer_approachability: { 
+        type: String, 
+        enum: ['Always', 'Sometimes', 'Rarely', 'Never'], 
+        required: true 
+    },
+    trainer_pacing: { 
+        type: String, 
+        enum: ['Too Fast', 'Just Right', 'Too Slow'], 
+        required: true 
+    },
+    confidence_in_computer_skills: { 
+        type: String, 
+        enum: ['Yes', 'No', 'Somewhat'], 
+        required: true 
     },
     learning_expectations_met: {
         type: String,
