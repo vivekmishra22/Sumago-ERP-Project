@@ -816,7 +816,9 @@ const Feedback = () => {
                 </Col>
 
                 <Col md={12} lg={12} lx={12} lxx={12}>
-                    <div style={{ overflowX: "auto" }}>
+                {/* <div style={{ width: "100%", overflowX: "auto", whiteSpace: "nowrap" }}> */}
+                    {/* <div style={{ overflowX: "auto" }}> */}
+                    <div className="table-responsive">
                         <Table striped bordered hover id="printable-table">
                             <thead>
                                 <tr>
