@@ -35,7 +35,7 @@ const Feedback = () => {
     const [trainer_explanation, setTrainerExplanation] = useState("");
     const [materials_helpful, setMaterialsHelpful] = useState("");
     const [practical_exercises, setPracticalExercises] = useState("");
-    const [confidence_using_skills, setConfidenceUsingSkills] = useState("");
+    const [trainer_knowledge_rating, setTrainerKnowledgeRating] = useState("");
     const [trainer_approachability, setTrainerApproachability] = useState("");
     const [trainer_pacing, setTrainerPacing] = useState("");
     const [confidence_in_computer_skills, setConfidenceInComputerSkills] = useState("");
@@ -65,6 +65,13 @@ const Feedback = () => {
         showUsers();
     }, []);
 
+    useEffect(() => {
+        if (show) {
+            const today = new Date().toISOString().split("T")[0];
+            setCurrentDate(today);
+        }
+    }, [show]);
+
     const showUsers = () => {
         axios
             .get("http://localhost:8000/getFeedback")
@@ -88,7 +95,7 @@ const Feedback = () => {
         setTrainerExplanation("");
         setMaterialsHelpful("");
         setPracticalExercises("");
-        setConfidenceUsingSkills("");
+        setTrainerKnowledgeRating("");
         setTrainerApproachability("");
         setTrainerPacing("");
         setConfidenceInComputerSkills("");
@@ -114,7 +121,7 @@ const Feedback = () => {
             trainer_explanation: capitalizeFirstLetter(trainer_explanation),
             materials_helpful: capitalizeFirstLetter(materials_helpful),
             practical_exercises: capitalizeFirstLetter(practical_exercises),
-            confidence_using_skills: capitalizeFirstLetter(confidence_using_skills),
+            trainer_knowledge_rating: capitalizeFirstLetter(trainer_knowledge_rating),
             trainer_approachability: capitalizeFirstLetter(trainer_approachability),
             trainer_pacing: capitalizeFirstLetter(trainer_pacing),
             confidence_in_computer_skills: capitalizeFirstLetter(confidence_in_computer_skills),
@@ -171,7 +178,7 @@ const Feedback = () => {
         setTrainerExplanation(item.trainer_explanation);
         setMaterialsHelpful(item.materials_helpful);
         setPracticalExercises(item.practical_exercises);
-        setConfidenceUsingSkills(item.confidence_using_skills);
+        setTrainerKnowledgeRating(item.trainer_knowledge_rating);
         setTrainerApproachability(item.trainer_approachability);
         setTrainerPacing(item.trainer_pacing);
         setConfidenceInComputerSkills(item.confidence_in_computer_skills);
@@ -194,7 +201,7 @@ const Feedback = () => {
                 "Trainer Explanation": a.trainer_explanation,
                 "Materials Helpful": a.materials_helpful,
                 "Practical Exercises": a.practical_exercises,
-                "Confidence using Skills": a.confidence_using_skills,
+                "Trainer Knowledge Rating": a.trainer_knowledge_rating,
                 "Trainer Approachability": a.trainer_approachability,
                 "Trainer Pacing": a.trainer_pacing,
                 "Confidence in Computer Skills": a.confidence_in_computer_skills,
@@ -224,7 +231,7 @@ const Feedback = () => {
                     "Trainer Explanation",
                     "Materials Helpful",
                     "Practical Exercises",
-                    "Confidence using Skills",
+                    "Trainer Kknowledge Rating",
                     "Trainer Approachability",
                     "Trainer Pacing",
                     "Confidence in Computer Skills",
@@ -244,7 +251,7 @@ const Feedback = () => {
                 a.trainer_explanation,
                 a.materials_helpful,
                 a.practical_exercises,
-                a.confidence_using_skills,
+                a.trainer_knowledge_rating,
                 a.trainer_approachability,
                 a.trainer_pacing,
                 a.confidence_in_computer_skills,
@@ -268,7 +275,7 @@ const Feedback = () => {
         "Trainer Explanation": a.trainer_explanation,
         "Materials Helpful": a.materials_helpful,
         "Practical Exercises": a.practical_exercises,
-        "Confidence using Skills": a.confidence_using_skills,
+        "Trainer Knowledge Rating": a.trainer_knowledge_rating,
         "Trainer Approachability": a.trainer_approachability,
         "Trainer Pacing": a.trainer_pacing,
         "Confidence in Computer Skills": a.confidence_in_computer_skills,
@@ -313,7 +320,7 @@ const Feedback = () => {
                 item.trainer_explanation?.toLowerCase().includes(searchLower) ||
                 item.materials_helpful?.toLowerCase().includes(searchLower) ||
                 item.practical_exercises?.toLowerCase().includes(searchLower) ||
-                item.confidence_using_skills?.toLowerCase().includes(searchLower) ||
+                item.trainer_knowledge_rating?.toLowerCase().includes(searchLower) ||
                 item.trainer_approachability?.toLowerCase().includes(searchLower) ||
                 item.trainer_pacing?.toLowerCase().includes(searchLower) ||
                 item.confidence_in_computer_skills?.toLowerCase().includes(searchLower) ||
@@ -403,7 +410,7 @@ const Feedback = () => {
                                         placeholder="Enter current date"
                                         value={current_date}
                                         onChange={(e) => setCurrentDate(e.target.value)}
-                                        required
+                                        required readOnly
                                     />
                                 </Col>
                             </Row>
@@ -557,34 +564,34 @@ const Feedback = () => {
                                         <Form.Check
                                             type="radio"
                                             label="Excellent"
-                                            name="confidence_using_skills"
+                                            name="trainer_knowledge_rating"
                                             value="Excellent"
-                                            checked={confidence_using_skills === "Excellent"}
-                                            onChange={(e) => setConfidenceUsingSkills(e.target.value)}
+                                            checked={trainer_knowledge_rating === "Excellent"}
+                                            onChange={(e) => setTrainerKnowledgeRating(e.target.value)}
                                         />
                                         <Form.Check
                                             type="radio"
                                             label="Good"
-                                            name="confidence_using_skills"
+                                            name="trainer_knowledge_rating"
                                             value="Good"
-                                            checked={confidence_using_skills === "Good"}
-                                            onChange={(e) => setConfidenceUsingSkills(e.target.value)}
+                                            checked={trainer_knowledge_rating === "Good"}
+                                            onChange={(e) => setTrainerKnowledgeRating(e.target.value)}
                                         />
                                         <Form.Check
                                             type="radio"
                                             label="Average"
-                                            name="confidence_using_skills"
+                                            name="trainer_knowledge_rating"
                                             value="Average"
-                                            checked={confidence_using_skills === "Average"}
-                                            onChange={(e) => setConfidenceUsingSkills(e.target.value)}
+                                            checked={trainer_knowledge_rating === "Average"}
+                                            onChange={(e) => setTrainerKnowledgeRating(e.target.value)}
                                         />
                                         <Form.Check
                                             type="radio"
                                             label="Poor"
-                                            name="confidence_using_skills"
+                                            name="trainer_knowledge_rating"
                                             value="Poor"
-                                            checked={confidence_using_skills === "Poor"}
-                                            onChange={(e) => setConfidenceUsingSkills(e.target.value)}
+                                            checked={trainer_knowledge_rating === "Poor"}
+                                            onChange={(e) => setTrainerKnowledgeRating(e.target.value)}
                                         />
                                     </div>
                                 </Col>
@@ -830,8 +837,8 @@ const Feedback = () => {
                                     <th>Training Rating</th>
                                     <th>Trainer Explanation</th>
                                     <th>Materials Helpful</th>
-                                    <th>practical_exercises</th>
-                                    <th>Confidence_using_Skills</th>
+                                    <th>Practical Exercises</th>
+                                    <th>Trainer Knowledge Rating</th>
                                     <th>Trainer Approachability</th>
                                     <th>Trainer Pacing</th>
                                     <th>Confidence_in Computer Skills</th>
@@ -854,7 +861,7 @@ const Feedback = () => {
                                         <td>{product.trainer_explanation}</td>
                                         <td>{product.materials_helpful}</td>
                                         <td>{product.practical_exercises}</td>
-                                        <td>{product.confidence_using_skills}</td>
+                                        <td>{product.trainer_knowledge_rating}</td>
                                         <td>{product.trainer_approachability}</td>
                                         <td>{product.trainer_pacing}</td>
                                         <td>{product.confidence_in_computer_skills}</td>

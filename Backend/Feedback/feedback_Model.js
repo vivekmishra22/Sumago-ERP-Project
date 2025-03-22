@@ -36,10 +36,9 @@ const data = mongoose.Schema({
         enum: ['Yes', 'No', 'Somewhat'],
         required: true
     },
-    confidence_using_skills: {
+    trainer_knowledge_rating: {
         type: String,
         enum: ['Excellent', 'Good', 'Average', 'Poor'], 
-        // enum: ['Yes', 'No', 'Somewhat'],
         required: true
     },
     trainer_approachability: { 

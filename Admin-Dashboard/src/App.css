@@ -21,7 +21,7 @@
 
   th, td {
     white-space: nowrap; /* Prevents text from wrapping */
-    text-align: center;
+    /* text-align: center; */
 }
 
   /* .sidebar3{
