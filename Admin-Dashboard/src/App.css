@@ -19,11 +19,6 @@
   overflow-x:hidden;
   }
 
-  th, td {
-    white-space: nowrap; /* Prevents text from wrapping */
-    /* text-align: center; */
-}
-
   /* .sidebar3{
     height: 100%;
   width: 250px;
@@ -186,4 +181,132 @@
   border-radius: 50%;
   padding: 2px 6px;
   font-size: 12px;
+}
+/* print css */
+/* Hide everything by default when printing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the table and its data (except the Action column) */
+  #printable-table,
+  #printable-table * {
+    visibility: visible;
+  }
+
+
+  @media print {
+    #printable-table th.no-print,
+    #printable-table td.no-print {
+      display: none !important;
+    }
+  }
+
+  /* Ensure the table takes full width */
+  #printable-table {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    width: 100%;
+  }
+
+  /* Add borders to the table for better readability */
+  #printable-table {
+    border-collapse: collapse;
+  }
+  #printable-table th,
+  #printable-table td {
+    border: 1px solid black;
+  }
+
+  /* Remove padding and margin for the body */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@media print {
+  #printable::before {
+    content: "City Data Report";
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+.signup-container {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), 
+              url("./Assets/Images/restored_image.jpeg") no-repeat center;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Aligns the card to the start (left) */
+  padding-left: 0px;
+}
+
+.custom-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  width: 420px; /* Fixed width for better appearance */
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.custom-card h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.input-group .form-control {
+  background: transparent;
+  color: white;
+  border-radius: 10px;
+  border: 1px solid white;
+}
+
+.input-group .input-group-text {
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.form-control:focus {
+  background: transparent;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: none;
+}
+
+.btn-signin {
+  background: #28a745;
+  border-radius: 10px;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 10px;
+  width: 100%;
+  transition: 0.3s;
+}
+
+.btn-signin:hover {
+  background: #218838;
+  transform: scale(1.05);
 }

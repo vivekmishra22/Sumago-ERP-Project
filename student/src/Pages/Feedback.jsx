@@ -415,8 +415,22 @@ const Feedback = () => {
                                 </Col>
                             </Row>
                             <Row>
+                                <Col md={12}>
+                                    <div className="d-flex">
+                                        <Form.Label>Trainer Name</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Enter trainer Name"
+                                            value={trainer_name}
+                                            onChange={(e) => setTrainerName(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row>
                                 <Col md={12} className="mt-3">
-                                    <Form.Label className="d-block">
+                                    <Form.Label className="">
                                         How would you rate the overall training session?
                                     </Form.Label>
                                     <div className="d-flex gap-4">
@@ -823,7 +837,7 @@ const Feedback = () => {
                 </Col>
 
                 <Col md={12} lg={12} lx={12} lxx={12}>
-                {/* <div style={{ width: "100%", overflowX: "auto", whiteSpace: "nowrap" }}> */}
+                    {/* <div style={{ width: "100%", overflowX: "auto", whiteSpace: "nowrap" }}> */}
                     {/* <div style={{ overflowX: "auto" }}> */}
                     <div className="table-responsive">
                         <Table striped bordered hover id="printable-table">
@@ -837,15 +851,15 @@ const Feedback = () => {
                                     <th>Training Rating</th>
                                     <th>Trainer Explanation</th>
                                     <th>Materials Helpful</th>
-                                    <th>Practical Exercises</th>
-                                    <th>Trainer Knowledge Rating</th>
-                                    <th>Trainer Approachability</th>
-                                    <th>Trainer Pacing</th>
-                                    <th>Confidence_in Computer Skills</th>
-                                    <th>Learning_expectations_met</th>
-                                    <th>Liked_most</th>
-                                    <th>Improvements</th>
-                                    <th>Other Feedback</th>
+                                    {/* <th>Practical Exercises</th> */}
+                                    {/* <th>Trainer Knowledge Rating</th> */}
+                                    {/* <th>Trainer Approachability</th> */}
+                                    {/* <th>Trainer Pacing</th> */}
+                                    {/* <th>Confidence_in Computer Skills</th> */}
+                                    {/* <th>Learning_expectations_met</th> */}
+                                    {/* <th>Liked_most</th> */}
+                                    {/* <th>Improvements</th> */}
+                                    {/* <th>Other Feedback</th> */}
                                     <th className="no-print text-center">Action</th>
                                 </tr>
                             </thead>
@@ -860,15 +874,15 @@ const Feedback = () => {
                                         <td>{product.training_rating}</td>
                                         <td>{product.trainer_explanation}</td>
                                         <td>{product.materials_helpful}</td>
-                                        <td>{product.practical_exercises}</td>
-                                        <td>{product.trainer_knowledge_rating}</td>
-                                        <td>{product.trainer_approachability}</td>
+                                        {/* <td>{product.practical_exercises}</td> */}
+                                        {/* <td>{product.trainer_knowledge_rating}</td> */}
+                                        {/* <td>{product.trainer_approachability}</td>
                                         <td>{product.trainer_pacing}</td>
                                         <td>{product.confidence_in_computer_skills}</td>
                                         <td>{product.learning_expectations_met}</td>
                                         <td>{product.liked_most}</td>
                                         <td>{product.improvements}</td>
-                                        <td>{product.other_comments}</td>
+                                        <td>{product.other_comments}</td> */}
                                         <td className="no-print d-flex justify-content-evenly">
                                             <Button
                                                 variant="warning"

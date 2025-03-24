@@ -1,9 +1,7 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Nav, Navbar, Image, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import image1 from "../Assets/Images/SUMAGO Logo.png";
+import image1 from "../Asset/Images/SUMAGO Logo (3).png";
 import { FaCircleUser } from 'react-icons/fa6';
 import { FaBell } from 'react-icons/fa';
 

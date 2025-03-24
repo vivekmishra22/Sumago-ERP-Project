@@ -17,8 +17,6 @@ const Dashboard = () => {
   const [ education_name ,setEducationCount] = useState("");
   const [technology_name ,setTechnologyCount] = useState("");
   const [welcome_kit, setWelcomeKitCount] = useState("");
-  const [student_name ,setEnquiry_Studentcount] = useState("");
-
 
   useEffect (() =>{
 
@@ -68,14 +66,6 @@ const Dashboard = () => {
       const kitcount = res.data.data.filter((item) => item.status === "Active");
       setWelcomeKitCount(kitcount.length);
       console.log("record fetched",res.data.kitcount)
-    })
-
-    // Enquiry_Student Conut 
-    axios.get("http://localhost:8000/getEnquiry_Student")
-    .then((res) =>{
-      const Enquiry_Studentcount = res.data.data.filter((item) => item.status === "Active");
-      setEnquiry_Studentcount(Enquiry_Studentcount.length);
-      console.log("record fetched",res.data.Enquiry_Studentcount)
     })
 
     .catch((err) => console.log(err));
@@ -428,8 +418,8 @@ const Dashboard = () => {
                 <Row>
                   <Col md={8}>
                   <Card.Title className="fs-5 fw-bold ">
-                      {student_name}
-                      
+                      {/* {totalUpcomingvisitsCount} */}
+                      23
                     </Card.Title>
                   </Col>
                   <Col md={4}>

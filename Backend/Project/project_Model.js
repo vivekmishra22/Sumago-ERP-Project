@@ -21,7 +21,7 @@ const projectSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["Complete", "Incomplete", "Pending", "Not Completed"], // Allowed values
+        enum: ["Completed", "Incomplete", "Pending", "Not Completed"], // Allowed values
         required: true
     }
 });

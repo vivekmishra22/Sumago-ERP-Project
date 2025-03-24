@@ -392,6 +392,7 @@ const Feedback = () => {
                                     />
                                 </Col>
                             </Row>
+                            
                             <Row className="mt-2">
                                 <Col md={6}>
                                     <Form.Label>Trainer Name</Form.Label>
@@ -414,9 +415,10 @@ const Feedback = () => {
                                     />
                                 </Col>
                             </Row>
+                            
                             <Row>
                                 <Col md={12} className="mt-3">
-                                    <Form.Label className="d-block">
+                                    <Form.Label className="">
                                         How would you rate the overall training session?
                                     </Form.Label>
                                     <div className="d-flex gap-4">

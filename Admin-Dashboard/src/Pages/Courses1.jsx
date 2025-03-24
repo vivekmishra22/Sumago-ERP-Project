@@ -26,8 +26,8 @@ const Courses = () => {
   const handleClose = () => {
     setCourse_Name("");
     setCourse_Description("");
-    setDuration("");
-    setAmount("");
+    setCourse_Duration("");
+    setCourse_Fees("");
     setStatus("Active");
     setShow(false);
   };
@@ -41,36 +41,27 @@ const Courses = () => {
 
   const [course_name, setCourse_Name] = useState("");
   const [course_description, setCourse_Description] = useState("");
-  const [duration, setDuration] = useState("");
-  const [amount, setAmount] = useState("");
+  const [course_duration, setCourse_Duration] = useState("");
+  const [course_fees, setCourse_Fees] = useState("");
   const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
-  const [categoriesdata, setCategoriesData] = useState([]);
-  
 
-  // const capitalizeFirstLetter = (str) => {
-  //   if (!str) return str;
-  //   return str
-  //     .split(" ") // Split the string into words
-  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-  //     .join(" "); // Join them back together
-  // };
-  function capitalizeFirstLetter(input) {
-    if (typeof input === 'string') {
-      return input.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    }
-     else {
-      console.error('Input is not a string!');
-      return input; // Or handle accordingly
-    }
-  }
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str
+      .split(" ") // Split the string into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join them back together
+  };
 
   // Fetch data on component mount
   useEffect(() => {
     showUsers();
   }, []);
+
+  // Fetch data from the API
   const showUsers = () => {
     axios
       .get("http://localhost:8000/getdataCourse")
@@ -85,31 +76,13 @@ const Courses = () => {
       });
   };
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/getdataDuration")
-      .then((res) => {
-        const sdata = res.data.data.filter((item) => item.status === "Active");
-        setCategoriesData(sdata);
-        console.log("Categories fetched:", res.data.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching categories:", err);
-      });
-
-   
-  }, []);
-
-  // Fetch data from the API
- 
-
   // Handle Edit Click
   const handleEdit = (course) => {
     setEditingId(course._id);
     setCourse_Name(course.course_name);
     setCourse_Description(course.course_description);
-    setDuration(course.duration);
-    setAmount(course.amount);
+    setCourse_Duration(course.course_duration);
+    setCourse_Fees(course.course_fees);
     setStatus(course.status);
     setShow(true);
   };
@@ -122,8 +95,8 @@ const Courses = () => {
     const newData = {
       course_name: capitalizeFirstLetter(course_name),
       course_description: capitalizeFirstLetter(course_description),
-      duration: capitalizeFirstLetter(duration),
-      amount: capitalizeFirstLetter(amount),
+      course_duration: capitalizeFirstLetter(course_duration),
+      course_fees,
       status: capitalizeFirstLetter(status),
     };
 
@@ -146,8 +119,8 @@ const Courses = () => {
           alert("Course Added Successfully!");
           setCourse_Name("");
           setCourse_Description("");
-          setDuration("");
-          setAmount("");
+          setCourse_Duration("");
+          setCourse_Fees("");
           setStatus("Active");
           handleClose();
           showUsers(); // Refresh the table
@@ -178,8 +151,8 @@ const Courses = () => {
         "Sr.No": index + 1,
         "Course Name": a.course_name,
         "Course Description": a.course_description,
-        "Course Duration": a.duration,
-        "Course Fees": a.amount,
+        "Course Duration": a.course_duration,
+        "Course Fees": a.course_fees,
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -198,15 +171,15 @@ const Courses = () => {
           "Course Name",
           "Course Description",
           "Course Duration",
-          "Amount",
+          "Course Fees",
         ],
       ],
       body: userData.map((a, index) => [
         index + 1,
         a.course_name,
         a.course_description,
-        a.duration,
-        a.amount,
+        a.course_duration,
+        a.course_fees,
       ]),
       startY: 30,
     });
@@ -218,8 +191,8 @@ const Courses = () => {
     "Sr.No": index + 1,
     "Course Name": a.course_name,
     "Course Description": a.course_description,
-    "Course Duration": a.duration,
-    "Amount": a.amount,
+    "Course Duration": a.course_duration,
+    "Course Fees": a.course_fees,
   }));
 
   // Pagination logic
@@ -255,9 +228,11 @@ const Courses = () => {
     const filteredData = userData.filter(
       (item) =>
         item.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.course_description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.duration.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.amount.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.course_description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        item.course_duration.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.course_fees.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
@@ -281,23 +256,26 @@ const Courses = () => {
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
         <Row>
-                 <Col md={4}>
-                   <Breadcrumb>
-                     <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-                     <Breadcrumb.Item active>Course</Breadcrumb.Item>
-                   </Breadcrumb>
-                 </Col>
-                 <Col md={8} className="d-flex justify-content-end mb-4">
-                   <Button variant="primary" onClick={() => setShow(true)}>
-                     Add Course
-                   </Button>
-                 </Col>
-               </Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>Courses</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Course
+            </Button>
+          </Col>
+        </Row>
 
         {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Course</Modal.Title>
+            <Modal.Title>
+              {editingId ? "Update Course" : "Add Course"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Course</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
@@ -324,41 +302,21 @@ const Courses = () => {
                 </Col>
                 <Col md={12}>
                   <Form.Label>Course Duration</Form.Label>
-                  <Form.Select
-                    aria-label="select Course"
-                    value={duration}
-                    onChange={(e) => {
-                      const selectedDuration = e.target.value;
-                      setDuration(selectedDuration);
-
-                      // Find the corresponding amount based on the selected duration
-                      const selectedCategory = categoriesdata.find(
-                        (category) => category.duration === selectedDuration
-                      );
-
-                      // If a matching category is found, set the amount
-                      if (selectedCategory) {
-                        setAmount(selectedCategory.amount);
-                      }
-                    }}
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter course duration"
+                    value={course_duration}
+                    onChange={(e) => setCourse_Duration(e.target.value)}
                     required
-                  >
-                    <option value="">Choose Duration</option>
-                    {categoriesdata.map((category) => (
-                      <option key={category._id} value={category.duration}>
-                        {category.duration}
-                      </option>
-                    ))}
-                  </Form.Select>
+                  />
                 </Col>
-
                 <Col md={12}>
                   <Form.Label>Course Fees</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter Amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter course fees"
+                    value={course_fees}
+                    onChange={(e) => setCourse_Fees(e.target.value)}
                     required
                   />
                 </Col>
@@ -450,7 +408,7 @@ const Courses = () => {
 
         <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
-            <Table striped bordered hover id="printable-table">
+            <Table striped bordered hover>
               <thead>
                 <tr>
                   <th>Sr.No</th>
@@ -458,8 +416,8 @@ const Courses = () => {
                   <th>Course Description</th>
                   <th>Course Duration</th>
                   <th>Course Fees</th>
-                  <th className="no-print">Status</th>
-                  <th className="no-print text-center">Action</th>
+                  <th>Status</th>
+                  <th className="text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -468,10 +426,10 @@ const Courses = () => {
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>{a.course_name}</td>
                     <td>{a.course_description}</td>
-                    <td>{a.duration}</td>
-                    <td>{a.amount}</td>
-                    <td  className="no-print">{a.status}</td>
-                    <td className="no-print d-flex justify-content-evenly">
+                    <td>{a.course_duration}</td>
+                    <td>{a.course_fees}</td>
+                    <td>{a.status}</td>
+                    <td className="d-flex justify-content-evenly">
                       <Button variant="warning" onClick={() => handleEdit(a)}>
                         <GrEdit />
                       </Button>
