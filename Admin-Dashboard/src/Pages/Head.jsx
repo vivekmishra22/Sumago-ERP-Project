@@ -19,6 +19,7 @@ import Dashboard from "./Dashboard";
 import UpdateCourse from "./UpdateCourse";
 import Users from "./Users";
 import Duration from "./Duration";
+import Batch from "./Batch";
 // import Feedback from "./Feedback";
 // import Project from "./Project";
 
@@ -53,6 +54,7 @@ const Head = () => {
               {/* <Route path="/project" element={<Project />} />   */}
               <Route path="/dashboard" element={<Dashboard />}></Route>      
               <Route path="/duration" element={<Duration />}></Route>      
+              <Route path="/batch" element={<Batch />}></Route>      
             </Routes>
           </Container>
         </div>

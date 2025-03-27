@@ -146,6 +146,13 @@ const Sidebar = () => {
                                         <span>Duration</span>
                                     </Link>
                                     <Link
+                                        to="/Head/batch"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                    >
+                                        <MdLibraryBooks size={23} className="me-3" /> 
+                                        <span>Batch</span>
+                                    </Link>
+                                    <Link
                                         to="/Head/welcomekit"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >

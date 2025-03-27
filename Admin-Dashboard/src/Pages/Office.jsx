@@ -157,7 +157,7 @@ const Office = () => {
     const doc = new jsPDF();
     doc.text("Office Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Office Name", "City Name"]],
+      head: [["Sr.No", "Office Name", "City Name", "City Address"]],
       body: userData.map((a, index) => [
         index + 1,
         a.office_name,

@@ -11,7 +11,7 @@ const batchSchema = new mongoose.Schema({
     },
     student_name: {
         type: String,
-        required: true
+        // required: true
     },
     end_date: {
         type: Date,
