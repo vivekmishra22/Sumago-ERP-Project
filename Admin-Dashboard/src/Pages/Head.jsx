@@ -20,6 +20,9 @@ import UpdateCourse from "./UpdateCourse";
 import Users from "./Users";
 import Duration from "./Duration";
 import Batch from "./Batch";
+import HR from "./HR";
+import BDE from "./BDE";
+import Trainer from "./Trainer";
 // import Feedback from "./Feedback";
 // import Project from "./Project";
 
@@ -35,6 +38,7 @@ const Head = () => {
           <Container>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />      
               <Route path="/technology" element={<Technology />} />
               <Route path="/university" element={<University />} />
               <Route path="/college" element={<College />} />
@@ -45,16 +49,14 @@ const Head = () => {
               <Route path="/office" element={<Office />} />
               <Route path ="/Courses" element={<Courses/>} />
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
-              {/* <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />         */}
-              <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />        
-              {/* <Route path="/fee" element={<Fee />} />         */}
+              <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />   
               <Route path="/welcomekit" element={<WelcomeKit />} />  
-              <Route path="/users" element={<Users />} />  
-              {/* <Route path="/feedback" element={<Feedback />} />   */}
-              {/* <Route path="/project" element={<Project />} />   */}
-              <Route path="/dashboard" element={<Dashboard />}></Route>      
               <Route path="/duration" element={<Duration />}></Route>      
               <Route path="/batch" element={<Batch />}></Route>      
+              <Route path="/hr" element={<HR />} />  
+              <Route path="/bde" element={<BDE />} />  
+              <Route path="/trainer" element={<Trainer />} />  
+              <Route path="/users" element={<Users />} />  
             </Routes>
           </Container>
         </div>

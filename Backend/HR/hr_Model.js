@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const trainer_detail= new Schema({
+const hr_detail= new Schema({
   fname: 
   { type: String, 
     required: true
@@ -14,16 +14,10 @@ const trainer_detail= new Schema({
   email: 
   {
      type: String,
-     required: true,
-     unique: true 
+     required: true
     },
-   contact_no:
-   {
-    type: Number,
-     required: true,
-     unique: true 
-   },
-    technology:
+ 
+    designation:
   {
     type:String,
      required:true
@@ -39,7 +33,7 @@ const trainer_detail= new Schema({
   },
 });
 
-module.exports = mongoose.model('Trainer', trainer_detail);
+module.exports = mongoose.model('hr',hr_detail);
 
 // const user_detail = mongoose.Schema({
   

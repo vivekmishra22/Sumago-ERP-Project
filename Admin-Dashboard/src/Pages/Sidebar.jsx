@@ -76,6 +76,27 @@ const Sidebar = () => {
                                     style={{ display: isMastersOpen ? "block" : "none" }}
                                 >
                                     <Link
+                                        to="/Head/hr"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                    >
+                                        <FaUserGroup size={23} className="me-3" /> 
+                                        <span>HR</span>
+                                    </Link>
+                                    <Link
+                                        to="/Head/bde"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                    >
+                                        <FaUserGroup size={23} className="me-3" /> 
+                                        <span>BDE</span>
+                                    </Link>
+                                    <Link
+                                        to="/Head/trainer"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                    >
+                                        <FaUserGroup size={23} className="me-3" /> 
+                                        <span>Trainer</span>
+                                    </Link>
+                                    <Link
                                         to="/Head/users"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >

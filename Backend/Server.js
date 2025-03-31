@@ -21,13 +21,16 @@ const office_City_Route = require('./Office_City/office_City_Route');
 const welcomekit_Route = require('./Welcomekit/welcomekit_Route');
 const feedback_Route = require('./Feedback/feedback_Route');
 const project_Route = require('./Project/project_Route');
-const user_Route = require ('./Users/user_Route');
 const enquiryStudent_Route = require('./Enquiry_Student/enquiryStudent_Route');
 const admissionFees_Route = require('./Admission_Fees/admissionFees_Route');
 const kit_Feespaid_Route = require('./Kit_FeesPaid/kit_Feespaid_Route');
 const duration_Route = require('./Duration/duration_Route');
 const batch_Route = require('./Batch/batch_Route');
 const admin_Route = require('./Admin/admin_Route');
+const bde_Route = require('./BDE/bde_Route');
+const hr_Route = require('./HR/hr_Route');
+const trainer_Route = require('./Trainer/trainer_Route');
+const user_Route = require ('./Users/user_Route');
 
 
 app.use(express.json())
@@ -45,13 +48,16 @@ app.use('/', office_City_Route);
 app.use('/', welcomekit_Route);
 app.use('/', feedback_Route);
 app.use('/', project_Route);
-app.use('/', user_Route);
 app.use('/', enquiryStudent_Route);
 app.use('/', admissionFees_Route);
 app.use('/', kit_Feespaid_Route);
 app.use('/', duration_Route);
 app.use('/', batch_Route);
 app.use('/', admin_Route);
+app.use('/', bde_Route);
+app.use('/', hr_Route);
+app.use('/', trainer_Route);
+app.use('/', user_Route);
 
   // Refresh token endpoint
   app.post('/refresh-token', (req, res) => {

@@ -1,21 +1,17 @@
-const {regi_user,loginuser,getuser,getbyId,Delete,Update} = require('./bde_Controller');
-
 const express = require('express');
+const router = express.Router();
+const { regi_bde, loginuser, getbde, getbyId, Delete, Update, change } = require('./bde_Controller');
+const auth = require('../Middleware/Authentication');
 
-const route = express.Router()
- const auth = require('../Middleware/Authentication');
-// const {photoUpload} = require('./fileUpload')
+// Public routes
+router.post('/registerbde', regi_bde);
+router.post('/loginbde', loginuser);
 
-// route.post('/add',addexpense)
+// Protected routes
+router.post('/change_password', auth, change);
+router.get('/getbde', auth, getbde);
+router.get('/ById/:id', auth, getbyId);
+router.put('/updatebde/:id', auth, Update);
+router.delete('/deletebde/:id', auth, Delete);
 
-route.post('/add',regi_user);
-route.post('/login', loginuser);
-
-route.get('/getusers',auth,getuser);
-
-route.get('/getById/:_id',getbyId)
- route.put('/update/:_id',auth,Update)
-
-route.delete('/delete/:_id',auth,Delete)
-
-module.exports = route
+module.exports = router;

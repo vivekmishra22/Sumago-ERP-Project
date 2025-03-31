@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table, } from "react-bootstrap";
+import { Breadcrumb, Button, Col, Container, Form, InputGroup, Row, Table } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -17,7 +17,7 @@ const Batch = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const [batch_name, setBatchName] = useState("");
-    const [student_name, setStudentName] = useState([]);
+    const [student_name, setStudentName] = useState("");
     const [start_date, setStartDate] = useState("");
     const [end_date, setEndDate] = useState("");
     const [status, setStatus] = useState("Active");
@@ -26,13 +26,24 @@ const Batch = () => {
     const [editingId, setEditingId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
 
+    // Helper function to format dates (removes time portion)
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        // If already in YYYY-MM-DD format
+        if (typeof dateString === "string" && dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            return dateString;
+        }
+        // If it's a Date object or ISO string
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+    };
 
     const capitalizeFirstLetter = (str) => {
         if (!str) return str;
         return str
-            .split(" ") // Split the string into words
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-            .join(" "); // Join them back together
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ");
     };
 
     useEffect(() => {
@@ -43,7 +54,13 @@ const Batch = () => {
         axios
             .get("http://localhost:8000/getAllBatches")
             .then((res) => {
-                setUserData(res.data.data);
+                // Format dates to remove time when receiving data
+                const formattedData = res.data.data.map(item => ({
+                    ...item,
+                    start_date: formatDate(item.start_date),
+                    end_date: formatDate(item.end_date)
+                }));
+                setUserData(formattedData);
             })
             .catch((err) => {
                 console.error(err);
@@ -59,23 +76,19 @@ const Batch = () => {
         setStatus("Active");
         setEditingId(null);
         setErrorMessage("");
-
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // const newData = { Batch, status };
-
         const newData = {
             batch_name: capitalizeFirstLetter(batch_name),
             student_name: capitalizeFirstLetter(student_name),
-            start_date,
-            end_date,
+            start_date: formatDate(start_date), // Ensure no time is sent
+            end_date: formatDate(end_date),     // Ensure no time is sent
             status: capitalizeFirstLetter(status),
         };
-
 
         if (editingId) {
             axios
@@ -113,28 +126,26 @@ const Batch = () => {
     };
 
     const deletedata = (_id) => {
-        axios
-            .delete(`http://localhost:8000/deleteBatch/${_id}`)
-            .then(() => {
-                alert("Are you sure you want to delete this record?");
-                showUsers();
-            })
-            .catch((err) => console.error(err));
+        if (window.confirm("Are you sure you want to delete this record?")) {
+            axios
+                .delete(`http://localhost:8000/deleteBatch/${_id}`)
+                .then(() => {
+                    showUsers();
+                })
+                .catch((err) => console.error(err));
+        }
     };
 
     const handleEdit = (batch) => {
         setEditingId(batch._id);
         setBatchName(batch.batch_name);
         setStudentName(batch.student_name);
-        setStartDate(batch.start_date);
-        setEndDate(batch.end_date);
-        // setBatch(item.Batch);
-        // setAmountName(item.amount);
+        setStartDate(formatDate(batch.start_date)); // Format date when editing
+        setEndDate(formatDate(batch.end_date));     // Format date when editing
         setStatus(batch.status);
         setShow(true);
         setErrorMessage("");
     };
-
 
     const handleExcel = () => {
         const worksheet = XLSX.utils.json_to_sheet(
@@ -142,15 +153,14 @@ const Batch = () => {
                 "Sr.No": index + 1,
                 "Batch Name": a.batch_name,
                 "Student Name": a.student_name,
-                "Start Date": a.start_date,
-                "End Date": a.end_date,
-                // "Status": a.status
+                "Start Date": a.start_date, // Already formatted
+                "End Date": a.end_date,      // Already formatted
+                "Status": a.status
             }))
         );
 
-
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Batch Data", "Amount");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Batch Data");
         XLSX.writeFile(workbook, "Batch-data.xlsx");
     };
 
@@ -158,14 +168,14 @@ const Batch = () => {
         const doc = new jsPDF();
         doc.text("Batch Data", 14, 22);
         doc.autoTable({
-            head: [["Sr.No", "Batch Name", "Student Name", "Start Date", "End Date"]],
+            head: [["Sr.No", "Batch Name", "Student Name", "Start Date", "End Date", "Status"]],
             body: userData.map((batch, index) => [
                 index + 1,
                 batch.batch_name,
                 batch.student_name,
-                batch.start_date,
-                batch.end_date,
-                // batch.status
+                batch.start_date, // Already formatted
+                batch.end_date,   // Already formatted
+                batch.status
             ]),
             startY: 30,
         });
@@ -176,37 +186,20 @@ const Batch = () => {
         "Sr.No": index + 1,
         "Batch Name": a.batch_name,
         "Student Name": a.student_name,
-        "Start Date": a.start_date,
-        "End Date": a.end_date,
+        "Start Date": a.start_date, // Already formatted
+        "End Date": a.end_date,      // Already formatted
         "Status": a.status
     }));
 
+    // Pagination logic remains the same
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = userData.slice(indexOfFirstItem, indexOfLastItem);
-
     const totalPages = Math.ceil(userData.length / itemsPerPage);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
-
-    const paginationItems = [];
-    for (let number = 1; number <= totalPages; number++) {
-        paginationItems.push(
-            <Pagination.Item
-                key={number}
-                active={number === currentPage}
-                onClick={() => handlePageChange(number)}
-            >
-                {number}
-            </Pagination.Item>
-        );
-    }
-
-    const showingFrom = indexOfFirstItem + 1;
-    const showingTo = Math.min(indexOfLastItem, userData.length);
-    const totalEntries = userData.length;
 
     const handleSearch = () => {
         const filteredData = userData.filter((item) => {
@@ -236,7 +229,6 @@ const Batch = () => {
     return (
         <Container className="d-flex justify-content-end">
             <Row className="d-flex justify-content-center mt-2 pt-5">
-                {/* <h1 className="fw-bold text-center text-primary">Batch</h1> */}
                 <Row>
                     <Col md={4}>
                         <Breadcrumb>
@@ -253,7 +245,7 @@ const Batch = () => {
 
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>{editingId ? "Update Batch" : "Add Batch "}</Modal.Title>
+                        <Modal.Title>{editingId ? "Update Batch" : "Add Batch"}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
@@ -279,27 +271,27 @@ const Batch = () => {
                                     />
                                 </Col>
                                 <Col md={6}>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Start Date</Form.Label>
-                                     <Form.Control
-                                        type="date"
-                                        value={start_date}
-                                        onChange={(e) => setStartDate(e.target.value)}
-                                        required
-                                    />
-                                 </Form.Group>
-                             </Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Start Date</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            value={start_date}
+                                            onChange={(e) => setStartDate(e.target.value)}
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
                                 <Col md={6}>
-                                 <Form.Group className="mb-3">
-                                     <Form.Label>End Date</Form.Label>
-                                     <Form.Control
-                                        type="date"
-                                        value={end_date}
-                                        onChange={(e) => setEndDate(e.target.value)}
-                                        required
-                                    />
-                                 </Form.Group>
-                             </Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>End Date</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            value={end_date}
+                                            onChange={(e) => setEndDate(e.target.value)}
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
                                 <Col md={12} className="d-flex mt-3">
                                     <Form.Label>Status</Form.Label>
                                     <Form.Check
@@ -321,6 +313,11 @@ const Batch = () => {
                                         onChange={(e) => setStatus(e.target.value)}
                                     />
                                 </Col>
+                                {errorMessage && (
+                                    <Col md={12} className="text-danger">
+                                        {errorMessage}
+                                    </Col>
+                                )}
                             </Row>
                         </Form>
                     </Modal.Body>
@@ -384,8 +381,7 @@ const Batch = () => {
                                     <th>Student Name</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
-                                    {/* <th>Amount</th> */}
-                                    <th className="no-print">Status</th>
+                                    <th>Status</th>
                                     <th className="no-print text-center">Action</th>
                                 </tr>
                             </thead>
@@ -397,18 +393,18 @@ const Batch = () => {
                                         <td>{a.student_name}</td>
                                         <td>{a.start_date}</td>
                                         <td>{a.end_date}</td>
-                                        <td className="no-print">{a.status}</td>
+                                        <td>{a.status}</td>
                                         <td className="no-print d-flex justify-content-evenly">
                                             <Button
                                                 variant="warning"
-                                                className="no-print" // Hide this during printing
+                                                className="no-print"
                                                 onClick={() => handleEdit(a)}
                                             >
                                                 <GrEdit />
                                             </Button>
                                             <Button
                                                 variant="danger"
-                                                className="no-print" // Hide this during printing
+                                                className="no-print"
                                                 onClick={() => deletedata(a._id)}
                                             >
                                                 <AiFillDelete />
@@ -424,7 +420,7 @@ const Batch = () => {
                 <Row>
                     <Col md={6}>
                         <div className="dataTables_info" aria-live="polite" role="status">
-                            Showing {showingFrom} to {showingTo} of {totalEntries} entries
+                            Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, userData.length)} of {userData.length} entries
                         </div>
                     </Col>
                     <Col md={6} className="d-flex justify-content-end">
@@ -459,6 +455,7 @@ const Batch = () => {
 };
 
 export default Batch;
+
 
 
 
