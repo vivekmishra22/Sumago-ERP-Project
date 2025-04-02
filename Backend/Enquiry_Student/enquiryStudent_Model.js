@@ -8,7 +8,7 @@ const data = mongoose.Schema({
     city_name:{ type:String, required:true },
     mobile_number:{ type:Number, required:true },
     whatsApp_number:{ type:Number, required:true },
-    date_birthe:{ type:Date, required:true},
+    date_birth:{ type:Date, required:true},
     gmail:{ type:String, required:true },
     blood_Group:{ type:String, required:true },
     education_name: { type: String, required: true},

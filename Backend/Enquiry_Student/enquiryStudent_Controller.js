@@ -3,14 +3,14 @@ const model = require('../Enquiry_Student/enquiryStudent_Model')
 // post API
 const add = async(req, res) => {
     const {  student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
-        date_birthe, gmail, blood_Group,education_name,marital_status, office_city_name, 
+        date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
         temporary_address, permanent_address, mode_education, course_name, duration, 
         amount,placement_reference,system,tshirt,batch_slot, status
     } = req.body;
     try {
         const data = new model({
             student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
-            date_birthe, gmail, blood_Group,education_name,marital_status, office_city_name, 
+            date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
             temporary_address, permanent_address, mode_education, course_name, duration, 
             amount,placement_reference,system,tshirt,batch_slot, status
             
@@ -63,7 +63,7 @@ const Delete = async (req, res) => {
 //Update API
 const Update = async (req, res) => {
     const { student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
-        date_birthe, gmail, blood_Group,education_name,marital_status, office_city_name, 
+        date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
         temporary_address, permanent_address, mode_education, course_name, duration, 
         amount,placement_reference,system,tshirt,batch_slot, status
     } = req.body;
@@ -72,7 +72,7 @@ const Update = async (req, res) => {
             {_id: req.params._id},
             { $set: {
                 student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
-                date_birthe, gmail, blood_Group,education_name,marital_status, office_city_name, 
+                date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
                 temporary_address, permanent_address, mode_education, course_name, duration, 
                 amount,placement_reference,system,tshirt,batch_slot, status
                 

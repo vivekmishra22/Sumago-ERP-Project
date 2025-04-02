@@ -15,7 +15,7 @@ const Login = () => {
     const userData = { email, password };
 
     axios
-      .post('http://localhost:8000/login', userData ,{
+      .post('http://localhost:8000/loginbde', userData ,{
         headers: {
           Authorization:` Bearer ${localStorage.getItem('token')}`
       }
@@ -49,7 +49,7 @@ const Login = () => {
             onBackToLogin={handleBackToLogin}
              />
           ) : (
-            <Col md={6} className="mt-5 pt-3">
+            <Col md={6} sm={12} lg={6} xl={6} xxl={6} className="mt-5 pt-3">
               <h1 className="text-center text-white">LOGIN</h1>
               <Card className="login4 py-5 rounded-4 border-0">
                 <Card.Body>

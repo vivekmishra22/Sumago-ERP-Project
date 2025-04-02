@@ -68,6 +68,14 @@ const Admission_Fees = () => {
     }
   }
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+   const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
+   const month = String(date.getMonth() + 1); // Months are zero-based
+   const year = date.getFullYear();
+   return `${day}-${month}-${year}`;
+};
+
   // Fetch data on component mount
   useEffect(() => {
     showUsers();
@@ -117,7 +125,7 @@ const Admission_Fees = () => {
   const handleEdit = (course) => {
     setEditingId(course._id);
     setCourse_Name(course.course_name);
-    setFees_date(course.fees_date);
+    setFees_date(new Date(course.fees_date).toISOString().split("T")[0]);
     setDuration(course.duration);
     setAmount(course.amount);
     setStatus(course.status);
@@ -129,9 +137,10 @@ const Admission_Fees = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const updatedDate = new Date(fees_date).toISOString();
     const newData = {
       course_name: capitalizeFirstLetter(course_name),
-      fees_date: capitalizeFirstLetter(fees_date),
+      fees_date: updatedDate,
       duration: capitalizeFirstLetter(duration),
       amount: capitalizeFirstLetter(amount),
       status: capitalizeFirstLetter(status),
@@ -154,11 +163,6 @@ const Admission_Fees = () => {
         .then((res) => {
           // console.log("Data Added:", res.data);
           alert("Course Added Successfully!");
-          setCourse_Name("");
-          setFees_date("");
-          setDuration("");
-          setAmount("");
-          setStatus("Active");
           handleClose();
           showUsers(); // Refresh the table
         })
@@ -287,12 +291,12 @@ const Admission_Fees = () => {
           <Col md={4}>
             <Breadcrumb>
               <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-              <Breadcrumb.Item active>Admission Fees</Breadcrumb.Item>
+              <Breadcrumb.Item active>Fees structure</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
           <Col md={8} className="d-flex justify-content-end mb-4">
             <Button variant="primary" onClick={() => setShow(true)}>
-              Add Course
+              Add Fees Structure
             </Button>
           </Col>
         </Row>
@@ -300,9 +304,12 @@ const Admission_Fees = () => {
         {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>
+            {/* <Modal.Title>
               {editingId ? " Update Adission Fees" : "Add Adission Fees"}
-            </Modal.Title>
+            </Modal.Title> */}
+            <Modal.Title>
+              {editingId ? "Update Fees Structure" : "Add Fees Structure"} {/* Conditional title */}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
@@ -310,13 +317,14 @@ const Admission_Fees = () => {
                 <Col md={12}>
                   <Form.Label>Fees Date</Form.Label>
                   <Form.Control
-                    type="date"
+                    type="Date"
                     placeholder="Enter Fees Date"
                     value={fees_date}
                     onChange={(e) => setFees_date(e.target.value)}
                     required
                   />
                 </Col>
+               
                 <Col md={12}>
                   <Form.Label>Course Name</Form.Label>
                   <Form.Select
@@ -480,7 +488,7 @@ const Admission_Fees = () => {
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>{a.course_name}</td>
-                    <td>{a.fees_date}</td>
+                    <td>{formatDate(a.fees_date)}</td>
                     <td>{a.duration}</td>
                     <td>{a.amount}</td>
                     <td className="no-print">{a.status}</td>

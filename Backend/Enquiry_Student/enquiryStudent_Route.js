@@ -10,4 +10,4 @@ route.get('/getbyIdCollege/:_id', getbyId);
 route.put('/UpdateEnquiry_Student/:_id', Update);
 route.delete('/deleteEnquiry_Student/:_id', Delete);
 
-module.exports = route
+module.exports = route;

@@ -38,7 +38,7 @@ const Change_Password = ({ onBackToLogin }) => {
     try {
       // Send request to change password
       const response = await axios.post(
-        'http://localhost:8000/change_password',
+        'http://localhost:8000/bdechange_password',
         { currentPassword, newPassword },
         {
           headers: {
@@ -70,7 +70,7 @@ const Change_Password = ({ onBackToLogin }) => {
   };
 
   return (
-    <Col md={6} className="mt-5 pt-3">
+    <Col md={6} sm={12} lg={6} xl={6} xxl={6} className="mt-5 pt-3">
       <h1 className="text-center text-white">CHANGE PASSWORD</h1>
       <Card className="login4">
         <Card.Body>
@@ -101,9 +101,9 @@ const Change_Password = ({ onBackToLogin }) => {
                 required
                 aria-describedby="newPasswordHelp"
               />
-              <Form.Text id="newPasswordHelp" muted>
+              {/* <Form.Text id="newPasswordHelp" muted>
                 Password must be at least 6 characters long.
-              </Form.Text>
+              </Form.Text> */}
             </Col>
 
             <Col md={12} className="my-3 text-white">

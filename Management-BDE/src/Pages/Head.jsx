@@ -7,6 +7,7 @@ import Dashboard from "./Dashboard";
 import Admission_Fees from "./Admission_Fees";
 import Welcomekit_Feespaid from "./Welcomekit_Feespaid";
 import Enquiry_Student from "./Enquiry_Student";
+import Enquiry_Add from "./Enquiry_Add";
 
 
 const Head = () => {
@@ -25,6 +26,7 @@ const Head = () => {
               <Route path="/admission_fees" element={<Admission_Fees />}/>
               <Route path="/welcomekit_feespaid" element={<Welcomekit_Feespaid />}/>
               <Route path="/enquiry_student" element={<Enquiry_Student/>}/>
+              <Route path="/enquiry_add" element={<Enquiry_Add/>}/>
              
             </Routes>
           </Container>

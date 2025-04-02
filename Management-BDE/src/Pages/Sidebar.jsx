@@ -49,10 +49,16 @@ const Sidebar = () => {
                                 <MdSpaceDashboard size={25} className="me-2" /> Dashboard
                             </Link>
                             <Link
-                                to="/Head/enquiry_student"
+                                to="/Head/enquiry_add"
                                 className="text-decoration-none link ps-3 py-2"
                             >
                                 <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry
+                            </Link>
+                            <Link
+                                to="/Head/enquiry_student"
+                                className="text-decoration-none link ps-3 py-2"
+                            >
+                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry Data
                             </Link>
                             <Link
                                 to="/Head/admission_fees"
