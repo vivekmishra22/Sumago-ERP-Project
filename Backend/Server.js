@@ -30,6 +30,7 @@ const admin_Route = require('./Admin/admin_Route');
 const bde_Route = require('./BDE/bde_Route');
 const hr_Route = require('./HR/hr_Route');
 const trainer_Route = require('./Trainer/trainer_Route');
+const student_Route = require('./Student/student_Route');
 const user_Route = require ('./Users/user_Route');
 
 
@@ -57,6 +58,7 @@ app.use('/', admin_Route);
 app.use('/', bde_Route);
 app.use('/', hr_Route);
 app.use('/', trainer_Route);
+app.use('/', student_Route);
 app.use('/', user_Route);
 
   // Refresh token endpoint
