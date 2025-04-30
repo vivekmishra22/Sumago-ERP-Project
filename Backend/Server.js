@@ -32,10 +32,15 @@ const hr_Route = require('./HR/hr_Route');
 const trainer_Route = require('./Trainer/trainer_Route');
 const student_Route = require('./Student/student_Route');
 const user_Route = require ('./Users/user_Route');
+const country_Route = require ('./Country/country_Route');
+const document_Route = require ('./Documents/documents_Route');
+// const trainerProfile_Route = require ('./Trainer_Profile/trainer_Profile_Route');
 
 
 app.use(express.json())
 app.use(cors());
+
+app.use('/documents_Image', express.static('Documents_Image'))
 
 app.use('/', technology_Route);
 app.use('/', university_Route);
@@ -60,6 +65,9 @@ app.use('/', hr_Route);
 app.use('/', trainer_Route);
 app.use('/', student_Route);
 app.use('/', user_Route);
+app.use('/', country_Route);
+app.use('/', document_Route);
+// app.use('/', trainerProfile_Route);
 
   // Refresh token endpoint
   app.post('/refresh-token', (req, res) => {
@@ -75,7 +83,7 @@ app.use('/', user_Route);
   });
 
 app.get(('/'),(req,res) =>
-    res.send("database canected ERP Project"));
+    res.send("Database cannected ERP Project"));
 
 app.listen(8000, () => {
     console.log(`app listening on port 8000`)

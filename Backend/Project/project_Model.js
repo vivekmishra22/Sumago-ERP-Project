@@ -8,7 +8,7 @@ const projectSchema = new mongoose.Schema({
     },
     startDate: {
         type: Date,
-        default: Date.now, // Automatically set to the current date
+        default: Date.now, 
         required: true
     },
     description: {
@@ -21,7 +21,7 @@ const projectSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["Completed", "Incomplete", "Pending", "Not Completed"], // Allowed values
+        enum: ["Completed", "Incomplete", "Pending", "Not Completed"], 
         required: true
     }
 });

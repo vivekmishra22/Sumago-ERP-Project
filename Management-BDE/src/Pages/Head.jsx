@@ -8,6 +8,9 @@ import Admission_Fees from "./Admission_Fees";
 import Welcomekit_Feespaid from "./Welcomekit_Feespaid";
 import Enquiry_Student from "./Enquiry_Student";
 import Enquiry_Add from "./Enquiry_Add";
+import Installment from "./Installment";
+import GenerateReceipt from "./GenerateReceipt";
+import Pending_welcomeKit from "./Pending_welcomeKit";
 
 
 const Head = () => {
@@ -23,10 +26,13 @@ const Head = () => {
             <Routes>
               {/* <Route path="/" element={<Home />} /> */}
               <Route path="/" element={<Dashboard/>}></Route>
+              <Route path="/enquiry_add" element={<Enquiry_Add />}/>
               <Route path="/admission_fees" element={<Admission_Fees />}/>
               <Route path="/welcomekit_feespaid" element={<Welcomekit_Feespaid />}/>
               <Route path="/enquiry_student" element={<Enquiry_Student/>}/>
-              <Route path="/enquiry_add" element={<Enquiry_Add/>}/>
+              <Route path="installment" element={<Installment/>}/>
+              <Route path="GenerateReceipt/:id"  element={<GenerateReceipt/>}/>
+              <Route path='/pending_welcomekit' element={<Pending_welcomeKit/>}/>
              
             </Routes>
           </Container>
@@ -37,3 +43,5 @@ const Head = () => {
 };
 
 export default Head;
+
+

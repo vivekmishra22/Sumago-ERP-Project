@@ -320,7 +320,7 @@ const Projects = () => {
                   >
                     <option value="Pending">Pending</option>
                     <option value="Incomplete">Incomplete</option>
-                    <option value="Complete">Completed</option>
+                    <option value="Completed">Completed</option>
                     <option value="Not Completed">Not Completed</option>
                   </Form.Select>
                 </Col>

@@ -3,14 +3,15 @@ import React, { useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import {  FaListAlt, FaRupeeSign} from "react-icons/fa";
 import { FaArrowRightLong    } from "react-icons/fa6";
-import { IoBagCheckSharp } from "react-icons/io5";
+import { RiShoppingBag3Fill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
 
   const [student_name ,setEnquiry_Studentcount] = useState("");
   const [college_name, setCollegeCount] = useState("");
-  const [city_name, setCityCount] = useState("");
+  // const [welcome_kit, setKitCount] = useState("");
+  const [welcome_kit, setKit_Count] = useState("");
 
   useEffect (() =>{
 
@@ -30,15 +31,17 @@ const Dashboard = () => {
       console.log("record fetched",res.data.collegecount)
     })
 
-    // City Conut
-    axios.get("http://localhost:8000/getdataCity")
-    .then((res) =>{
-      const citycount = res.data.data.filter((item) => item.status === "Active");
-      setCityCount(citycount.length);
-      console.log("record fetched",res.data.citycount)
+    // panding welcome kit item  
+    axios.get("http://localhost:8000/getdataKit_FeesPaid")
+    .then((res) => {
+      
+      const pendingKits = res.data.data.filter(item => item.kit_aside  === "pending Kit" && item.status === "Active" );
+      setKit_Count(pendingKits.length); // Update state with count
+      console.log("Pending Welcome Kits (Active Interns):", pendingKits.length);
     })
-
     .catch((err) => console.log(err));
+
+
   })
 
   return (
@@ -49,7 +52,7 @@ const Dashboard = () => {
         {/* card 1 */}
        
         <Col md={6} lg={4} xs={12}>
-        <Link to="/Head/university" className=" text-decoration-none  ">
+        <Link to="/Head/enquiry_student" className=" text-decoration-none  ">
             <Card className="h-100 shadow p-0"  style={{ borderLeft: '5px solid  rgb(61, 152, 250)' }}>
               <Card.Body>
               <Row>
@@ -62,7 +65,7 @@ const Dashboard = () => {
                   <FaListAlt  className="fs-1 ms-0 p-0 me-3 dashboarde-color  "/>
                   </Col>
                   <Card.Text style={{color:"rgb(61, 152, 250)"}} className=" fs-6  fw-bold d-flex gap-2">
-                    Enquiry to Floowup <FaArrowRightLong  className="my-1"/> 
+                    Enquiry to Floow up <FaArrowRightLong  className="my-1"/> 
                     </Card.Text>
                 </Row>
               </Card.Body>
@@ -94,14 +97,14 @@ const Dashboard = () => {
           </Col>
 
         {/* card 3 */}
-        <Col md={6} lg={4} xs={12}>
+        {/* <Col md={6} lg={4} xs={12}>
         <Link to="/Head/city" className=" text-decoration-none  ">
             <Card className="h-100 shadow p-0"  style={{ borderLeft: '5px solid  rgb(6, 194, 178)'}} >
               <Card.Body>
               <Row>
                   <Col md={8}>
                   <Card.Title className="fs-5 fw-bold ">
-                      {city_name}
+                      {welcome_kit}
                     </Card.Title>
                   </Col>
                   <Col md={4}>
@@ -114,7 +117,29 @@ const Dashboard = () => {
                 </Card.Body>
             </Card>
             </Link>
+          </Col> */}
+
+<Col md={6} lg={4} xs={12}>
+  <Link to="/Head/welcomekit_feespaid" className="text-decoration-none">
+    <Card className="h-100 shadow p-0" style={{ borderLeft: '5px solid rgb(6, 194, 178)' }}>
+      <Card.Body>
+        <Row>
+          <Col md={8}>
+            <Card.Title className="fs-5 fw-bold">
+               {welcome_kit} {/* Display dynamic count */}
+            </Card.Title>
           </Col>
+          <Col md={4}>
+            <RiShoppingBag3Fill className="fs-1 ms-0 p-0 me-3 dashboarde-color" />
+          </Col>
+          <Card.Text style={{color: "rgb(6, 194, 178)"}} className="fs-6 d-flex gap-2 fw-bold">
+            Pending Welcome Kit Items of Active Interns <FaArrowRightLong className="my-1" />
+          </Card.Text>
+        </Row>
+      </Card.Body>
+    </Card>
+  </Link>
+</Col>
         </Row>
       </Container>
     </>

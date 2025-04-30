@@ -6,7 +6,9 @@ import { LuLogIn } from "react-icons/lu";
 import {  MdSpaceDashboard } from "react-icons/md";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { IoBagCheckSharp } from "react-icons/io5";
-import { RiMoneyRupeeCircleFill } from "react-icons/ri";
+import { RiMoneyRupeeCircleFill, RiShoppingBag3Fill } from "react-icons/ri";
+// import { PiStudentBold } from "react-icons/pi";
+import { FaDatabase } from "react-icons/fa";
 const Sidebar = () => {
     const [show, setShow] = useState(false); // State for Offcanvas
 
@@ -48,29 +50,41 @@ const Sidebar = () => {
                             >
                                 <MdSpaceDashboard size={25} className="me-2" /> Dashboard
                             </Link>
-                            <Link
+                            {/* <Link
                                 to="/Head/enquiry_add"
                                 className="text-decoration-none link ps-3 py-2"
                             >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry
-                            </Link>
+                                <PiStudentBold size={25} className="me-2" />  Student Enquiry
+                            </Link> */}
                             <Link
                                 to="/Head/enquiry_student"
                                 className="text-decoration-none link ps-3 py-2"
                             >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry Data
+                               <FaDatabase size={25} className="me-2" />  Student Enquiry 
                             </Link>
                             <Link
                                 to="/Head/admission_fees"
                                 className="text-decoration-none link ps-3 py-2"
                             >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Admission Fees
+                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Fees structure
                             </Link>
+                            <Link
+                                to="/Head/Installment"
+                                className="text-decoration-none link ps-3 py-2"
+                            >
+                                <RiMoneyRupeeCircleFill size={25} className="me-2" /> Fees Installment
+                            </Link>            
                             <Link
                                 to="/Head/welcomekit_feespaid"
                                 className="text-decoration-none link ps-3 py-2"
                             >
                                 <IoBagCheckSharp size={25} className="me-2" />  Welcome Kit
+                            </Link>
+                            <Link
+                                to="/Head/pending_welcomekit"
+                                className="text-decoration-none link ps-3 py-2"
+                            >
+                                <RiShoppingBag3Fill size={25} className="me-2" />  Pending Welcome Kit
                             </Link>
 
                             <Link to="/" className="text-decoration-none link ps-3 py-2">
@@ -109,18 +123,30 @@ const Sidebar = () => {
                             >
                                 <MdSpaceDashboard size={25} className="me-2" /> Dashboard
                             </Link>
+                            {/* <Link
+                                to="/Head/enquiry_add"
+                                className="text-decoration-none link ps-3 py-2"
+                            >
+                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry
+                            </Link> */}
                             <Link
                                 to="/Head/enquiry_student"
                                 className="text-decoration-none link ps-3 py-2"
                             >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry
+                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry 
                             </Link>
                             <Link
                                 to="/Head/admission_fees"
                                 className="text-decoration-none link ps-3 py-2"
                             >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Admission Fees
+                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Fees structure
                             </Link>
+                            <Link
+                                to="/Head/Installment"
+                                className="text-decoration-none link ps-3 py-2"
+                            >
+                                <RiMoneyRupeeCircleFill size={25} className="me-2" /> Fees Installment
+                            </Link>            
                             <Link
                                 to="/Head/welcomekit_feespaid"
                                 className="text-decoration-none link ps-3 py-2"

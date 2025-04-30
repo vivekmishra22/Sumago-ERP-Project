@@ -10,10 +10,8 @@ import OfficeCity from "./OfficeCity";
 import Office from "./Office";
 import Education from "./Education";
 import GuestLecturer from "./GuestLecturer";
-// import UpdateGuest from "./UpdateGuest";
 import City from "./City";
 import Courses from "./Courses";
-// import Fee from "./Fee";
 import WelcomeKit from "./WelcomeKit";
 import Dashboard from "./Dashboard";
 import UpdateCourse from "./UpdateCourse";
@@ -23,8 +21,8 @@ import Batch from "./Batch";
 import HR from "./HR";
 import BDE from "./BDE";
 import Trainer from "./Trainer";
-// import Feedback from "./Feedback";
-// import Project from "./Project";
+import Country from "./Country";
+import Projects from "./Project";
 
 const Head = () => {
   return (
@@ -57,6 +55,8 @@ const Head = () => {
               <Route path="/bde" element={<BDE />} />  
               <Route path="/trainer" element={<Trainer />} />  
               <Route path="/users" element={<Users />} />  
+              <Route path="/country" element={<Country />} />  
+              <Route path="/project" element={<Projects />} />  
             </Routes>
           </Container>
         </div>

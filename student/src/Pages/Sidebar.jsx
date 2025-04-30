@@ -51,6 +51,11 @@ const Sidebar = () => {
                                 <span>Projects</span>
                             </Link>
 
+                            {/* Documents Link */}
+                            <Link to="/Head/documents" className="text-decoration-none link ps-3 py-2">
+                                <FaFolderOpen size={23} className="me-2" />Pending Documents
+                            </Link>
+
                             {/* Logout Link (Always at the bottom) */}
                             <Link to="/" className="text-decoration-none link ps-3 py-2 d-flex align-items-center mt-auto">
                                 <LuLogIn size={25} className="me-2" /> 
@@ -82,6 +87,11 @@ const Sidebar = () => {
                             {/* Projects Link */}
                             <Link to="/Head/project" className="text-decoration-none link ps-3 py-2">
                                 <FaFolderOpen size={23} className="me-2" /> Projects
+                            </Link>
+
+                            {/* Documents Link */}
+                            <Link to="/Head/documents" className="text-decoration-none link ps-3 py-2">
+                                <FaFolderOpen size={23} className="me-2" /> Documents
                             </Link>
 
                             {/* Logout Link (Always at the bottom) */}
