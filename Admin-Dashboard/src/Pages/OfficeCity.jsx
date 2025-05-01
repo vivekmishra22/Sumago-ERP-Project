@@ -24,7 +24,7 @@ import { FaSearch } from "react-icons/fa";
 const OfficeCity = () => {
   const [show, setShow] = useState(false);
 
-  // const handleShow = () => setShow(true);
+  const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,11 +40,15 @@ const OfficeCity = () => {
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
     return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
+      .split(" ") // Split the string into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join them back together
   };
 
+  // Fetch data on component mount
+  useEffect(() => {
+    showUsers();
+  }, []);
 
   // Fetch Data from API
   useEffect(() => {
@@ -232,24 +236,18 @@ const OfficeCity = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button
-        <h1 className="fw-bold text-center text-primary ">Office City </h1>
-        <Col md={12} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add Office City
-          </Button>
-        </Col> */}
-
+        {/* Add City Button */}
+        {/* <h1 className="fw-bold text-center text-primary ">Office City </h1> */}
         <Row>
           <Col md={4}>
             <Breadcrumb>
-              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
-              <Breadcrumb.Item active>OfficeCity</Breadcrumb.Item>
+              <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>Office City</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
           <Col md={8} className="d-flex justify-content-end mb-4">
-            <Button variant="primary" onClick={() => setShow(true)}>
-              Add OfficeCity
+            <Button variant="primary" onClick={handleShow}>
+              Add Office City
             </Button>
           </Col>
         </Row>
@@ -257,10 +255,7 @@ const OfficeCity = () => {
         {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-          <Modal.Title>
-              {editingId ? "Update City" : "Add City"} {/* Conditional title */}
-            </Modal.Title>
-            {/* <Modal.Title>Add Office City</Modal.Title> */}
+            <Modal.Title>{editingId ? "Update Office City" : "Add Office City"} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

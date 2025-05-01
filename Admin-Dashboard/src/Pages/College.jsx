@@ -22,7 +22,7 @@ import { FaSearch } from "react-icons/fa";
 
 const College = () => {
   const [show, setShow] = useState(false);
-  // const handleShow = () => setShow(true);
+  const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,9 +42,9 @@ const College = () => {
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
     return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
+      .split(" ") // Split the string into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join them back together
   };
 
   // Fetch Data from API
@@ -53,7 +53,8 @@ const College = () => {
   }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/getdataUniversity")
+    axios
+      .get("http://localhost:8000/getdataUniversity")
       .then((res) => {
         const udata = res.data.data.filter((item) => item.status === "Active");
         setCategoriesData(udata);
@@ -63,7 +64,8 @@ const College = () => {
         console.error("Error fetching categories:", err);
       });
 
-    axios.get("http://localhost:8000/getdataCity")
+    axios
+      .get("http://localhost:8000/getdataCity")
       .then((res) => {
         const cdata = res.data.data.filter((item) => item.status === "Active");
         setCategories(cdata); // Assuming the response contains a `data` array
@@ -73,7 +75,6 @@ const College = () => {
         console.error("Error fetching categories:", err);
       });
   }, []);
-
 
   const showUsers = () => {
     // setLoading(true);
@@ -113,7 +114,7 @@ const College = () => {
       college_name: capitalizeFirstLetter(college_name),
       university_name: capitalizeFirstLetter(university_name),
       city_name: capitalizeFirstLetter(city_name),
-      status: capitalizeFirstLetter(status)
+      status: capitalizeFirstLetter(status),
     };
 
     if (editingId) {
@@ -261,7 +262,6 @@ const College = () => {
 
   // Handle Enter key press
 
-
   // Reset search when the input is cleared
   useEffect(() => {
     if (searchTerm === "") {
@@ -273,22 +273,16 @@ const College = () => {
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
         {/* Add City Button */}
-        {/* <h1 className="fw-bold text-center text-primary ">College </h1>
-        <Col md={12} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add College
-          </Button>
-        </Col> */}
-
+        {/* <h1 className="fw-bold text-center text-primary ">College </h1> */}
         <Row>
           <Col md={4}>
             <Breadcrumb>
-              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
               <Breadcrumb.Item active>College</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
           <Col md={8} className="d-flex justify-content-end mb-4">
-            <Button variant="primary" onClick={() => setShow(true)}>
+            <Button variant="primary" onClick={handleShow}>
               Add College
             </Button>
           </Col>
@@ -297,10 +291,7 @@ const College = () => {
         {/* Add College Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>
-              {editingId ? "Update College" : "Add College"} {/* Conditional title */}
-            </Modal.Title>
-            {/* <Modal.Title>Add College</Modal.Title> */}
+            <Modal.Title>{editingId ? "Update College" : "Add College"} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
@@ -314,6 +305,7 @@ const College = () => {
                     value={university_name}
                     onChange={(e) => setUniversityName(e.target.value)}
                     required
+                    
                   >
                     <option value="">Choose a university</option>
                     {categoriesdata.map((university) => (
@@ -326,7 +318,6 @@ const College = () => {
                     ))}
                   </Form.Select>
                 </Col>
-
 
                 <Col md={12} className="mt-2">
                   <Form.Label>College Name</Form.Label>
@@ -363,6 +354,8 @@ const College = () => {
                     ))}
                   </Form.Select>
                 </Col>
+
+                
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
@@ -404,7 +397,7 @@ const College = () => {
         {/* Export Buttons */}
         <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink variant="secondary"
+          <CSVLink
             data={csvData}
             filename={"College-data.csv"}
             className="ms-1"

@@ -14,6 +14,7 @@ const Signin = () => {
     e.preventDefault();
     const userData = { email, password };
 
+    // axios.post("http://localhost:8000/login", userData)
     axios.post("http://localhost:8000/adminLogin", userData)
       .then((res) => {
         localStorage.setItem("token", res.data.token);  // Store token

@@ -4,23 +4,24 @@ const model = require('../Office_City/office_City_Model');
 const add = async(req, res) => {
     const { office_city_name, status} = req.body;
     try {
-        const existingCity = await model.findOne({ office_city_name });
-                        if (existingCity) {
-                            return res.status(400).json({ message: 'City name already exists' });
-                        }
+
+        const existingOffice = await model.findOne({ office_city_name });
+        if (existingOffice) {
+          return res.status(400).json({ message: 'Office name already exists' });
+        }
         const data = new model({
             office_city_name, status
         });
         const userdata = await data.save()
         res.send({userdata});
     }
-    catch (error) {
+    catch (error){
         if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
-            return res.status(400).json({ message: 'City already exists' });
+            return res.status(400).json({ message: 'Office already exists' });
         }
 
         console.log(error);
-        return res.status(500).json({ message: 'internal servar error' })
+        return res.status(500).json({ message:'internal servar error'})
     }
 }
 
@@ -61,10 +62,11 @@ const Delete = async (req, res) => {
 const Update = async (req, res) => {
     const {office_city_name, status} = req.body;
     try{
-        const existingCity = await model.findOne({ office_city_name });
-        if (existingCity) {
-            return res.status(400).json({ message: 'City name already exists' });
+        const existingOffice = await model.findOne({ office_city_name, status });
+        if (existingOffice) {
+          return res.status(400).json({ message: 'Office name already exists' });
         }
+
         const data = await model.updateOne(
             {_id: req.params._id},
             { $set: {
@@ -78,19 +80,14 @@ const Update = async (req, res) => {
             res.status(300).send({message: "user update not found"});
         }
 
-    }
-    catch (error) {
+    }catch (error){
         if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
-            return res.status(400).json({ message: 'City already exists' });
+            return res.status(400).json({ message: 'Office already exists' });
         }
 
         console.log(error);
-        return res.status(500).json({ message: 'internal servar error' })
+        return res.status(500).json({ message:'internal servar error'})
     }
-    // catch (error) {
-    //     console.log(error);
-    //     res.status(500).send({message: " Internal server error"})
-    // }
 };
 
 

@@ -1,4 +1,4 @@
-const model = require('./bde_Model');
+const model = require('../BDE/bde_Model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET || 'mysecretkey'; // Use environment variable for the secret
@@ -7,11 +7,11 @@ const saltRounds = 10;
 
 // Register a new user
 const regi_bde = async (req, res) => {
-  const { fname, lname, email,designation, password, status } = req.body;
+  const { fname, lname, email, password, status } = req.body;
 
   try {
     // // Validate input
-    // if (!fname || !lname || !email || !designation || !password || !status) {
+    // if (!fname || !lname || !email ||  || !password || !status) {
     //   return res.status(400).json({ message: 'All fields are required' });
     // }
 
@@ -29,7 +29,6 @@ const regi_bde = async (req, res) => {
       fname,
       lname,
       email,
-      designation,
       password: hashedPassword,
       status,
     });
@@ -44,44 +43,13 @@ const regi_bde = async (req, res) => {
   }
 };
 
-// Login user
-// const loginuser = async (req, res) => {
-//   const { email, password } = req.body;
-
-//   try {
-//     // Validate input
-//     if (!email || !password) {
-//       return res.status(400).json({ message: 'Email and password are required' });
-//     }
-
-//     // Find the user
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     // Compare passwords
-//     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-//     if (!isPasswordCorrect) {
-//       return res.status(401).json({ message: 'Invalid credentials' });
-//     }
-
-//     // Generate a token
-//     const token = jwt.sign({ email: user.email, id: user._id }, secret, { expiresIn: '1h' });
-
-//     res.json({ email: user.email, token });
-//   } catch (error) {
-//     console.error('Error logging in:', error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// };
-
+// login
 const loginuser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const BDE = await model.findOne({ email });
-    if (!regi_bde) {
+    if (!BDE) {
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -98,7 +66,7 @@ const loginuser = async (req, res) => {
   }
 };
 
-
+// Change password
 const change = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
@@ -109,13 +77,13 @@ const change = async (req, res) => {
     const userId = decoded.id;
 
     // Find the user by ID
-    const BDE = await model.findById(userId);
-    if (!BDE) {
+    const user = await model.findById(userId);
+    if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     // Verify the current password
-    const isMatch = await bcrypt.compare(currentPassword, BDE.password);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
@@ -125,7 +93,7 @@ const change = async (req, res) => {
 
     // Update the user's password
     user.password = hashedPassword;
-    await model.save();
+    await user.save();
 
     res.status(200).json({ message: 'Password changed successfully' });
   } catch (error) {
@@ -159,20 +127,6 @@ const getbyId = async (req, res) => {
   }
 };
 
-// Delete user
-// const Delete = async (req, res) => {
-//   try {
-//     const result = await User.deleteOne({ _id: req.params.id });
-//     if (result.deletedCount === 0) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-//     res.status(200).json({ message: 'User deleted successfully' });
-//   } catch (error) {
-//     console.error('Error deleting user:', error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// };
-
 // Delete API
 const Delete = async (req, res) => {
     try{
@@ -202,12 +156,12 @@ const Delete = async (req, res) => {
 
 // Update user
 const Update = async (req, res) => {
-  const { fname, lname, email,designation, status } = req.body;
+  const { fname, lname, email, status } = req.body;
 
   try {
     const updatedUser = await model.findByIdAndUpdate(
       req.params.id,
-      { fname, lname, email,designation, status },
+      { fname, lname, email, status },
       { new: true }
     );
 

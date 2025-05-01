@@ -89,14 +89,14 @@ const Login = () => {
                         <Nav.Link className="px-2 text-primary" 
                         onClick={handleChangePassword}
                         >
-                          Change Password?
+                          Clange Password?
                         </Nav.Link>
                       </Col>
                     </Row>
 
                     <Col md={12} className="d-flex justify-content-center">
                       <Button type="submit" className="mt-4 w-50 rounded-pill btn btn-primary login2"
-                      onClick={() =>navigate(`/Head`)}
+                      // onClick={() =>navigate(`/Head`)}
                       >
                         Submit
                       </Button>

@@ -24,7 +24,7 @@ import { FaSearch } from "react-icons/fa";
 const Courses = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => {
-    setCourse_Name("");
+    setName("");
     setCourse_Description("");
     setDuration("");
     setAmount("");
@@ -39,7 +39,7 @@ const Courses = () => {
   const [itemsPerPage] = useState(10); // Adjust as needed
   // const navigate = useNavigate();
 
-  const [course_name, setCourse_Name] = useState("");
+  const [name, setName] = useState("");
   const [course_description, setCourse_Description] = useState("");
   const [duration, setDuration] = useState("");
   const [amount, setAmount] = useState("");
@@ -87,10 +87,10 @@ const Courses = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/getdataDuration")
+      .get("http://localhost:8000/getdata")
       .then((res) => {
-        const sdata = res.data.data.filter((item) => item.status === "Active");
-        setCategoriesData(sdata);
+        const data = res.data.data.filter((item) => item.status === "Active");
+        setCategoriesData(data);
         console.log("Categories fetched:", res.data.data);
       })
       .catch((err) => {
@@ -106,7 +106,7 @@ const Courses = () => {
   // Handle Edit Click
   const handleEdit = (course) => {
     setEditingId(course._id);
-    setCourse_Name(course.course_name);
+    setName(course.name);
     setCourse_Description(course.course_description);
     setDuration(course.duration);
     setAmount(course.amount);
@@ -120,7 +120,7 @@ const Courses = () => {
     setIsSubmitting(true);
 
     const newData = {
-      course_name: capitalizeFirstLetter(course_name),
+      name: capitalizeFirstLetter(name),
       course_description: capitalizeFirstLetter(course_description),
       duration: capitalizeFirstLetter(duration),
       amount: capitalizeFirstLetter(amount),
@@ -144,7 +144,7 @@ const Courses = () => {
         .then((res) => {
           // console.log("Data Added:", res.data);
           alert("Course Added Successfully!");
-          setCourse_Name("");
+          setName("");
           setCourse_Description("");
           setDuration("");
           setAmount("");
@@ -176,7 +176,7 @@ const Courses = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "Course Name": a.course_name,
+        "Course Name": a.name,
         "Course Description": a.course_description,
         "Course Duration": a.duration,
         "Course Fees": a.amount,
@@ -203,7 +203,7 @@ const Courses = () => {
       ],
       body: userData.map((a, index) => [
         index + 1,
-        a.course_name,
+        a.name,
         a.course_description,
         a.duration,
         a.amount,
@@ -216,7 +216,7 @@ const Courses = () => {
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "Course Name": a.course_name,
+    "Course Name": a.name,
     "Course Description": a.course_description,
     "Course Duration": a.duration,
     "Amount": a.amount,
@@ -254,7 +254,7 @@ const Courses = () => {
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.course_description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.duration.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.amount.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -297,20 +297,32 @@ const Courses = () => {
         {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Course</Modal.Title>
+            <Modal.Title>{editingId ? "Update Course" : "Add Course"} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={12}>
                   <Form.Label>Course Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter course Name"
-                    value={course_name}
-                    onChange={(e) => setCourse_Name(e.target.value)}
+                 
+                  <Form.Select
+                    aria-label="select Course "
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
-                  />
+                  >
+                    <option value="">Choose the Course</option>
+                    {categoriesdata.map((course) => (
+                      <option
+                      key={course._id}
+                      value={course.name}
+                      >
+                        {course.name}
+                      </option>
+                     
+                    ))}
+
+                  </Form.Select>
                 </Col>
                 <Col md={12}>
                   <Form.Label>Course Description</Form.Label>
@@ -324,7 +336,14 @@ const Courses = () => {
                 </Col>
                 <Col md={12}>
                   <Form.Label>Course Duration</Form.Label>
-                  <Form.Select
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Duration Name"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    required
+                  />
+                  {/* <Form.Select
                     aria-label="select Course"
                     value={duration}
                     onChange={(e) => {
@@ -349,19 +368,20 @@ const Courses = () => {
                         {category.duration}
                       </option>
                     ))}
-                  </Form.Select>
+                  </Form.Select> */}
                 </Col>
 
                 <Col md={12}>
                   <Form.Label>Course Fees</Form.Label>
                   <Form.Control
-                    type="text"
+                    type="number"
                     placeholder="Enter Amount"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
                   />
                 </Col>
+                
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
@@ -466,7 +486,7 @@ const Courses = () => {
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.course_name}</td>
+                    <td>{a.name}</td>
                     <td>{a.course_description}</td>
                     <td>{a.duration}</td>
                     <td>{a.amount}</td>

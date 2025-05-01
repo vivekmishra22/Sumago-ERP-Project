@@ -4,24 +4,26 @@ const model = require('../Education/education_Model')
 const add = async (req, res) => {
     const { education_name, status } = req.body;
     try {
+
         const existingEducation = await model.findOne({ education_name });
-        if (existingEducation) {
-            return res.status(400).json({ message: 'Education name already exists' });
-        }
+  if (existingEducation) {
+    return res.status(400).json({ message: 'Education name already exists' });
+  }
         const data = new model({
             education_name, status
         });
         const userdata = await data.save()
         res.send({ userdata });
     }
-    catch (error) {
+    catch (error){
         if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
             return res.status(400).json({ message: 'Education already exists' });
         }
 
         console.log(error);
-        return res.status(500).json({ message: 'internal servar error' })
+        return res.status(500).json({ message:'internal servar error'})
     }
+    
 }
 
 // Get API
@@ -61,9 +63,10 @@ const Delete = async (req, res) => {
 const Update = async (req, res) => {
     const { education_name, status } = req.body;
     try {
-        const existingEducation = await model.findOne({ education_name });
+
+        const existingEducation = await model.findOne({ education_name, status });
         if (existingEducation) {
-            return res.status(400).json({ message: 'Education name already exists' });
+          return res.status(400).json({ message: 'Education name already exists' });
         }
         const data = await model.updateOne(
             { _id: req.params._id },
@@ -80,18 +83,14 @@ const Update = async (req, res) => {
             res.status(300).send({ message: "user update not found" });
         }
 
-    } 
-    catch (error) {
+    } catch (error){
         if (error.code === 11000) { // 11000 is the error code for duplicate key in MongoDB
             return res.status(400).json({ message: 'Education already exists' });
         }
+
         console.log(error);
-        return res.status(500).json({ message: 'internal server error' })
+        return res.status(500).json({ message:'internal servar error'})
     }
-    // catch (error) {
-    //     console.log(error);
-    //     res.status(500).send({ message: " Internal server error" })
-    // }
 };
 
 

@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const  data = mongoose.Schema({
 
-course_name:{
+name:{
 type:String,
 required:true,
 },

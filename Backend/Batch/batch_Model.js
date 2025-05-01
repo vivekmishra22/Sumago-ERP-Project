@@ -30,7 +30,6 @@ const batchSchema = new mongoose.Schema({
     }
 }, { timestamps: true }); // Enables automatic timestamps 
 
-
 module.exports = mongoose.model('Batch', batchSchema);
 
 

@@ -1,4 +1,4 @@
-const model = require('./batch_Model');
+const model = require('../Batch/batch_Model');
 
 // Post API - Add new batch
 const add = async (req, res) => {

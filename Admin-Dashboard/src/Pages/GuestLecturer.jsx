@@ -25,25 +25,12 @@ const GuestLecturer = () => {
   // const navigate = useNavigate();
 
   const [show, setShow] = useState(false);
-  const handleClose = () => {
-   
-        setguest_lecturer_name("");
-        setlecture_topic_description("");
-        setguest_lecture_batch("");
-        setguest_lecture_date("");
-        setStatus("Active");
-        setShow(false);
-     
-  };
-  
-
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
 
   const [guest_lecturer_name, setguest_lecturer_name] = useState("");
-  const [lecture_topic_description, setlecture_topic_description] =
-    useState("");
+  const [lecture_topic_description, setlecture_topic_description] = useState("");
   const [guest_lecture_batch, setguest_lecture_batch] = useState("");
   const [guest_lecture_date, setguest_lecture_date] = useState("");
   const [status, setStatus] = useState("Active"); // Default status
@@ -59,9 +46,18 @@ const GuestLecturer = () => {
       .join(" "); // Join them back together
   };
 
-
+  const handleClose = () => {
+   
+    setguest_lecturer_name("");
+    setlecture_topic_description("");
+    setguest_lecture_batch("");
+    setguest_lecture_date("");
+    setStatus("Active");
+    setShow(false);
+ 
+};
  // Log the new data and editing ID to check what's being sent
- console.log('Editing ID:', editingId);
+//  console.log('Editing ID:', editingId);
  
 
 
@@ -163,7 +159,7 @@ const GuestLecturer = () => {
     }
     
   };
-  // console.log('Editing ID:', editingId);
+  console.log('Editing ID:', editingId);
   
   
   // Delete data
@@ -225,10 +221,10 @@ const GuestLecturer = () => {
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    guest_lecturer_name: a.guest_lecturer_name,
-    lecture_topic_description: a.lecture_topic_description,
-    guest_lecture_batch: a.guest_lecture_batch,
-    guest_lecture_date: a.guest_lecture_date,
+    "guest_lecturer_name": a.guest_lecturer_name,
+    "lecture_topic_description": a.lecture_topic_description,
+    "guest_lecture_batch": a.guest_lecture_batch,
+    "guest_lecture_date": a.guest_lecture_date,
   }));
 
   // Pagination logic
@@ -300,7 +296,7 @@ const GuestLecturer = () => {
       <Row>
           <Col md={4}>
             <Breadcrumb>
-              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
               <Breadcrumb.Item active>Guest Lecturer</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
@@ -311,14 +307,16 @@ const GuestLecturer = () => {
           </Col>
         </Row>
 
-        {/* Add Technology Modal */}
+        {/* Add Guest Lecturer Modal */}
         <Modal show={show} onHide={handleClose}>
+          {/* <Modal.Header closeButton>
+            <Modal.Title>{editingId ? "Update Guest Lecturer" : "Add Guest Lecturer"} </Modal.Title>
+          </Modal.Header> */}
           <Modal.Header closeButton>
-          <Modal.Title>
-              {editingId ? "Update Guest Lecturer" : "Add Guest Lecturer"} {/* Conditional title */}
-            </Modal.Title>
-            {/* <Modal.Title>Add Guest Lecturer</Modal.Title> */}
-          </Modal.Header>
+                    <Modal.Title>
+                        {editingId ? "Update Guest Lecturer" : "Add Guest Lecturer"} {/* Conditional title */}
+                      </Modal.Title>
+                    </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
@@ -332,7 +330,7 @@ const GuestLecturer = () => {
                     required
                   />
                 </Col>
-                <Col md={12} className="mt-2">
+                <Col md={12}>
                   <Form.Label>Lecture Description</Form.Label>
                   <Form.Control
                    as="textarea"
@@ -345,7 +343,7 @@ const GuestLecturer = () => {
                   />
                 </Col>
 
-                <Row className="mt-2">
+                <Row>
                 <Col md={6}>
                   <Form.Label>Lecture Batch</Form.Label>
                   <Form.Control

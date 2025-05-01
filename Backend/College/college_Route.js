@@ -1,4 +1,4 @@
-const {add, getdata, getbyId, Update, Delete } = require ('./college_Controller');
+const {add, getdata, getbyId, Update, Delete } = require ('../College/college_Controller');
 
 const express = require ('express');
 

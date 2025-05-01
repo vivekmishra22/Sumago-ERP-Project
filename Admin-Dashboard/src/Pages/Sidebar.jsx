@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button, Col, Nav, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaLayerGroup, FaUniversity, FaUserGraduate, FaUserPlus, FaUsersCog } from "react-icons/fa";
-import { LuLogIn } from "react-icons/lu";
 import { MdLibraryBooks, MdLocationCity, MdSpaceDashboard } from "react-icons/md";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { IoBagCheckSharp } from "react-icons/io5";
@@ -195,12 +194,12 @@ const Sidebar = () => {
                                         <span>Duration</span>
                                     </Link>
                                     <Link
-                                            to="/Head/country"
-                                            className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
-                                        >
-                                            <MdLibraryBooks size={23} className="me-3" />
-                                            <span>Country</span>
-                                        </Link> 
+                                        to="/Head/country"
+                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                    >
+                                        <MdLibraryBooks size={23} className="me-3" />
+                                        <span>Country</span>
+                                    </Link>
                                     <Link
                                         to="/Head/batch"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
@@ -399,15 +398,21 @@ const Sidebar = () => {
                                         >
                                             <MdLibraryBooks size={23} className="me-3" />
                                             <span>Country</span>
-                                        </Link> 
+                                        </Link>
                                         <Link
                                             to="/Head/batch"
                                             className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                         >
-                                            <MdLibraryBooks size={23} className="me-3" />
+                                            <FaUsersCog size={23} className="me-3" />
                                             <span>Batch</span>
                                         </Link>
-
+                                        <Link
+                                            to="/Head/project"
+                                            className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
+                                        >
+                                            <FaUsersCog size={23} className="me-3" />
+                                            <span>Project Allocation</span>
+                                        </Link>
                                         <Link
                                             to="/Head/welcomekit"
                                             className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
@@ -434,7 +439,7 @@ const Sidebar = () => {
                         </div>
                         <div className="mt-auto">
                             <Link to="/" className="text-decoration-none link ps-3 py-2 d-flex align-items-center">
-                                <LuLogIn size={25} className="me-2" />
+                                <BiLogOut size={25} className="me-2" />
                                 <span>Logout</span>
                             </Link>
                         </div>

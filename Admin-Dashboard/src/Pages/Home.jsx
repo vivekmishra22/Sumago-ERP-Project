@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Nav, Navbar, Image, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import image1 from "../Assets/Images/SUMAGO Logo (1).png";
+import image1 from "../Assets/Images/SUMAGO Logo.png";
 import { FaCircleUser } from 'react-icons/fa6';
 import { FaBell } from 'react-icons/fa';
 
@@ -34,6 +34,13 @@ const Home = () => {
     <>
       <Navbar expand="lg" fixed="top" className="bg-body-secondary">
         <Container fluid>
+
+          {/* <h2>Administrator</h2> */}
+          
+          {/* <div className="d-flex justify-content-center align-items-center w-100">
+            <Image src={image1} className="w-25 h-auto" />
+          </div> */}
+
           <Image src={image1} className="w-25 h-25" />
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -59,10 +66,10 @@ const Home = () => {
                     style={{
                       fontSize: '0.7rem', // Smaller font size
                       padding: '0.25rem 0.4rem', // Smaller padding
-                      marginLeft:"-15px"
+                      marginLeft: "-15px"
                     }}
                   >
-                    99+ 
+                    99+
                     {/* {notificationCount > 99 ? "99+" : notificationCount} */}
                     <span className="visually-hidden">unread messages</span>
                   </span>
@@ -75,9 +82,9 @@ const Home = () => {
                   </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
-                  {/* <Dropdown.Item href="#/action-2">Another action</Dropdown.Item> */}
-                  {/* <Dropdown.Item href="#/action-3">Something else</Dropdown.Item> */}
+                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                  <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                   <Link to="/" className="text-decoration-none ps-3 py-2">
                     Logout
                   </Link>

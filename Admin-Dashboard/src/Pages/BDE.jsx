@@ -21,7 +21,6 @@ const BDE = () => {
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [designation, setDesignation] = useState("");
   const [status, setStatus] = useState("Active");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,24 +50,11 @@ const BDE = () => {
 
       )
       .then((res) => {
-        setUserData(res.data.data);
+        setUserData(res.data.data  || []);
       })
       .catch((err) => {
         console.error(err);
       });
-  // };
-  // axios
-  // .get("http://localhost:8000/getusers", {
-  //   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-  // })
-  // .then((res) => {
-  //   console.log("API Response:", res.data); // Debugging log
-  //   setUserData(res.data.data || []); // Fallback to empty array if undefined
-  // })
-  // .catch((err) => {
-  //   console.error("Error fetching users:", err);
-  //   setUserData([]); // Ensure it's always an array
-  // });
 };
 
   const handleClose = () => {
@@ -77,7 +63,6 @@ const BDE = () => {
     setLname("");
     setEmail("");
     setPassword("");
-    setDesignation("");
 
 
     setStatus("Active");
@@ -96,7 +81,6 @@ const BDE = () => {
       lname: capitalizeFirstLetter(lname),
       email,
       password,
-      designation,
       status: capitalizeFirstLetter(status),
     };
 
@@ -159,7 +143,6 @@ const BDE = () => {
     setFname(item.fname);
     setLname(item.lname);
     setEmail(item.email);
-    setDesignation(item.designation);
      setPassword(item.password);
     setStatus(item.status);
     setShow(true);
@@ -173,7 +156,6 @@ const BDE = () => {
         "First Name": a.fname,
         "Last Name": a.lname,
         "Email":a.email,
-        "Designation":a.designation
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -185,7 +167,7 @@ const BDE = () => {
     const doc = new jsPDF();
     doc.text("User Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "First Name","Last Name","Email ID","Designation"]],
+      head: [["Sr.No", "First Name","Last Name","Email ID"]],
       body: userData.map((a, index) => [index + 1, a.fname,a.lname,a.email,a.designation,a.status]),
       startY: 30,
     });
@@ -197,7 +179,6 @@ const BDE = () => {
     "First Name": a.fname,
     "Last Name": a.lname,
         "Email":a.email,
-        "Designation":a.designation
   }));
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -231,6 +212,8 @@ const BDE = () => {
     const filteredData = userData.filter(
       (item) =>
         item.fname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.lname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData);
@@ -275,7 +258,7 @@ const BDE = () => {
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add BDE</Modal.Title>
+            <Modal.Title>{editingId ? "Update BDE" : "Add BDE"} </Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
@@ -318,16 +301,6 @@ const BDE = () => {
                   />
                 </Col>
 
-                <Col md={12} className=" mt-3">
-                  <Form.Label>Designation</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter designation"
-                    value={designation}
-                    onChange={(e) => setDesignation(e.target.value)}
-                    required
-                  />
-                </Col>
                 <Col md={12} className="mt-3">
                   <Form.Label>Password</Form.Label>
                   <Form.Control
@@ -421,8 +394,6 @@ const BDE = () => {
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Email</th>
-                   <th>Designation</th> 
-                   <th>Password</th>
                   <th className="no-print">Status</th>
                   <th className="no-print text-center">Action</th> 
                 </tr>
@@ -434,9 +405,6 @@ const BDE = () => {
                     <td>{a.fname}</td>
                     <td>{a.lname}</td>
                     <td>{a.email}</td>
-                     <td>{a.designation}</td> 
-                     <td>{a.password}</td>
-
                     <td className="no-print">{a.status}</td>
                     <td className="no-print d-flex justify-content-evenly">
                       <Button

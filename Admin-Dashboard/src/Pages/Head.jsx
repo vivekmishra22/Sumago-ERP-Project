@@ -10,19 +10,20 @@ import OfficeCity from "./OfficeCity";
 import Office from "./Office";
 import Education from "./Education";
 import GuestLecturer from "./GuestLecturer";
+// import UpdateGuest from "./UpdateGuest";
 import City from "./City";
 import Courses from "./Courses";
+// import UpdateCourse from "./UpdateCourse";
 import WelcomeKit from "./WelcomeKit";
 import Dashboard from "./Dashboard";
-import UpdateCourse from "./UpdateCourse";
 import Users from "./Users";
 import Duration from "./Duration";
-import Batch from "./Batch";
-import HR from "./HR";
 import BDE from "./BDE";
+import HR from "./HR";
 import Trainer from "./Trainer";
+import Batch from "./Batch";
 import Country from "./Country";
-import Projects from "./Project";
+// import State from "./State";
 
 const Head = () => {
   return (
@@ -35,8 +36,9 @@ const Head = () => {
         <div className="content-container flex-grow-1" style={{ marginLeft: "250px", padding: "20px" }}>
           <Container>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/dashboard" element={<Dashboard />} />      
+              {/* <Route path="/" element={<Home />} /> */}
+              <Route path="/" element={<Dashboard/>}/>
+              <Route path="/users" element={<Users/>}/>
               <Route path="/technology" element={<Technology />} />
               <Route path="/university" element={<University />} />
               <Route path="/college" element={<College />} />
@@ -47,20 +49,24 @@ const Head = () => {
               <Route path="/office" element={<Office />} />
               <Route path ="/Courses" element={<Courses/>} />
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
-              <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />   
-              <Route path="/welcomekit" element={<WelcomeKit />} />  
-              <Route path="/duration" element={<Duration />}></Route>      
-              <Route path="/batch" element={<Batch />}></Route>      
-              <Route path="/hr" element={<HR />} />  
-              <Route path="/bde" element={<BDE />} />  
-              <Route path="/trainer" element={<Trainer />} />  
-              <Route path="/users" element={<Users />} />  
-              <Route path="/country" element={<Country />} />  
-              <Route path="/project" element={<Projects />} />  
+              {/* <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />         */}
+              {/* <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />        */}
+              <Route path="/WelcomeKit" element={<WelcomeKit/>}/> 
+              <Route path="duration" element={<Duration/>}/>
+              <Route path="/BDE" element={<BDE/>} />
+              <Route path="/HR" element={<HR/>} />
+              <Route path="/Trainer" element={<Trainer/>} />
+              <Route path="/batch" element={<Batch/>}/>
+              <Route path="/country" element={<Country/>}/>
+              {/* <Route path="/state" element={<State/>}/> */}
+              
             </Routes>
           </Container>
         </div>
       </div>
+
+
+     
     </>
   );
 };
