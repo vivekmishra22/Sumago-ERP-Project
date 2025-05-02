@@ -23,6 +23,7 @@ import HR from "./HR";
 import Trainer from "./Trainer";
 import Batch from "./Batch";
 import Country from "./Country";
+import Projects from "./Project";
 // import State from "./State";
 
 const Head = () => {
@@ -36,7 +37,6 @@ const Head = () => {
         <div className="content-container flex-grow-1" style={{ marginLeft: "250px", padding: "20px" }}>
           <Container>
             <Routes>
-              {/* <Route path="/" element={<Home />} /> */}
               <Route path="/" element={<Dashboard/>}/>
               <Route path="/users" element={<Users/>}/>
               <Route path="/technology" element={<Technology />} />
@@ -49,8 +49,6 @@ const Head = () => {
               <Route path="/office" element={<Office />} />
               <Route path ="/Courses" element={<Courses/>} />
               <Route path="/GuestLecturer" element={<GuestLecturer/>} /> 
-              {/* <Route path="/UpdateGuest/:_id" element={<UpdateGuest />} />         */}
-              {/* <Route path="/UpdateCourse/:_id" element={<UpdateCourse />} />        */}
               <Route path="/WelcomeKit" element={<WelcomeKit/>}/> 
               <Route path="duration" element={<Duration/>}/>
               <Route path="/BDE" element={<BDE/>} />
@@ -58,6 +56,7 @@ const Head = () => {
               <Route path="/Trainer" element={<Trainer/>} />
               <Route path="/batch" element={<Batch/>}/>
               <Route path="/country" element={<Country/>}/>
+              <Route path="/project" element={<Projects/>}/>
               {/* <Route path="/state" element={<State/>}/> */}
               
             </Routes>

@@ -1,4 +1,4 @@
-const model = require('../Trainer/trainer_Model');
+const model = require('./trainer_Model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET || 'mysecretkey'; // Use environment variable for the secret
@@ -82,8 +82,7 @@ const loginuser = async (req, res) => {
 
   try {
     const Trainer = await model.findOne({ email });
-    // if (!regi_trainer) {
-    if (!Trainer) {
+    if (!regi_trainer) {
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -126,8 +125,7 @@ const change = async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
     // Update the user's password
-    // user.password = hashedPassword;
-    Trainer.password = hashedPassword;
+    user.password = hashedPassword;
     await model.save();
 
     res.status(200).json({ message: 'Password changed successfully' });
@@ -179,10 +177,8 @@ const getbyId = async (req, res) => {
 // Delete API
 const Delete = async (req, res) => {
     try{
-        // const userdata = await model.deleteOne({_id: req.params._id})
-        // if (result.deletedCount === 0) {
-          const result = await model.deleteOne({ _id: req.params._id });
-          if (result.deletedCount === 0) {
+        const userdata = await model.deleteOne({_id: req.params._id})
+        if (result.deletedCount === 0) {
                  return res.status(404).json({ message: 'User not found' });
                }
         res.status(200).send({message:"Deleted Successfully..",userdata});
@@ -207,7 +203,7 @@ const Delete = async (req, res) => {
 
 // Update user
 const Update = async (req, res) => {
-  const { fname, lname, email, contact_no, technology, status } = req.body;
+  const { fname, lname, email,designation, status } = req.body;
 
   try {
     const updatedUser = await model.findByIdAndUpdate(

@@ -37,7 +37,7 @@ const trainer_detail= new Schema({
     type: String, 
     // default: 'Active' 
   },
-}, { timestamps: true });
+});
 
 module.exports = mongoose.model('Trainer', trainer_detail);
 

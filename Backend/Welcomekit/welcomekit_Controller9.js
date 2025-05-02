@@ -62,7 +62,7 @@ const deletewelcomekit = async (req, res) => {
 const Updatewelcomekit = async (req, res) => {
     const { welcome_kit, status} = req.body;
     try{
-        const existingWelcomekit = await model.findOne({  welcome_kit, status });
+        const existingWelcomekit = await model.findOne({  welcome_kit });
         if (existingWelcomekit) {
           return res.status(400).json({ message: 'Welcomekit item already exists' });
         }

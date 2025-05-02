@@ -78,7 +78,7 @@ const formatDate = (dateString) => {
   };
   console.log("Rendering UpdateGuest");
   return (
-    <Container className='mt-5'>
+    <Container>
       <Row className="d-flex justify-content-center align-items-center view-container">
         <Col md={8}>
           <Card className="my-4 shadow">
@@ -92,14 +92,14 @@ const formatDate = (dateString) => {
                       type="text"
                       placeholder="Enter  Name"
                       value={guest_lecturer_name}
-                      onChange={(e) => setguest_lecture_date(e.target.value)}
+                      onChange={(e) => setguest_lecturer_name(e.target.value)}
                       required
                     />
                   </Col>
                   <Col md={12}>
                     <Form.Label>Lecture Description</Form.Label>
                     <Form.Control
-                      as="textarea"
+                      type="text"
                       placeholder="Enter lecture description"
                       value={lecture_topic_description}
                       onChange={(e) => setlecture_topic_description(e.target.value)}
@@ -148,9 +148,7 @@ const formatDate = (dateString) => {
                     />
                   </Col></Row>
 
-                <Button className="align-items-center align-center w-25  border-2 rounded-5 fs-4 mt-4" variant="success" type="submit" 
-                  onClick={() => navigate(`/Head/GuestLecturer/${_id}`)}
-                >
+                <Button className="align-items-center align-center w-25  border-2 rounded-5 fs-4 mt-4" variant="success" type="submit">
                   Submit
                 </Button>
               </Form>

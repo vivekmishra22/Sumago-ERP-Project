@@ -40,7 +40,7 @@ const document_Route = require ('./Documents/documents_Route');
 app.use(express.json())
 app.use(cors());
 
-app.use('/documents_Image', express.static('Documents_Image'))
+app.use('/documents_Image', express.static('Documents_Image'));
 
 app.use('/', technology_Route);
 app.use('/', university_Route);

@@ -4,7 +4,7 @@ const data = mongoose.Schema({
     country:{
         type:String,
         required:true,
-        unique:true
+        // unique:true
     },
     state:{
         type:String,

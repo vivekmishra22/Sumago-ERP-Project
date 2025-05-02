@@ -5,13 +5,9 @@ const data = mongoose.Schema({
         type:String,
         required:true,
         unique:true
+
     },
-    status:{
-        // type:active/inactive,
-        type:String,
-        required:true,
-    }
+    status:String
 })
 
 module.exports = mongoose.model('technology',data);
-

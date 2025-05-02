@@ -23,7 +23,7 @@ import { FaSearch } from "react-icons/fa";
 
 const University = () => {
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [userData, setUserData] = useState([]);
@@ -228,34 +228,35 @@ const University = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* <h1 className="fw-bold text-center text-primary mb-3">University </h1> */}
-        {/* <Breadcrumb>
-      <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
-    </Breadcrumb> */}
-        {/* Add University Button */}
-        <Row><Col md={4}>
-        <Breadcrumb>
-      <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
-    </Breadcrumb>
-    </Col>
-    <Col md={8} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add University
-          </Button>
-        </Col>
-    </Row>
-        {/* <Col md={6} className="d-flex justify-content-end mb-4">
+        {/* <h1 className="fw-bold text-center text-primary mb-3">University </h1>
+        Add University Button
+        <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
             Add University
           </Button>
         </Col> */}
 
+        <Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>University</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add University
+            </Button>
+          </Col>
+        </Row>
+
         {/* Add University Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title> {editingId ? "Update University" : "Add University"} </Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update University" : "Add University"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add University</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

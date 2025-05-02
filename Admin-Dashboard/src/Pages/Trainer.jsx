@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { Button,Col,Container, Form,InputGroup,Row,Table,Breadcrumb} from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row, Table, Breadcrumb } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -20,19 +20,22 @@ const Trainer = () => {
   const [itemsPerPage] = useState(10);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-  const[contact_no,setContact]= useState("");
+  const [contact_no, setContact] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [technology, setTechnology] = useState("");
   const [status, setStatus] = useState("Active");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-   const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-const[categories,setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
+  
+
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
-    return str
+    // return str
+    return String(str)
       .split(" ") // Split the string into words
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
       .join(" "); // Join them back together
@@ -42,26 +45,26 @@ const[categories,setCategories] = useState([]);
     showUsers();
   }, []);
 
-    
+
   const showUsers = () => {
     axios
-    .get("http://localhost:8000/getdata")
-    .then((res) => {
-      const tdata = res.data.data.filter((item) => item.status === "Active");
-      setCategories(tdata);
-      console.log("Categories fetched:", res.data.data);
-    })
-    .catch((err) => {
-      console.error("Error fetching categories:", err);
-    });
+      .get("http://localhost:8000/getdata")
+      .then((res) => {
+        const tdata = res.data.data.filter((item) => item.status === "Active");
+        setCategories(tdata);
+        console.log("Categories fetched:", res.data.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+      });
 
     axios
       .get("http://localhost:8000/gettrainer",
         {
           headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           }
-      }
+        }
 
       )
       .then((res) => {
@@ -70,20 +73,7 @@ const[categories,setCategories] = useState([]);
       .catch((err) => {
         console.error(err);
       });
-  // };
-  // axios
-  // .get("http://localhost:8000/getusers", {
-  //   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-  // })
-  // .then((res) => {
-  //   console.log("API Response:", res.data); // Debugging log
-  //   setUserData(res.data.data || []); // Fallback to empty array if undefined
-  // })
-  // .catch((err) => {
-  //   console.error("Error fetching users:", err);
-  //   setUserData([]); // Ensure it's always an array
-  // });
-};
+  };
 
   const handleClose = () => {
     setShow(false);
@@ -92,7 +82,7 @@ const[categories,setCategories] = useState([]);
     setEmail("");
     setPassword("");
     setTechnology("");
-   setContact("");
+    setContact("");
 
     setStatus("Active");
     setEditingId(null);
@@ -103,27 +93,25 @@ const[categories,setCategories] = useState([]);
     e.preventDefault();
     setIsSubmitting(true);
 
-    // const newData = { city_name, status };
-
     const newData = {
       fname: capitalizeFirstLetter(fname),
       lname: capitalizeFirstLetter(lname),
       email,
       password,
-      contact_no:capitalizeFirstLetter(contact_no),
-      technology:capitalizeFirstLetter(technology),
+      contact_no,
+      technology: capitalizeFirstLetter(technology),
       status: capitalizeFirstLetter(status),
     };
 
-     if (editingId) {
+    if (editingId) {
       axios
         .put(`http://localhost:8000/updatetrainer/${editingId}`, newData,
 
           {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+              Authorization: `Bearer ${localStorage.getItem('token')}`
             }
-        }
+          }
 
         )
         .then(() => {
@@ -139,9 +127,9 @@ const[categories,setCategories] = useState([]);
 
           {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+              Authorization: `Bearer ${localStorage.getItem('token')}`
             }
-        }
+          }
         )
         .then(() => {
           alert("Trainer Added Successfully!");
@@ -174,9 +162,9 @@ const[categories,setCategories] = useState([]);
     setFname(item.fname);
     setLname(item.lname);
     setEmail(item.email);
-    setTechnology(item.technolgy);
+    setTechnology(item.technology);
     setContact(item.contact_no);
-     setPassword(item.password);
+    setPassword(item.password);
     setStatus(item.status);
     setShow(true);
     setErrorMessage("");
@@ -188,9 +176,9 @@ const[categories,setCategories] = useState([]);
         "Sr.No": index + 1,
         "First Name": a.fname,
         "Last Name": a.lname,
-        "Email":a.email,
-        "Technology":a.technolgy,
-        "Contact No.":a.contact_no
+        "Email": a.email,
+        "Technology": a.technology,
+        "Contact No.": a.contact_no
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -202,9 +190,9 @@ const[categories,setCategories] = useState([]);
     const doc = new jsPDF();
     doc.text("User Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "First Name","Last Name","Email ID","Technology",
+      head: [["Sr.No", "First Name", "Last Name", "Email ID", "Technology",
         "Contact No."]],
-      body: userData.map((a, index) => [index + 1, a.fname,a.lname,a.email,a.contact_no,a.technolgy,a.status]),
+      body: userData.map((a, index) => [index + 1, a.fname, a.lname, a.email, a.contact_no, a.technology, a.status]),
       startY: 30,
     });
     doc.save("User-data.pdf");
@@ -214,9 +202,9 @@ const[categories,setCategories] = useState([]);
     "Sr.No": index + 1,
     "First Name": a.fname,
     "Last Name": a.lname,
-        "Email":a.email,
-       "Technology":a.technolgy,
-        "Contact No.":a.contact_no
+    "Email": a.email,
+    "Technology": a.technology,
+    "Contact No.": a.contact_no
   }));
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -249,8 +237,12 @@ const[categories,setCategories] = useState([]);
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.fname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.status.toLowerCase().includes(searchTerm.toLowerCase())
+        (item.fname && item.fname.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.email && item.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.technology && item.technology.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.contact_no && String(item.contact_no).toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.status && item.status.toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setUserData(filteredData);
   };
@@ -294,13 +286,13 @@ const[categories,setCategories] = useState([]);
 
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Trainer</Modal.Title>
+            <Modal.Title>{editingId ? "Update Trainer" : "Add Trainer"} </Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
-              
-                <Row>
+
+              <Row>
                 <Col md={6}>
                   <Form.Label>First Name</Form.Label>
                   <Form.Control
@@ -310,7 +302,7 @@ const[categories,setCategories] = useState([]);
                     onChange={(e) => setFname(e.target.value)}
                     required
                   /></Col>
-                  <Col md={6}>
+                <Col md={6}>
                   <Form.Label>Last Name</Form.Label>
                   <Form.Control
                     type="text"
@@ -320,12 +312,12 @@ const[categories,setCategories] = useState([]);
                     required
                   />
                 </Col></Row>
-                {errorMessage && (
-                  <Col md={12} className="mt-2">
-                    <div style={{ color: "red" }}>{errorMessage}</div>
-                  </Col>
-                )}
-                <Row>
+              {errorMessage && (
+                <Col md={12} className="mt-2">
+                  <div style={{ color: "red" }}>{errorMessage}</div>
+                </Col>
+              )}
+              <Row>
                 <Col md={12} className=" mt-3">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
@@ -337,7 +329,7 @@ const[categories,setCategories] = useState([]);
                   />
                 </Col>
 
-                
+
                 <Col md={12} className="mt-3">
                   <Form.Label>Password</Form.Label>
                   <Form.Control
@@ -398,7 +390,7 @@ const[categories,setCategories] = useState([]);
               </Row>
             </Form>
           </Modal.Body>
-          
+
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close
@@ -413,7 +405,7 @@ const[categories,setCategories] = useState([]);
           </Modal.Footer>
         </Modal>
 
-{/* downlod button */}
+        {/* downlod button */}
         <Col md={8}>
           <CSVLink data={csvData} filename={"User-data.csv"}>
             <Button className="btn-secondary">CSV</Button>
@@ -457,10 +449,10 @@ const[categories,setCategories] = useState([]);
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Email</th>
-                   <th>Contact No.</th> 
-                   <th>Technology</th>
+                  <th>Contact No.</th>
+                  <th>Technology</th>
                   <th className="no-print">Status</th>
-                  <th className="no-print text-center">Action</th> 
+                  <th className="no-print text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -470,8 +462,8 @@ const[categories,setCategories] = useState([]);
                     <td>{a.fname}</td>
                     <td>{a.lname}</td>
                     <td>{a.email}</td>
-                     <td>{a.contact_no}</td> 
-                     <td>{a.technology}</td>
+                    <td>{a.contact_no}</td>
+                    <td>{a.technology}</td>
 
                     <td className="no-print">{a.status}</td>
                     <td className="no-print d-flex justify-content-evenly">

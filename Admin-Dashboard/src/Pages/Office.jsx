@@ -46,7 +46,7 @@ const Office = () => {
       .get("http://localhost:8000/getdataOfficeCity")
       .then((res) => {
         const udata = res.data.data.filter((item) => item.status === "Active");
-        setCategories(udata); // Assuming the response contains a `data` array
+        setCategories(udata); // Assuming the response contains a data array
         console.log("Categories fetched:", res.data.data);
       })
       .catch((err) => {
@@ -157,7 +157,7 @@ const Office = () => {
     const doc = new jsPDF();
     doc.text("Office Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Office Name", "City Name", "City Address"]],
+      head: [["Sr.No", "Office Name", "City Name"]],
       body: userData.map((a, index) => [
         index + 1,
         a.office_name,
@@ -240,18 +240,11 @@ const Office = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button
-        <h1 className="fw-bold text-center text-primary ">Office </h1>
-        <Col md={12} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add Office
-          </Button>
-        </Col> */}
 
         <Row>
           <Col md={4}>
             <Breadcrumb>
-              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
               <Breadcrumb.Item active>Office</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
@@ -265,10 +258,7 @@ const Office = () => {
         {/* Add Office Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-          <Modal.Title>
-              {editingId ? "Update Office" : "Add Office"} {/* Conditional title */}
-            </Modal.Title>
-            {/* <Modal.Title>Add Office</Modal.Title> */}
+            <Modal.Title>{editingId ? "Update Office": "Add Office"} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

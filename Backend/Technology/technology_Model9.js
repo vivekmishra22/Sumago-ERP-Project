@@ -1,7 +1,7 @@
 const mongoose = require ('mongoose')
 const data = mongoose.Schema({
     
-    university_name:{
+    name:{
         type:String,
         required:true,
         unique:true
@@ -11,8 +11,7 @@ const data = mongoose.Schema({
         type:String,
         required:true,
     }
-        
-        
 })
 
-module.exports = mongoose.model('university',data);
+module.exports = mongoose.model('technology',data);
+

@@ -23,24 +23,11 @@ import { FaSearch } from "react-icons/fa";
 
 const Technology = () => {
   const [show, setShow] = useState(false);
-  // const handleClose = () => {
-  //   if ( name || status !== "active") {
-  //     if (window.confirm("Are you sure you want to discard changes?")) {
-  //       setName("");
-  //       setStatus("active");
-  //       setShow(false);
-  //     }
-  //   } else {
-  //     setShow(false);
-  //   }
-  // };
-  // const handleShow = () => setShow(true);
+  const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
-  // const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
-  // const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [status, setStatus] = useState("Active"); // Default status
@@ -52,15 +39,11 @@ const Technology = () => {
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
     return str
-      .split(' ') // Split the string into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-      .join(' '); // Join them back together
+      .split(" ") // Split the string into words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join them back together
   };
 
-  // Fetch data on component mount
-  useEffect(() => {
-    showUsers();
-  }, []);
 
   // Fetch Data from API
   useEffect(() => {
@@ -244,23 +227,17 @@ const Technology = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button
-        <h1 className="fw-bold text-center text-primary ">Technology </h1>
-        <Col md={12} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add Technology
-          </Button>
-        </Col> */}
-
+        {/* Add City Button */}
+        {/* <h1 className="fw-bold text-center text-primary ">Technology </h1> */}
         <Row>
           <Col md={4}>
             <Breadcrumb>
-              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
               <Breadcrumb.Item active>Technology</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
           <Col md={8} className="d-flex justify-content-end mb-4">
-            <Button variant="primary" onClick={() => setShow(true)}>
+            <Button variant="primary" onClick={handleShow}>
               Add Technology
             </Button>
           </Col>
@@ -271,9 +248,9 @@ const Technology = () => {
           <Modal.Header closeButton>
           <Modal.Title>
               {editingId ? "Update Technology" : "Add Technology"} {/* Conditional title */}
-            </Modal.Title>
-            {/* <Modal.Title>Add Technology</Modal.Title> */}
+            </Modal.Title>
           </Modal.Header>
+          
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>

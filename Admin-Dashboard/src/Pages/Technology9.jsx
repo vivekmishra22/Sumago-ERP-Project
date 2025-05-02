@@ -21,20 +21,33 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
-const University = () => {
+const Technology = () => {
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  const [errorMessage, setErrorMessage] = useState("");
+  // const handleClose = () => {
+  //   if ( name || status !== "active") {
+  //     if (window.confirm("Are you sure you want to discard changes?")) {
+  //       setName("");
+  //       setStatus("active");
+  //       setShow(false);
+  //     }
+  //   } else {
+  //     setShow(false);
+  //   }
+  // };
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
+  // const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
+  // const navigate = useNavigate();
 
-  const [university_name, setUniversityName] = useState("");
+  const [name, setName] = useState("");
   const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
+  const [errorMessage, setErrorMessage] = useState("");
 
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
@@ -44,6 +57,11 @@ const University = () => {
       .join(' '); // Join them back together
   };
 
+  // Fetch data on component mount
+  useEffect(() => {
+    showUsers();
+  }, []);
+
   // Fetch Data from API
   useEffect(() => {
     showUsers();
@@ -52,7 +70,7 @@ const University = () => {
   const showUsers = () => {
     // setLoading(true);
     axios
-      .get("http://localhost:8000/getdataUniversity")
+      .get("http://localhost:8000/getdata")
       .then((res) => {
         setUserData(res.data.data);
         // setLoading(false);
@@ -66,55 +84,53 @@ const University = () => {
   // Handle Modal Close
   const handleClose = () => {
     setShow(false);
-    setUniversityName("");
+    setName("");
     setStatus("Active");
     setEditingId(null); // Reset editing state
     setErrorMessage("");
   };
 
-  // Add or Update University
+  // const handleShow = () => setShow(true);
+
+  // Add or Update Technology
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // const newData = {
-    //   university_name,  status
-    // }
-
     const newData = {
-      university_name: capitalizeFirstLetter(university_name),
+      name: capitalizeFirstLetter(name),
       status: capitalizeFirstLetter(status),
     };
 
     if (editingId) {
-      // Update existing University
+      // Update existing technology
       axios
-        .put(`http://localhost:8000/UpdateUniversity/${editingId}`, newData)
+        .put(`http://localhost:8000/UpdateTechnology/${editingId}`, newData)
         .then(() => {
-          alert("University Updated Successfully!");
+          alert("Technology Updated Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("University is already exist.."); // Set error message
+            setErrorMessage("College is already exist.."); // Set error message
           } else {
             console.error(err);
           }
         })
         .finally(() => setIsSubmitting(false));
     } else {
-      // Add new University
+      // Add new technology
       axios
-        .post("http://localhost:8000/addUniversity", newData)
+        .post("http://localhost:8000/technologypost", newData)
         .then(() => {
-          alert("University Added Successfully!");
+          alert("Technology Added Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("University is already exist.."); // Set error message
+            setErrorMessage("College is already exist.."); // Set error message
           } else {
             console.error(err);
           }
@@ -123,10 +139,10 @@ const University = () => {
     }
   };
 
-  // Delete University
+  // Delete Technology
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deleteUniversity/${_id}`)
+      .delete(`http://localhost:8000/deleteTechnology/${_id}`)
       .then(() => {
         alert("Are you sure you want to delete this record?");
         showUsers();
@@ -137,7 +153,7 @@ const University = () => {
   // Handle Edit Click
   const handleEdit = (item) => {
     setEditingId(item._id);
-    setUniversityName(item.university_name);
+    setName(item.name);
     setStatus(item.status);
     setShow(true);
   };
@@ -147,30 +163,30 @@ const University = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "University Name": a.university_name,
+        "Technology Name": a.name,
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "University Data");
-    XLSX.writeFile(workbook, "University-data.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Technology Data");
+    XLSX.writeFile(workbook, "technology-data.xlsx");
   };
 
   // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
-    doc.text("University Data", 14, 22);
+    doc.text("Technology Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "University Name"]],
-      body: userData.map((a, index) => [index + 1, a.university_name]),
+      head: [["Sr.No", "Technology Name"]],
+      body: userData.map((a, index) => [index + 1, a.name]),
       startY: 30,
     });
-    doc.save("University-data.pdf");
+    doc.save("technology-data.pdf");
   };
 
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "University Name": a.university_name,
+    "Technology Name": a.name,
   }));
 
   // Pagination logic
@@ -205,7 +221,7 @@ const University = () => {
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.university_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
@@ -228,53 +244,57 @@ const University = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* <h1 className="fw-bold text-center text-primary mb-3">University </h1> */}
-        {/* <Breadcrumb>
-      <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
-    </Breadcrumb> */}
-        {/* Add University Button */}
-        <Row><Col md={4}>
-        <Breadcrumb>
-      <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
-    </Breadcrumb>
-    </Col>
-    <Col md={8} className="d-flex justify-content-end mb-4">
+        {/* Add City Button
+        <h1 className="fw-bold text-center text-primary ">Technology </h1>
+        <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add University
-          </Button>
-        </Col>
-    </Row>
-        {/* <Col md={6} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add University
+            Add Technology
           </Button>
         </Col> */}
 
-        {/* Add University Modal */}
+        <Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>Technology</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Technology
+            </Button>
+          </Col>
+        </Row>
+
+        {/* Add Technology Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title> {editingId ? "Update University" : "Add University"} </Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update Technology" : "Add Technology"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Technology</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={12}>
-                  <Form.Label>University Name</Form.Label>
+                  <Form.Label>Technology Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter University Name"
-                    value={university_name}
-                    onChange={(e) => setUniversityName(e.target.value)}
+                    placeholder="Enter Technology Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </Col>
+
+                {/* Display Error Message */}
                 {errorMessage && (
                   <Col md={12} className="mt-2">
                     <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
+
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
@@ -314,9 +334,9 @@ const University = () => {
         </Modal>
 
         {/* Export Buttons */}
-        <Col md={8}>
+        <Col md={8} className=" button  ">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink data={csvData} filename={"University-data.csv"} className="">
+          <CSVLink data={csvData} filename={"technology-data.csv"} className="">
             <Button variant="secondary">CSV</Button>
           </CSVLink>
           <Button variant="secondary" onClick={handleExcel} className="ms-1">
@@ -355,14 +375,14 @@ const University = () => {
           </InputGroup>
         </Col>
 
-        {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} >
+        {/* table */}
+        <Col md={12} lg={12} lx={12} lxx={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
-                  <th>University Name</th>
+                  <th>Technology Name</th>
                   <th className="no-print">Status</th>
                   <th className="no-print text-center">Action</th>
                 </tr>
@@ -371,9 +391,9 @@ const University = () => {
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.university_name}</td>
-                    <td className="no-print ">{a.status}</td>
-                    <td className="no-print  d-flex justify-content-evenly">
+                    <td>{a.name}</td>
+                    <td className="no-print">{a.status}</td>
+                    <td className="no-print d-flex justify-content-evenly">
                       <Button variant="warning" onClick={() => handleEdit(a)}>
                         <GrEdit />
                       </Button>
@@ -399,7 +419,7 @@ const University = () => {
             </div>
           </Col>
 
-          <Col md={6} className="d-flex justify-content-end ">
+          <Col md={6} className="d-flex justify-content-end">
             <Pagination>
               <Pagination.Prev
                 disabled={currentPage === 1}
@@ -430,4 +450,4 @@ const University = () => {
   );
 };
 
-export default University;
+export default Technology;

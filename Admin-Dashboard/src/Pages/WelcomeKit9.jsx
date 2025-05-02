@@ -1,19 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Button,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-  Table,
-} from "react-bootstrap";
+import {Breadcrumb, Button,Col,Container,Form,InputGroup,Row,Table,} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
-// import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
@@ -21,20 +11,28 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
-const University = () => {
+const WelcomeKit = () => {
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  const [errorMessage, setErrorMessage] = useState("");
+
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
 
-  const [university_name, setUniversityName] = useState("");
+  const [welcome_kit, setwelcome_kit] = useState("");
   const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
+  const [errorMessage, setErrorMessage] = useState("");
+
+
+  
+  // Fetch Data from API
+  useEffect(() => {
+    showUsers();
+  }, []);
 
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
@@ -44,15 +42,10 @@ const University = () => {
       .join(' '); // Join them back together
   };
 
-  // Fetch Data from API
-  useEffect(() => {
-    showUsers();
-  }, []);
-
   const showUsers = () => {
     // setLoading(true);
     axios
-      .get("http://localhost:8000/getdataUniversity")
+      .get("http://localhost:8000/getkititem")
       .then((res) => {
         setUserData(res.data.data);
         // setLoading(false);
@@ -66,55 +59,53 @@ const University = () => {
   // Handle Modal Close
   const handleClose = () => {
     setShow(false);
-    setUniversityName("");
+    setwelcome_kit("");
     setStatus("Active");
     setEditingId(null); // Reset editing state
-    setErrorMessage("");
   };
 
-  // Add or Update University
+  // const handleShow = () => setShow(true);
+
+  // Add or Update City
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // const newData = {
-    //   university_name,  status
-    // }
-
+    
     const newData = {
-      university_name: capitalizeFirstLetter(university_name),
-      status: capitalizeFirstLetter(status),
-    };
+        welcome_kit: capitalizeFirstLetter(welcome_kit),
+        status: capitalizeFirstLetter(status) 
+      };
+    
 
     if (editingId) {
-      // Update existing University
+      // Update existing kit Item
       axios
-        .put(`http://localhost:8000/UpdateUniversity/${editingId}`, newData)
+        .put(`http://localhost:8000/Updatekititem/${editingId}`, newData)
         .then(() => {
-          alert("University Updated Successfully!");
+          alert("Kit item Updated Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("University is already exist.."); // Set error message
+            setErrorMessage("Kit Item is already exist.."); // Set error message
           } else {
             console.error(err);
           }
         })
         .finally(() => setIsSubmitting(false));
     } else {
-      // Add new University
+      // Add new Item
       axios
-        .post("http://localhost:8000/addUniversity", newData)
+        .post("http://localhost:8000/addkititem", newData)
         .then(() => {
-          alert("University Added Successfully!");
+          alert("Welcome Kit item Added Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("University is already exist.."); // Set error message
+            setErrorMessage("Kit Item is already exist.."); // Set error message
           } else {
             console.error(err);
           }
@@ -123,12 +114,12 @@ const University = () => {
     }
   };
 
-  // Delete University
+  // Delete City
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deleteUniversity/${_id}`)
+      .delete(`http://localhost:8000/deletekititem/${_id}`)
       .then(() => {
-        alert("Are you sure you want to delete this record?");
+        alert("Are you sure you want to delete this Item?");
         showUsers();
       })
       .catch((err) => console.error(err));
@@ -137,9 +128,10 @@ const University = () => {
   // Handle Edit Click
   const handleEdit = (item) => {
     setEditingId(item._id);
-    setUniversityName(item.university_name);
+    setwelcome_kit(item.welcome_kit);
     setStatus(item.status);
     setShow(true);
+    setErrorMessage("");
   };
 
   // Export to Excel
@@ -147,30 +139,30 @@ const University = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "University Name": a.university_name,
+        "Welcome kit Item": a.welcome_kit,
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "University Data");
-    XLSX.writeFile(workbook, "University-data.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Welcome kit Data");
+    XLSX.writeFile(workbook, "Welcome Kit-data.xlsx");
   };
 
   // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
-    doc.text("University Data", 14, 22);
+    doc.text("Welcome Kit Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "University Name"]],
-      body: userData.map((a, index) => [index + 1, a.university_name]),
+      head: [["Sr.No", "Welcome kit Item"]],
+      body: userData.map((a, index) => [index + 1, a.welcome_kit]),
       startY: 30,
     });
-    doc.save("University-data.pdf");
+    doc.save("Welcomekit-data.pdf");
   };
 
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "University Name": a.university_name,
+    "City Name": a.welcome_kit,
   }));
 
   // Pagination logic
@@ -205,7 +197,7 @@ const University = () => {
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.university_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.welcome_kit.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
@@ -228,60 +220,63 @@ const University = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* <h1 className="fw-bold text-center text-primary mb-3">University </h1> */}
-        {/* <Breadcrumb>
-      <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
-    </Breadcrumb> */}
-        {/* Add University Button */}
-        <Row><Col md={4}>
-        <Breadcrumb>
-      <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
-    </Breadcrumb>
-    </Col>
-    <Col md={8} className="d-flex justify-content-end mb-4">
+        {/* Add City Button
+        <h1 className="fw-bold text-center text-primary ">Welcome Kit Item</h1>
+        <Col md={12} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add University
-          </Button>
-        </Col>
-    </Row>
-        {/* <Col md={6} className="d-flex justify-content-end mb-4">
-          <Button variant="primary" onClick={handleShow}>
-            Add University
+            Add Kit Item
           </Button>
         </Col> */}
 
-        {/* Add University Modal */}
+<Row>
+          <Col md={4}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>WelcomeKit</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add WelcomeKit
+            </Button>
+          </Col>
+        </Row>
+
+        {/* Add City Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title> {editingId ? "Update University" : "Add University"} </Modal.Title>
+          <Modal.Title>
+              {editingId ? "Update Kit Item" : "Add Kit Item"} {/* Conditional title */}
+            </Modal.Title>
+            {/* <Modal.Title>Add Kit Item</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={12}>
-                  <Form.Label>University Name</Form.Label>
+                  <Form.Label>Item Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter University Name"
-                    value={university_name}
-                    onChange={(e) => setUniversityName(e.target.value)}
+                    placeholder="Enter welcome kit item Name"
+                    value={welcome_kit}
+                    onChange={(e) => setwelcome_kit(e.target.value)}
                     required
                   />
                 </Col>
+                {/* Display Error Message */}
                 {errorMessage && (
                   <Col md={12} className="mt-2">
                     <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
+
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
                     type="radio"
                     label="Active"
                     name="status"
-                    value="Active"
+                    value="active"
                     className="ps-5"
                     checked={status === "Active"}
                     onChange={(e) => setStatus(e.target.value)}
@@ -290,7 +285,7 @@ const University = () => {
                     type="radio"
                     label="Inactive"
                     name="status"
-                    value="Inactive"
+                    value="inactive"
                     className="ps-5"
                     checked={status === "Inactive"}
                     onChange={(e) => setStatus(e.target.value)}
@@ -314,22 +309,18 @@ const University = () => {
         </Modal>
 
         {/* Export Buttons */}
-        <Col md={8}>
+        <Col md={8} className="">
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink data={csvData} filename={"University-data.csv"} className="">
-            <Button variant="secondary">CSV</Button>
+          <CSVLink data={csvData} filename={"City-data.csv"}>
+            <Button variant="secondary" className="">CSV</Button>
           </CSVLink>
-          <Button variant="secondary" onClick={handleExcel} className="ms-1">
+          <Button variant="secondary" onClick={handleExcel} className="ms-1 ">
             Excel
           </Button>
-          <Button variant="secondary" onClick={handlePdf} className="ms-1">
+          <Button variant="secondary" onClick={handlePdf} className="ms-1 ">
             PDF
           </Button>
-          <Button
-            variant="secondary"
-            onClick={() => window.print()}
-            className="ms-1"
-          >
+          <Button variant="secondary" onClick={() => window.print()} className="ms-1 ">
             Print
           </Button>
           {/* </ButtonGroup> */}
@@ -356,13 +347,13 @@ const University = () => {
         </Col>
 
         {/* Table */}
-        <Col md={12} lg={12} lx={12} lxx={12} >
+        <Col md={12} lg={12} xl={12} xxl={12}  id="printable">
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
-                  <th>University Name</th>
+                  <th>Welcome Kit Item Name</th>
                   <th className="no-print">Status</th>
                   <th className="no-print text-center">Action</th>
                 </tr>
@@ -371,14 +362,19 @@ const University = () => {
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.university_name}</td>
-                    <td className="no-print ">{a.status}</td>
-                    <td className="no-print  d-flex justify-content-evenly">
-                      <Button variant="warning" onClick={() => handleEdit(a)}>
+                    <td>{a.welcome_kit}</td>
+                    <td className="no-print">{a.status}</td>
+                    <td className="no-print d-flex justify-content-evenly">
+                      <Button
+                        variant="warning"
+                        className="no-print" // Hide this during printing
+                        onClick={() => handleEdit(a)}
+                      >
                         <GrEdit />
                       </Button>
                       <Button
                         variant="danger"
+                        className="no-print" // Hide this during printing
                         onClick={() => deletedata(a._id)}
                       >
                         <AiFillDelete />
@@ -390,7 +386,6 @@ const University = () => {
             </Table>
           </div>
         </Col>
-
         {/* Pagination */}
         <Row>
           <Col md={6}>
@@ -399,7 +394,7 @@ const University = () => {
             </div>
           </Col>
 
-          <Col md={6} className="d-flex justify-content-end ">
+          <Col md={6} className="d-flex justify-content-end">
             <Pagination>
               <Pagination.Prev
                 disabled={currentPage === 1}
@@ -430,4 +425,4 @@ const University = () => {
   );
 };
 
-export default University;
+export default WelcomeKit;

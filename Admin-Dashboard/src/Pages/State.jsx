@@ -21,7 +21,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
-const University = () => {
+const State = () => {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -29,8 +29,10 @@ const University = () => {
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
+  const [categoriesdata, setCategoriesData] = useState([]);
 
-  const [university_name, setUniversityName] = useState("");
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
   const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
@@ -52,7 +54,7 @@ const University = () => {
   const showUsers = () => {
     // setLoading(true);
     axios
-      .get("http://localhost:8000/getdataUniversity")
+      .get("http://localhost:8000/getdataState")
       .then((res) => {
         setUserData(res.data.data);
         // setLoading(false);
@@ -61,60 +63,73 @@ const University = () => {
         console.error(err);
         // setLoading(false);
       });
+
+      axios
+            .get("http://localhost:8000/getdataCountry")
+            .then((res) => {
+              const udata = res.data.data.filter((item) => item.status === "Active");
+              setCategoriesData(udata);
+              console.log("Categories fetched:", res.data.data);
+            })
+            .catch((err) => {
+              console.error("Error fetching categories:", err);
+            });
   };
 
   // Handle Modal Close
   const handleClose = () => {
     setShow(false);
-    setUniversityName("");
+    setCountry("");
+    setState("");
     setStatus("Active");
     setEditingId(null); // Reset editing state
     setErrorMessage("");
   };
 
-  // Add or Update University
+  // Add or Update state
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     // const newData = {
-    //   university_name,  status
+    //   state,  status
     // }
 
     const newData = {
-      university_name: capitalizeFirstLetter(university_name),
+      country: capitalizeFirstLetter(country),
+      state: capitalizeFirstLetter(state),
       status: capitalizeFirstLetter(status),
     };
 
     if (editingId) {
-      // Update existing University
+      // Update existing state
       axios
-        .put(`http://localhost:8000/UpdateUniversity/${editingId}`, newData)
+        .put(`http://localhost:8000/UpdateState/${editingId}`, newData)
         .then(() => {
-          alert("University Updated Successfully!");
+          alert("state Updated Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("University is already exist.."); // Set error message
+            setErrorMessage("State is already exist.."); // Set error message
           } else {
             console.error(err);
           }
         })
         .finally(() => setIsSubmitting(false));
     } else {
-      // Add new University
+      // Add new state
       axios
-        .post("http://localhost:8000/addUniversity", newData)
+        .post("http://localhost:8000/addState", newData)
         .then(() => {
-          alert("University Added Successfully!");
+          alert("State Added Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("University is already exist.."); // Set error message
+            setErrorMessage("State is already exist.."); // Set error message
           } else {
             console.error(err);
           }
@@ -123,10 +138,10 @@ const University = () => {
     }
   };
 
-  // Delete University
+  // Delete state
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deleteUniversity/${_id}`)
+      .delete(`http://localhost:8000/deleteState/${_id}`)
       .then(() => {
         alert("Are you sure you want to delete this record?");
         showUsers();
@@ -137,7 +152,8 @@ const University = () => {
   // Handle Edit Click
   const handleEdit = (item) => {
     setEditingId(item._id);
-    setUniversityName(item.university_name);
+    setCountry(item.country);
+    setState(item.state);
     setStatus(item.status);
     setShow(true);
   };
@@ -147,30 +163,32 @@ const University = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "University Name": a.university_name,
+        "Country":a.country,
+        "State Name": a.state,
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "University Data");
-    XLSX.writeFile(workbook, "University-data.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "state Data");
+    XLSX.writeFile(workbook, "state-data.xlsx");
   };
 
   // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
-    doc.text("University Data", 14, 22);
+    doc.text("State Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "University Name"]],
-      body: userData.map((a, index) => [index + 1, a.university_name]),
+      head: [["Sr.No", "Country", "State Name"]],
+      body: userData.map((a, index) => [index + 1, a.country, a.state]),
       startY: 30,
     });
-    doc.save("University-data.pdf");
+    doc.save("State-data.pdf");
   };
 
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "University Name": a.university_name,
+    "Country": a.country,
+    "State Name": a.state,
   }));
 
   // Pagination logic
@@ -205,7 +223,8 @@ const University = () => {
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.university_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.country.toLowerCase().includes(searchTerm.toLowerCase)||
+        item.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUserData(filteredData); // Update the table data
@@ -228,45 +247,67 @@ const University = () => {
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* <h1 className="fw-bold text-center text-primary mb-3">University </h1> */}
+        {/* <h1 className="fw-bold text-center text-primary mb-3">state </h1> */}
         {/* <Breadcrumb>
       <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
+      <Breadcrumb.Item active>state</Breadcrumb.Item>
     </Breadcrumb> */}
-        {/* Add University Button */}
+        {/* Add state Button */}
         <Row><Col md={4}>
         <Breadcrumb>
       <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-      <Breadcrumb.Item active>University</Breadcrumb.Item>
+      <Breadcrumb.Item active>state</Breadcrumb.Item>
     </Breadcrumb>
     </Col>
     <Col md={8} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add University
+            Add state
           </Button>
         </Col>
     </Row>
         {/* <Col md={6} className="d-flex justify-content-end mb-4">
           <Button variant="primary" onClick={handleShow}>
-            Add University
+            Add state
           </Button>
         </Col> */}
 
-        {/* Add University Modal */}
+        {/* Add state Modal */}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title> {editingId ? "Update University" : "Add University"} </Modal.Title>
+            <Modal.Title> {editingId ? "Update state" : "Add state"} </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={12}>
-                  <Form.Label>University Name</Form.Label>
+                                  <Form.Label className="mt-3">
+                                    <b>Select Country</b>
+                                  </Form.Label>
+                                  <Form.Select
+                                    aria-label="Select Country"
+                                    value={country}
+                                    onChange={(e) => setCountry(e.target.value)}
+                                    required
+                                    
+                                  >
+                                    <option value="">Choose a Country</option>
+                                    {categoriesdata.map((index) => (
+                                      <option
+                                        key={index._id}
+                                        value={index.country}
+                                      >
+                                        {index.country}
+                                      </option>
+                                    ))}
+                                  </Form.Select>
+                                </Col>
+                <Col md={12}>
+                  <Form.Label>state Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter University Name"
-                    value={university_name}
-                    onChange={(e) => setUniversityName(e.target.value)}
+                    placeholder="Enter state Name"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
                     required
                   />
                 </Col>
@@ -316,7 +357,7 @@ const University = () => {
         {/* Export Buttons */}
         <Col md={8}>
           {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink data={csvData} filename={"University-data.csv"} className="">
+          <CSVLink data={csvData} filename={"state-data.csv"} className="">
             <Button variant="secondary">CSV</Button>
           </CSVLink>
           <Button variant="secondary" onClick={handleExcel} className="ms-1">
@@ -362,7 +403,8 @@ const University = () => {
               <thead>
                 <tr>
                   <th>Sr.No</th>
-                  <th>University Name</th>
+                  <th>Country</th>
+                  <th>state Name</th>
                   <th className="no-print">Status</th>
                   <th className="no-print text-center">Action</th>
                 </tr>
@@ -371,7 +413,8 @@ const University = () => {
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.university_name}</td>
+                    <td>{a.country} </td>
+                    <td>{a.state}</td>
                     <td className="no-print ">{a.status}</td>
                     <td className="no-print  d-flex justify-content-evenly">
                       <Button variant="warning" onClick={() => handleEdit(a)}>
@@ -430,4 +473,4 @@ const University = () => {
   );
 };
 
-export default University;
+export default State;

@@ -1,15 +1,6 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Button,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-  Table,
-} from "react-bootstrap";
+import { Button,Col,Container, Form,InputGroup,Row,Table,Breadcrumb} from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
@@ -19,28 +10,26 @@ import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
+import axios from "axios";
+// import { name } from "react-date-object/calendars/julian";
 
-const WelcomeKit = () => {
+const Trainer = () => {
   const [show, setShow] = useState(false);
-
-  const handleShow = () => setShow(true);
-
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Adjust as needed
-
-  const [welcome_kit, setWelcome_kit] = useState("");
-  const [status, setStatus] = useState("Active"); // Default status
+  const [itemsPerPage] = useState(10);
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const[contact_no,setContact]= useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [technology, setTechnology] = useState("");
+  const [status, setStatus] = useState("Active");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Search input value
-  const [editingId, setEditingId] = useState(null); // Track which ID is being edited
+  const [searchTerm, setSearchTerm] = useState("");
+   const [editingId, setEditingId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Fetch Data from API
-  useEffect(() => {
-    showUsers();
-  }, []);
-
+const[categories,setCategories] = useState([]);
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
     return str
@@ -49,69 +38,119 @@ const WelcomeKit = () => {
       .join(" "); // Join them back together
   };
 
+  useEffect(() => {
+    showUsers();
+  }, []);
+
+    
   const showUsers = () => {
-    // setLoading(true);
     axios
-      .get("http://localhost:8000/getkititem")
+    .get("http://localhost:8000/getdata")
+    .then((res) => {
+      const tdata = res.data.data.filter((item) => item.status === "Active");
+      setCategories(tdata);
+      console.log("Categories fetched:", res.data.data);
+    })
+    .catch((err) => {
+      console.error("Error fetching categories:", err);
+    });
+
+    axios
+      .get("http://localhost:8000/gettrainer",
+        {
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+      }
+
+      )
       .then((res) => {
         setUserData(res.data.data);
-        // setLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        // setLoading(false);
       });
-  };
+  // };
+  // axios
+  // .get("http://localhost:8000/getusers", {
+  //   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  // })
+  // .then((res) => {
+  //   console.log("API Response:", res.data); // Debugging log
+  //   setUserData(res.data.data || []); // Fallback to empty array if undefined
+  // })
+  // .catch((err) => {
+  //   console.error("Error fetching users:", err);
+  //   setUserData([]); // Ensure it's always an array
+  // });
+};
 
-  // Handle Modal Close
   const handleClose = () => {
     setShow(false);
-    setWelcome_kit("");
+    setFname("");
+    setLname("");
+    setEmail("");
+    setPassword("");
+    setTechnology("");
+   setContact("");
+
     setStatus("Active");
-    setEditingId(null); // Reset editing state
+    setEditingId(null);
+    setErrorMessage("");
   };
 
-  // const handleShow = () => setShow(true);
-
-  // Add or Update City
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // const newData = { city_name, status };
+
     const newData = {
-      welcome_kit: capitalizeFirstLetter(welcome_kit),
+      fname: capitalizeFirstLetter(fname),
+      lname: capitalizeFirstLetter(lname),
+      email,
+      password,
+      contact_no:capitalizeFirstLetter(contact_no),
+      technology:capitalizeFirstLetter(technology),
       status: capitalizeFirstLetter(status),
     };
 
-    if (editingId) {
-      // Update existing kit Item
+     if (editingId) {
       axios
-        .put(`http://localhost:8000/Updatekititem/${editingId}`, newData)
+        .put(`http://localhost:8000/updatetrainer/${editingId}`, newData,
+
+          {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        }
+
+        )
         .then(() => {
-          alert("Kit item Updated Successfully!");
+          alert("Trainer Updated Successfully!");
           showUsers();
           handleClose();
         })
-        .catch((err) => {
-          if (err.response && err.response.status === 400) {
-            setErrorMessage("Kit Item is already exist.."); // Set error message
-          } else {
-            console.error(err);
-          }
-        })
+        .catch((err) => console.error(err))
         .finally(() => setIsSubmitting(false));
     } else {
-      // Add new Item
       axios
-        .post("http://localhost:8000/addkititem", newData)
+        .post("http://localhost:8000/add_trainer", newData,
+
+          {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        }
+        )
         .then(() => {
-          alert("Welcome Kit item Added Successfully!");
+          alert("Trainer Added Successfully!");
           showUsers();
           handleClose();
         })
         .catch((err) => {
           if (err.response && err.response.status === 400) {
-            setErrorMessage("Kit Item is already exist.."); // Set error message
+            setErrorMessage("User already exists.");
           } else {
             console.error(err);
           }
@@ -120,58 +159,66 @@ const WelcomeKit = () => {
     }
   };
 
-  // Delete City
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deletekititem/${_id}`)
+      .delete(`http://localhost:8000/deletetrainer/${_id}`)
       .then(() => {
-        alert("Are you sure you want to delete this Item?");
+        alert("Are you sure you want to delete this user?");
         showUsers();
       })
       .catch((err) => console.error(err));
   };
 
-  // Handle Edit Click
   const handleEdit = (item) => {
     setEditingId(item._id);
-    setWelcome_kit(item.welcome_kit);
+    setFname(item.fname);
+    setLname(item.lname);
+    setEmail(item.email);
+    setTechnology(item.technolgy);
+    setContact(item.contact_no);
+     setPassword(item.password);
     setStatus(item.status);
     setShow(true);
     setErrorMessage("");
   };
 
-  // Export to Excel
   const handleExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "Welcome kit Item": a.welcome_kit,
+        "First Name": a.fname,
+        "Last Name": a.lname,
+        "Email":a.email,
+        "Technology":a.technolgy,
+        "Contact No.":a.contact_no
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Welcome kit Data");
-    XLSX.writeFile(workbook, "Welcome Kit-data.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "User Data");
+    XLSX.writeFile(workbook, "User-data.xlsx");
   };
 
-  // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
-    doc.text("Welcome Kit Data", 14, 22);
+    doc.text("User Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Welcome kit Item"]],
-      body: userData.map((a, index) => [index + 1, a.welcome_kit]),
+      head: [["Sr.No", "First Name","Last Name","Email ID","Technology",
+        "Contact No."]],
+      body: userData.map((a, index) => [index + 1, a.fname,a.lname,a.email,a.contact_no,a.technolgy,a.status]),
       startY: 30,
     });
-    doc.save("Welcomekit-data.pdf");
+    doc.save("User-data.pdf");
   };
 
-  // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "City Name": a.welcome_kit,
+    "First Name": a.fname,
+    "Last Name": a.lname,
+        "Email":a.email,
+       "Technology":a.technolgy,
+        "Contact No.":a.contact_no
   }));
 
-  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = userData.slice(indexOfFirstItem, indexOfLastItem);
@@ -199,74 +246,134 @@ const WelcomeKit = () => {
   const showingTo = Math.min(indexOfLastItem, userData.length);
   const totalEntries = userData.length;
 
-  // Handle search
   const handleSearch = () => {
     const filteredData = userData.filter(
       (item) =>
-        item.welcome_kit.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.fname.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setUserData(filteredData); // Update the table data
+    setUserData(filteredData);
   };
 
-  // Handle Enter key press
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  // Reset search when the input is cleared
   useEffect(() => {
     if (searchTerm === "") {
-      showUsers(); // Reset the table data to the original data
+      showUsers();
     }
   }, [searchTerm]);
 
   return (
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
-        {/* Add City Button */}
-        {/* <h1 className="fw-bold text-center text-primary ">Welcome Kit Item</h1> */}
+        {/* <h1 className="fw-bold text-center text-secondary">City</h1>
+        <Col md={12} className="d-flex justify-content-end mb-4">
+          <Button variant="primary" onClick={() => setShow(true)}>
+            Add City
+          </Button>
+        </Col> */}
+
         <Row>
           <Col md={4}>
             <Breadcrumb>
-              <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-              <Breadcrumb.Item active>Welcome Kit Item</Breadcrumb.Item>
+              <Breadcrumb.Item href="dashboard">Home</Breadcrumb.Item>
+              <Breadcrumb.Item active>Trainer</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
-          <Col md={12} className="d-flex justify-content-end mb-4">
-            <Button variant="primary" onClick={handleShow}>
-              Add Kit Item
+          <Col md={8} className="d-flex justify-content-end mb-4">
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Trainer
             </Button>
           </Col>
         </Row>
 
-        {/* Add City Modal */}
+
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>{editingId ? "Update Kit Item " :" Add Kit Item"} </Modal.Title>
+            <Modal.Title>Add Trainer</Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
-              <Row>
-                <Col md={12}>
-                  <Form.Label>Item Name</Form.Label>
+              
+                <Row>
+                <Col md={6}>
+                  <Form.Label>First Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter welcome kit item Name"
-                    value={welcome_kit}
-                    onChange={(e) => setWelcome_kit(e.target.value)}
+                    placeholder="Enter first Name"
+                    value={fname}
+                    onChange={(e) => setFname(e.target.value)}
+                    required
+                  /></Col>
+                  <Col md={6}>
+                  <Form.Label>Last Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter last Name"
+                    value={lname}
+                    onChange={(e) => setLname(e.target.value)}
                     required
                   />
-                </Col>
-                {/* Display Error Message */}
+                </Col></Row>
                 {errorMessage && (
                   <Col md={12} className="mt-2">
                     <div style={{ color: "red" }}>{errorMessage}</div>
                   </Col>
                 )}
+                <Row>
+                <Col md={12} className=" mt-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter Email id"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </Col>
 
+                
+                <Col md={12} className="mt-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </Col>
+                <Col md={12} className="mt-3">
+                  <Form.Label>Contact No.</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter contact no."
+                    value={contact_no}
+                    onChange={(e) => setContact(e.target.value)}
+                    required
+                  />
+                </Col>
+                <Col md={12}>
+                  <Form.Label> Technology Name </Form.Label>
+                  <Form.Select
+                    aria-label="select Technology"
+                    value={technology}
+                    onChange={(e) => setTechnology(e.target.value)}
+                    required
+                  >
+                    <option value="">Choose Technology</option>
+                    {categories.map((t) => (
+                      <option key={t._id} value={t.name}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
                   <Form.Check
@@ -291,6 +398,7 @@ const WelcomeKit = () => {
               </Row>
             </Form>
           </Modal.Body>
+          
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close
@@ -305,33 +413,25 @@ const WelcomeKit = () => {
           </Modal.Footer>
         </Modal>
 
-        {/* Export Buttons */}
-        <Col md={8} className="">
-          {/* <ButtonGroup aria-label="Export Buttons"> */}
-          <CSVLink data={csvData} filename={"City-data.csv"}>
-            <Button variant="secondary" className="">
-              CSV
-            </Button>
+{/* downlod button */}
+        <Col md={8}>
+          <CSVLink data={csvData} filename={"User-data.csv"}>
+            <Button className="btn-secondary">CSV</Button>
           </CSVLink>
-          <Button variant="secondary" onClick={handleExcel} className="ms-1 ">
+          <Button onClick={handleExcel} className="ms-1 btn-secondary">
             Excel
           </Button>
-          <Button variant="secondary" onClick={handlePdf} className="ms-1 ">
+          <Button onClick={handlePdf} className="ms-1 btn-secondary">
             PDF
           </Button>
-          <Button
-            variant="secondary"
-            onClick={() => window.print()}
-            className="ms-1 "
-          >
+          <Button onClick={() => window.print()} className="ms-1 btn-secondary">
             Print
           </Button>
-          {/* </ButtonGroup> */}
         </Col>
 
-        {/* Search Input */}
-        <Col md={4} className=" d-flex">
-          <InputGroup className="mb-3  ">
+        {/* Search */}
+        <Col md={4} className="d-flex">
+          <InputGroup className="mb-3">
             <Form.Control
               type="text"
               placeholder="Search for ...."
@@ -340,32 +440,39 @@ const WelcomeKit = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
-              aria-label="Recipient's username"
-              aria-describedby="basic-addon2"
             />
-            <InputGroup.Text id="basic-addon2" className=" bg-secondary ">
+            <InputGroup.Text id="basic-addon2" className="bg-secondary">
               <FaSearch className="text-white" />
             </InputGroup.Text>
           </InputGroup>
         </Col>
 
-        {/* Table */}
-        <Col md={12} lg={12} xl={12} xxl={12} id="printable">
+        {/* table */}
+        <Col md={12} lg={12} xl={12} xxl={12}>
           <div style={{ overflowX: "auto" }}>
             <Table striped bordered hover id="printable-table">
               <thead>
                 <tr>
                   <th>Sr.No</th>
-                  <th>Welcome Kit Item Name</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                   <th>Contact No.</th> 
+                   <th>Technology</th>
                   <th className="no-print">Status</th>
-                  <th className="no-print text-center">Action</th>
+                  <th className="no-print text-center">Action</th> 
                 </tr>
               </thead>
               <tbody>
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.welcome_kit}</td>
+                    <td>{a.fname}</td>
+                    <td>{a.lname}</td>
+                    <td>{a.email}</td>
+                     <td>{a.contact_no}</td> 
+                     <td>{a.technology}</td>
+
                     <td className="no-print">{a.status}</td>
                     <td className="no-print d-flex justify-content-evenly">
                       <Button
@@ -389,14 +496,13 @@ const WelcomeKit = () => {
             </Table>
           </div>
         </Col>
-        {/* Pagination */}
+
         <Row>
           <Col md={6}>
             <div className="dataTables_info" aria-live="polite" role="status">
               Showing {showingFrom} to {showingTo} of {totalEntries} entries
             </div>
           </Col>
-
           <Col md={6} className="d-flex justify-content-end">
             <Pagination>
               <Pagination.Prev
@@ -428,4 +534,4 @@ const WelcomeKit = () => {
   );
 };
 
-export default WelcomeKit;
+export default Trainer;
