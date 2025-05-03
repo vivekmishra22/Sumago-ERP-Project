@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button, Col, Nav, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { FaLayerGroup, FaUniversity, FaUserGraduate, FaUserPlus, FaUsersCog } from "react-icons/fa";
-import { MdLibraryBooks, MdLocationCity, MdSpaceDashboard } from "react-icons/md";
+import { FaGlobe, FaLaptopCode, FaLayerGroup, FaUniversity, FaUserGraduate, FaUserPlus, FaUsersCog } from "react-icons/fa";
+import { MdLocationCity, MdSpaceDashboard } from "react-icons/md";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { IoBagCheckSharp } from "react-icons/io5";
 import { GrDocumentStore } from "react-icons/gr";
@@ -12,6 +12,7 @@ import { FaMountainCity, FaUserGroup } from "react-icons/fa6";
 import { TbBulbFilled } from "react-icons/tb";
 import { GiTeacher } from "react-icons/gi";
 import { BiLogOut } from "react-icons/bi";
+import { GoClockFill } from "react-icons/go";
 
 const Sidebar = () => {
     const [show, setShow] = useState(false); // State for Offcanvas
@@ -55,7 +56,8 @@ const Sidebar = () => {
                         <Nav defaultActiveKey="/User" className="flex-column link-unstyled">
                             {/* Dashboard Link */}
                             <Link
-                                to="/Head/dashboard"
+                                // to="/Head/dashboard"
+                                to="/Head/"
                                 className="text-decoration-none link ps-3 py-2 d-flex align-items-center"
                             >
                                 <MdSpaceDashboard size={25} className="me-2" />
@@ -69,9 +71,6 @@ const Sidebar = () => {
                                     onClick={toggleAddLogin} // Toggle dropdown on click
                                     style={{ cursor: "pointer" }}
                                 >
-                                    {/* <RiUserAddFill size={23} className="me-3" />
-                                    <span>Add Login</span> */}
-
                                     <FaUserPlus size={23} className="me-3" />
                                     <span>Add Login</span>
                                     <i
@@ -117,7 +116,6 @@ const Sidebar = () => {
                                     onClick={toggleMasters} // Toggle dropdown on click
                                     style={{ cursor: "pointer" }}
                                 >
-                                    {/* <GrDocumentStore size={23} className="me-3" /> */}
                                     <FaLayerGroup size={23} className="me-3" />
                                     <span>Masters</span>
                                     <i
@@ -183,21 +181,21 @@ const Sidebar = () => {
                                         to="/Head/Courses"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <MdLibraryBooks size={23} className="me-3" />
+                                        <FaLaptopCode size={23} className="me-3" />
                                         <span>Courses</span>
                                     </Link>
                                     <Link
                                         to="/Head/duration"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <MdLibraryBooks size={23} className="me-3" />
+                                        <GoClockFill size={23} className="me-3" />
                                         <span>Duration</span>
                                     </Link>
                                     <Link
                                         to="/Head/country"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
-                                        <MdLibraryBooks size={23} className="me-3" />
+                                        <FaGlobe size={23} className="me-3" />
                                         <span>Country</span>
                                     </Link>
                                     <Link
@@ -207,13 +205,13 @@ const Sidebar = () => {
                                         <FaUsersCog size={23} className="me-3" />
                                         <span>Batch</span>
                                     </Link>
-                                    <Link
+                                    {/* <Link
                                         to="/Head/project"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                     >
                                         <FaUsersCog size={23} className="me-3" />
                                         <span>Project Allocation</span>
-                                    </Link>
+                                    </Link> */}
                                     <Link
                                         to="/Head/welcomekit"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
@@ -255,7 +253,6 @@ const Sidebar = () => {
                         <Offcanvas.Title>Sumago Infotech</Offcanvas.Title>
                     </Offcanvas.Header>
                     <Offcanvas.Body className="d-flex flex-column">
-                        {/* <div className="sidebar d-block d-md-none"> */}
                         <div className="flex-grow-1">
                             <Nav defaultActiveKey="/User" className="flex-column link-unstyled">
                                 {/* Dashboard Link */}
@@ -382,21 +379,21 @@ const Sidebar = () => {
                                             to="/Head/Courses"
                                             className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                         >
-                                            <MdLibraryBooks size={23} className="me-3" />
+                                            <FaLaptopCode size={23} className="me-3" />
                                             <span>Courses</span>
                                         </Link>
                                         <Link
                                             to="/Head/duration"
                                             className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                         >
-                                            <MdLibraryBooks size={23} className="me-3" />
+                                            <GoClockFill size={23} className="me-3" />
                                             <span>Duration</span>
                                         </Link>
                                         <Link
                                             to="/Head/country"
                                             className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
                                         >
-                                            <MdLibraryBooks size={23} className="me-3" />
+                                            <FaGlobe size={23} className="me-3" />
                                             <span>Country</span>
                                         </Link>
                                         <Link
