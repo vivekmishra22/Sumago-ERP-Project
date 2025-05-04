@@ -1,5 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   Col,
@@ -13,6 +15,7 @@ import {
 import Pagination from "react-bootstrap/Pagination";
 import { AiFillDelete } from "react-icons/ai";
 import { GrEdit } from "react-icons/gr";
+// import { useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
@@ -20,30 +23,29 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
-const Admission_Fees = () => {
+const Installment= () => {
   const [show, setShow] = useState(false);
-  
   const handleClose = () => {
-    setName("");
+    setStudent_Name("");
+    setCourse_Name("");
     setFees_date("");
     setDuration("");
     setAmount("");
+    setInstallmentAmount("");
+    setInstallment("");
     setStatus("Active");
     setShow(false);
   };
 
-  const handleShow = () => {
-    const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-    setFees_date(formattedDate);
-    setShow(true);
-  };
-
+  // const handleShow = () => setShow(true);
+  const navigate = useNavigate();
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
-
-  const [name, setName] = useState("");
+  // const navigate = useNavigate();
+const[student_name, setStudent_Name] = useState("");
+const[installment_no, setInstallment] = useState("");
+  const [course_name, setCourse_Name] = useState("");
   const [fees_date, setFees_date] = useState("");
   const [duration, setDuration] = useState("");
   const [amount, setAmount] = useState("");
@@ -51,26 +53,37 @@ const Admission_Fees = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
-  const [categories, setCategories] = useState([]);
-  const [filteredDurations, setFilteredDurations] = useState([]);
-  
+  const [categoriesdata, setCategoriesData] = useState([]);
+   const [iamount, setInstallmentAmount] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState(""); 
+
+  // const [categories, setCategories] = useState([]);
+
+  // const capitalizeFirstLetter = (str) => {
+  //   if (!str) return str;
+  //   return str
+  //     .split(" ") // Split the string into words
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+  //     .join(" "); // Join them back together
+  // };
 
   function capitalizeFirstLetter(input) {
     if (typeof input === 'string') {
       return input.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    } else {
+    }
+     else {
       console.error('Input is not a string!');
       return input; // Or handle accordingly
     }
   }
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+   const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
+   const month = String(date.getMonth() + 1); // Months are zero-based
+   const year = date.getFullYear();
+   return `${day}-${month}-${year}`;
+};
+
 
   // Fetch data on component mount
   useEffect(() => {
@@ -80,7 +93,7 @@ const Admission_Fees = () => {
   // Fetch data from the API
   const showUsers = () => {
     axios
-      .get("http://localhost:8000/getdataAdmissionFees")
+      .get("http://localhost:8000/getinstallment")
       .then((res) => {
         setUserData(res.data.data);
       })
@@ -92,14 +105,51 @@ const Admission_Fees = () => {
       });
   };
 
+  useEffect(() => {
+    
+      axios
+        .get("http://localhost:8000/getEnquiry_Student")
+        .then((res) => {
+          const sdata = res.data.data.filter((item) => item.status === "Active");
+          setCategoriesData(sdata);
+        })
+        .catch((err) => console.error("Error fetching categories:", err));
+  
+    // axios
+    //   .get("http://localhost:8000/getdataDuration")
+    //   .then((res) => {
+    //     const ddata = res.data.data.filter((item) => item.status === "Active");
+    //     setCategoriesData(ddata);
+    //     console.log("Categories fetched:", res.data.data);
+    //   })
+    //   .catch((err) => {
+    //     console.error("Error fetching categories:", err);
+    //   });
+
+
+    // axios
+    //   .get("http://localhost:8000/getdataCourse")
+    //   .then((res) => {
+    //     const cdata = res.data.data.filter((item) => item.status === "Active");
+    //     setCategories(cdata);
+    //     console.log("Categories fetched:", res.data.data);
+    //   })
+    //   .catch((err) => {
+    //     console.error("Error fetching categories:", err);
+    //   });
+  }, []);
+
   // Handle Edit Click
-  const handleEdit = (course) => {
-    setEditingId(course._id);
-    setName(course.name);
-    setFees_date(new Date(course.fees_date).toISOString().split("T")[0]);
-    setDuration(course.duration);
-    setAmount(course.amount);
-    setStatus(course.status);
+  const handleEdit = (installment) => {
+    setEditingId(installment._id);
+    setStudent_Name(installment.student_name);
+    setInstallment(installment.installment_no);
+    setCourse_Name(installment.course_name);
+    setFees_date(new Date(installment.date).toISOString().split("T")[0]);;
+    setDuration(installment.duration);
+    setAmount(installment.amount);
+    setInstallmentAmount(installment.iamount);
+    setStatus(installment.status);
     setShow(true);
   };
 
@@ -107,20 +157,27 @@ const Admission_Fees = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    const updatedDate = new Date(fees_date).toISOString();
-    const newData = {
-      name: capitalizeFirstLetter(name),
-      fees_date: updatedDate,
-      duration: capitalizeFirstLetter(duration),
-      amount: capitalizeFirstLetter(amount),
-      status: capitalizeFirstLetter(status),
-    };
+    const updatedDate = new Date(fees_date).toISOString();    
+    
+      const newData = {
+        student_name: capitalizeFirstLetter(student_name),
+        installment_no,
+        course_name: capitalizeFirstLetter(course_name),
+        fees_date: updatedDate,
+        duration: capitalizeFirstLetter(duration),
+        amount,
+        iamount,
+        status: capitalizeFirstLetter(status),
+        payment_method: paymentMethod, // <-- Add this line
+      };
+      
+    
 
     if (editingId) {
       axios
-        .put(`http://localhost:8000/UpdateAdmissionFees/${editingId}`, newData)
+        .put(`http://localhost:8000/updateinstallment/${editingId}`, newData)
         .then((res) => {
+          // console.log(res.data);
           alert("Data updated successfully");
           showUsers();
           handleClose();
@@ -129,11 +186,20 @@ const Admission_Fees = () => {
         .finally(() => setIsSubmitting(false));
     } else {
       axios
-        .post("http://localhost:8000/addAdmissionFees", newData)
+        .post("http://localhost:8000/addinstallment", newData)
         .then((res) => {
-          alert("Course Added Successfully!");
+          // console.log("Data Added:", res.data);
+          alert("Installment Added Successfully!");
+          setStudent_Name("");
+          setInstallment("");
+          setCourse_Name("");
+          setFees_date("");
+          setDuration("");
+          setAmount("");
+          setInstallmentAmount("");
+          setStatus("Active");
           handleClose();
-          showUsers();
+          showUsers(); // Refresh the table
         })
         .catch((err) => {
           console.log(err);
@@ -145,56 +211,82 @@ const Admission_Fees = () => {
   // Delete data
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deleteAdmissionFees/${_id}`)
+      .delete(`http://localhost:8000/deleteinstallment/${_id}`)
       .then((res) => {
-        console.log("course Deleted:", res.data);
-        alert("Course deleted");
+        console.log("Installment Deleted:", res.data);
+        alert("Installment deleted");
         showUsers();
       })
       .catch((err) => console.error(err));
   };
+  //Generate Receipt
+  // const GenerateReceipt = ({ installmentId }) => {
+  //   const [receiptUrl, setReceiptUrl] = useState("");
+  
+  const handleGenerateReceipt = (id) => {
+    navigate(`/GenerateReceipt/${id}`);
+};
+    // const handleGenerateReceipt = async () => {
+    //   try {
+    //     const response = await axios.get(`http://localhost:8000/Receipt/${installmentId}`);
+    //     setReceiptUrl(response.data.receiptUrl);
+    //   } catch (error) {
+    //     console.error("Error generating receipt:", error);
+    //   }
+    // };
 
   // Export to Excel
   const handleExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "Fees Date": formatDate(a.fees_date),
-        "Course Name": a.name,
+        "Installment No.":a.installment_no,
+        "Student Name":a.student_name,
+        "Fees Date": a.fees_date,
+        "Course Name": a.course_name,
         "Course Duration": a.duration,
-        "Amount": a.amount,
+        "Course Fees": a.amount,
+        "Installment Amount":a.iamount,
       }))
     );
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Courses Data");
-    XLSX.writeFile(workbook, "courses-data.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Installment Data");
+    XLSX.writeFile(workbook, "Installment-data.xlsx");
   };
 
   // Export to PDF
   const handlePdf = () => {
     const doc = new jsPDF();
-    doc.text("Courses Data", 14, 22);
+    doc.text("Installment Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Fees Date", "Course Name", "Course Duration", "Amount"]],
+      head: [
+        ["Sr.No", "Installment No.","Student Name","Fees Date", "Course Name", "Course Duration","Course Fees", "Installment Amount"],
+      ],
       body: userData.map((a, index) => [
         index + 1,
-        formatDate(a.fees_date),
-        a.name,
+        a.installment_no,
+        a.student_name,
+        a.fees_date,
+        a.course_name,
         a.duration,
         a.amount,
+        a.iamount,
       ]),
       startY: 30,
     });
-    doc.save("Courses-data.pdf");
+    doc.save("installment-data.pdf");
   };
 
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "Fees Date": formatDate(a.fees_date),
-    "Course Name": a.name,
+    "Installment No.":a.installment_no,
+    "Student Name":a.student_name,
+    "Fees Date": a.fees_date,
+    "Course Name": a.course_name,
     "Course Duration": a.duration,
-    "Amount": a.amount,
+    "Course Fees": a.amount,
+    "Installmetn Amount":a.iamount,
   }));
 
   // Pagination logic
@@ -228,13 +320,16 @@ const Admission_Fees = () => {
   // Handle search
   const handleSearch = () => {
     const filteredData = userData.filter((item) => 
-      String(item.name).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item.student_name).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(item.installment_no).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item.course_name).toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(item.fees_date).toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(item.duration).toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(item.amount).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item.iamount).toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(item.status).toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setUserData(filteredData);
+    setUserData(filteredData); // Update the table data
   };
 
   // Handle Enter key press
@@ -247,7 +342,7 @@ const Admission_Fees = () => {
   // Reset search when the input is cleared
   useEffect(() => {
     if (searchTerm === "") {
-      showUsers();
+      showUsers(); // Reset the table data to the original data
     }
   }, [searchTerm]);
 
@@ -258,12 +353,12 @@ const Admission_Fees = () => {
           <Col md={4}>
             <Breadcrumb>
               <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-              <Breadcrumb.Item active>Fees structure</Breadcrumb.Item>
+              <Breadcrumb.Item active>Fees Installment</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
           <Col md={8} className="d-flex justify-content-end mb-4">
-            <Button variant="primary" onClick={handleShow}>
-              Add Fees Structure
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Installment
             </Button>
           </Col>
         </Row>
@@ -272,12 +367,39 @@ const Admission_Fees = () => {
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {editingId ? "Update Fees Structure" : "Add Fees Structure"}
+              {editingId ? " Update Fees Installment" : "Add Fees Installment"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
+              <Col md={12}>
+                  <Form.Label>Student Name</Form.Label>
+                  <Form.Select
+                    aria-label="select Student"
+                    value={student_name}
+                    onChange={(e) => setStudent_Name(e.target.value)}
+                    required
+                  >
+                    <option value="">Choose Student Name</option>
+                    {categoriesdata.map((stud) => (
+                      <option key={stud._id} value={stud.student_name}>
+                        {stud.student_name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
+                <Col md={12}>
+                  <Form.Label>Installment No.</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter installment no."
+                    value={installment_no}
+                    onChange={(e) => setInstallment(e.target.value)}
+                    required
+                  />
+                </Col>
+
                 <Col md={12}>
                   <Form.Label>Fees Date</Form.Label>
                   <Form.Control
@@ -286,85 +408,92 @@ const Admission_Fees = () => {
                     value={fees_date}
                     onChange={(e) => setFees_date(e.target.value)}
                     required
-                    readOnly
                   />
                 </Col>
-               
-                {/* Course Name */}
-                                  <Col md={6} className="pb-4">
-                                    <Form.Label>Course Name :</Form.Label>
-                                    <Form.Select
-                                      aria-label="select Course"
-                                      value={name}
-                                      onChange={(e) => {
-                                        const selectedCourse = e.target.value;
-                                        setName(selectedCourse);
-                
-                                        // Filter durations based on selected course
-                                        const courseDurations = categories.filter(
-                                          (category) => category.name === selectedCourse
-                                        );
-                
-                                        setFilteredDurations(courseDurations);
-                
-                                        // Reset duration and amount when course changes
-                                        setDuration("");
-                                        setAmount("");
-                                      }}
-                                      required
-                                    >
-                                      <option value="">Choose Course Name</option>
-                                      {categories.map((course) => (
-                                        <option key={course._id} value={course.name}>
-                                          {course.name}
-                                        </option>
-                                      ))}
-                                    </Form.Select>
-                                  </Col>
+                <Col md={12}>
+                  <Form.Label>Course Name</Form.Label>
+                  <Form.Select
+                    aria-label="select Course"
+                    value={course_name}
+                    onChange={(e) => setCourse_Name(e.target.value)}
+                    required
+                  >
+                    <option value="">Choose Course Name</option>
+                    {categoriesdata.map((course) => (
+                      <option key={course._id} value={course.course_name}>
+                        {course.course_name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
 
-                 {/* Duration */}
-                                  <Col md={6} className="pb-4">
-                                    <Form.Label>Duration :</Form.Label>
-                                    <Form.Select
-                                      aria-label="select Duration"
-                                      value={duration}
-                                      onChange={(e) => {
-                                        const selectedDuration = e.target.value;
-                                        setDuration(selectedDuration);
-                
-                                        // Find the corresponding amount based on the selected duration
-                                        const selectedCategory = filteredDurations.find(
-                                          (category) => category.duration === selectedDuration
-                                        );
-                
-                                        // If a matching category is found, set the amount
-                                        if (selectedCategory) {
-                                          setAmount(selectedCategory.amount);
-                                        }
-                                      }}
-                                      required
-                                      disabled={!name} // Disable if no course is selected
-                                    >
-                                      <option value="">Choose Duration</option>
-                                      {filteredDurations.map((category) => (
-                                        <option key={category._id} value={category.duration}>
-                                          {category.duration}
-                                        </option>
-                                      ))}
-                                    </Form.Select>
-                                  </Col>
-                
-                                      {/* Amount */}
-                                  <Col md={6} className="pb-4">
-                                    <Form.Label>Amount :</Form.Label>
-                                    <Form.Control
-                                      type="text"
-                                      placeholder="Amount will auto-fill"
-                                      value={amount}
-                                      readOnly // Make it read-only since it's auto-filled
-                                      required
-                                    />
-                                  </Col>
+                <Col md={12}>
+                  <Form.Label>Duration</Form.Label>
+                  <Form.Select
+                    aria-label="select duration"
+                    value={duration}
+                    onChange={(e) => {
+                      const selectedDuration = e.target.value;
+                      setDuration(selectedDuration);
+
+                      // Find the corresponding amount based on the selected duration
+                      const selectedCategory = categoriesdata.find(
+                        (category) => category.duration === selectedDuration
+                      );
+
+                      // If a matching category is found, set the amount
+                      if (selectedCategory) {
+                        setAmount(selectedCategory.amount);
+                      }
+                    }}
+                    required
+                  >
+                    <option value="">Choose Duration</option>
+                    {categoriesdata.map((category) => (
+                      <option key={category._id} value={category.duration}>
+                        {category.duration}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
+
+                <Col md={12}>
+                  <Form.Label>Amount</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                  />
+                </Col>
+                <Col md={12}>
+  <Form.Label>Payment Method</Form.Label>
+  <Form.Select
+    aria-label="Select Payment Method"
+    value={paymentMethod}
+    onChange={(e) => setPaymentMethod(e.target.value)}
+    required
+  >
+    <option value="">Choose Payment Method</option>
+    <option value="Cash">Cash</option>
+    <option value="Credit Card">Credit Card</option>
+    <option value="Debit Card">Debit Card</option>
+    <option value="UPI">UPI</option>
+    <option value="Bank Transfer">Bank Transfer</option>
+  </Form.Select>
+</Col>
+<Col md={12}>
+                  <Form.Label>Installment Amount</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Amount"
+                    value={iamount}
+                    onChange={(e) => setInstallmentAmount(e.target.value)}
+                    required
+                  />
+                </Col>
+
 
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
@@ -458,10 +587,14 @@ const Admission_Fees = () => {
               <thead>
                 <tr>
                   <th>Sr.No</th>
+                  <th>Student Name</th>
+                  <th>Installment No.</th>
                   <th>Course Name</th>
                   <th>Fees Date</th>
                   <th>Course Duration</th>
-                  <th>Amount</th>
+                  <th>Course Fees</th>
+                  <th>Payment Method</th>
+                  <th>Installment Amount</th>
                   <th className="no-print">Status</th>
                   <th className="no-print text-center">Action</th>
                 </tr>
@@ -470,10 +603,14 @@ const Admission_Fees = () => {
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.name}</td>
+                    <td>{a.student_name}</td>
+                    <td>{a.installment_no}</td>
+                    <td>{a.course_name}</td>
                     <td>{formatDate(a.fees_date)}</td>
                     <td>{a.duration}</td>
                     <td>{a.amount}</td>
+                    <td>{a.payment_method}</td>
+                    <td>{a.iamount}</td>
                     <td className="no-print">{a.status}</td>
                     <td className="no-print d-flex justify-content-evenly">
                       <Button variant="warning" onClick={() => handleEdit(a)}>
@@ -485,6 +622,8 @@ const Admission_Fees = () => {
                       >
                         <AiFillDelete />
                       </Button>
+                      <button className="btn btn-info btn-sm"
+                       onClick={() => handleGenerateReceipt(a._id)}>Generate Receipt</button>
                     </td>
                   </tr>
                 ))}
@@ -492,7 +631,14 @@ const Admission_Fees = () => {
             </Table>
           </div>
         </Col>
-
+        {/* <div>
+      <button onClick={handleGenerateReceipt}>Generate Receipt</button>
+      {receiptUrl && (
+        <div>
+          <p>Receipt Generated: <a href={receiptUrl} target="_blank" rel="noopener noreferrer">Download Receipt</a></p>
+        </div>
+      )}
+    </div> */}
         {/* Pagination */}
         <Row>
           <Col md={6}>
@@ -532,4 +678,4 @@ const Admission_Fees = () => {
   );
 };
 
-export default Admission_Fees;
+export default Installment;

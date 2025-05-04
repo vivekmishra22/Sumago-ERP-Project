@@ -52,6 +52,7 @@ const Admission_Fees = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
   const [categories, setCategories] = useState([]);
+  // const [categoriesdata, setCategoriesData] = useState([]);
   const [filteredDurations, setFilteredDurations] = useState([]);
   
 
@@ -77,6 +78,32 @@ const Admission_Fees = () => {
     showUsers();
   }, []);
 
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8000/getdataCourse")
+  //     .then((res) => {
+  //       const udata = res.data.data.filter((item) => item.status === "Active");
+  //       setCategories(udata);
+  //       // setCategoriesData(udata);
+  //       console.log("Categories fetched:", res.data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error fetching categories:", err);
+  //     });
+
+    // axios
+    //   .get("http://localhost:8000/getdataCourse")
+    //   .then((res) => {
+    //     const udata = res.data.data.filter((item) => item.status === "Active");
+    //     setCategoriesData(udata);
+    //     console.log("Categories fetched:", res.data.data);
+    //   })
+    //   .catch((err) => {
+    //     console.error("Error fetching categories:", err);
+    //   });
+  // }, []);
+  
   // Fetch data from the API
   const showUsers = () => {
     axios

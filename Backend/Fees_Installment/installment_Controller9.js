@@ -1,4 +1,4 @@
-const model = require('../Fees_Installment/installment_Model')
+const model = require('./installment_Model')
 const fs = require("fs");
 const path = require("path");
 const pdf = require("pdfkit");

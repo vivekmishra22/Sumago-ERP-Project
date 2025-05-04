@@ -20,57 +20,74 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 
-const Admission_Fees = () => {
+const Welcomekit_Feespaid = () => {
   const [show, setShow] = useState(false);
-  
   const handleClose = () => {
-    setName("");
-    setFees_date("");
-    setDuration("");
-    setAmount("");
+    setCourse_Name("");
+    setStudent_name("");
+    setDate("");
+    setWelcome_kit([]);
     setStatus("Active");
     setShow(false);
   };
 
-  const handleShow = () => {
-    const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-    setFees_date(formattedDate);
-    setShow(true);
-  };
+  // const handleShow = () => setShow(true);
 
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
+  // const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [fees_date, setFees_date] = useState("");
-  const [duration, setDuration] = useState("");
-  const [amount, setAmount] = useState("");
+  const [course_name, setCourse_Name] = useState("");
+  const [student_name, setStudent_name] = useState("");
+  const [date, setDate] = useState("");
+  const [welcome_kit, setWelcome_kit] = useState([]);
   const [status, setStatus] = useState("Active"); // Default status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Search input value
   const [editingId, setEditingId] = useState(null); // Track which ID is being edited
+  const [categoriesdata, setCategoriesData] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [filteredDurations, setFilteredDurations] = useState([]);
-  
+  const [categorieskitdata, setCategoriesKitData] = useState([]);
+  const [selectedKits, setSelectedKits] = useState([]);
 
-  function capitalizeFirstLetter(input) {
-    if (typeof input === 'string') {
-      return input.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  // Handle the change event when a checkbox is toggled
+  const handleCheckboxChange = (e, kitValue) => {
+    if (e.target.checked) {
+      // If checked, add the value to the selectedKits array
+      setSelectedKits((prev) => [...prev, kitValue]);
     } else {
-      console.error('Input is not a string!');
+      // If unchecked, remove the value from the selectedKits array
+      setSelectedKits((prev) => prev.filter((kit) => kit !== kitValue));
+    }
+  };
+
+  // const capitalizeFirstLetter = (str) => {
+  //   if (!str) return str;
+  //   return str
+  //     .split(" ") // Split the string into words
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+  //     .join(" "); // Join them back together
+  // };
+  function capitalizeFirstLetter(input) {
+    if (typeof input === "string") {
+      return input
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    } else {
+      console.error("Input is not a string!");
       return input; // Or handle accordingly
     }
   }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+   const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
+   const month = String(date.getMonth() + 1); // Months are zero-based
+   const year = date.getFullYear();
+   return `${day}-${month}-${year}`;
+};
 
   // Fetch data on component mount
   useEffect(() => {
@@ -80,7 +97,7 @@ const Admission_Fees = () => {
   // Fetch data from the API
   const showUsers = () => {
     axios
-      .get("http://localhost:8000/getdataAdmissionFees")
+      .get("http://localhost:8000/getdataKit_FeesPaid")
       .then((res) => {
         setUserData(res.data.data);
       })
@@ -92,13 +109,48 @@ const Admission_Fees = () => {
       });
   };
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/getEnquiry_Student")
+      .then((res) => {
+        const sdata = res.data.data.filter((item) => item.status === "Active");
+        setCategoriesData(sdata);
+        console.log("Categories fetched:", res.data.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+      });
+
+    axios
+      .get("http://localhost:8000/getdataCourse")
+      .then((res) => {
+        const cdata = res.data.data.filter((item) => item.status === "Active");
+        setCategories(cdata);
+        console.log("Categories fetched:", res.data.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+      });
+
+    axios
+      .get("http://localhost:8000/getkititem")
+      .then((res) => {
+        const wdata = res.data.data.filter((item) => item.status === "Active");
+        setCategoriesKitData(wdata);
+        console.log("Categories fetched:", res.data.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+      });
+  }, []);
+
   // Handle Edit Click
   const handleEdit = (course) => {
     setEditingId(course._id);
-    setName(course.name);
-    setFees_date(new Date(course.fees_date).toISOString().split("T")[0]);
-    setDuration(course.duration);
-    setAmount(course.amount);
+    setCourse_Name(course.course_name);
+    setStudent_name(course.student_name);
+    setDate(new Date(course.date).toISOString().split("T")[0]);
+    setWelcome_kit(course.welcome_kit.join(", "));
     setStatus(course.status);
     setShow(true);
   };
@@ -108,19 +160,20 @@ const Admission_Fees = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const updatedDate = new Date(fees_date).toISOString();
+    const updatedDate = new Date(date).toISOString();    
     const newData = {
-      name: capitalizeFirstLetter(name),
-      fees_date: updatedDate,
-      duration: capitalizeFirstLetter(duration),
-      amount: capitalizeFirstLetter(amount),
+      course_name: capitalizeFirstLetter(course_name),
+      student_name: capitalizeFirstLetter(student_name),
+      date:updatedDate,
+      welcome_kit:selectedKits.join(", "),
       status: capitalizeFirstLetter(status),
     };
 
     if (editingId) {
       axios
-        .put(`http://localhost:8000/UpdateAdmissionFees/${editingId}`, newData)
+        .put(`http://localhost:8000/UpdateKit_FeesPaid/${editingId}`, newData)
         .then((res) => {
+          // console.log(res.data);
           alert("Data updated successfully");
           showUsers();
           handleClose();
@@ -129,11 +182,12 @@ const Admission_Fees = () => {
         .finally(() => setIsSubmitting(false));
     } else {
       axios
-        .post("http://localhost:8000/addAdmissionFees", newData)
+        .post("http://localhost:8000/addKit_FeesPaid", newData)
         .then((res) => {
+          // console.log("Data Added:", res.data);
           alert("Course Added Successfully!");
           handleClose();
-          showUsers();
+          showUsers(); // Refresh the table
         })
         .catch((err) => {
           console.log(err);
@@ -145,7 +199,7 @@ const Admission_Fees = () => {
   // Delete data
   const deletedata = (_id) => {
     axios
-      .delete(`http://localhost:8000/deleteAdmissionFees/${_id}`)
+      .delete(`http://localhost:8000/deleteKit_FeesPaid/${_id}`)
       .then((res) => {
         console.log("course Deleted:", res.data);
         alert("Course deleted");
@@ -159,10 +213,10 @@ const Admission_Fees = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       userData.map((a, index) => ({
         "Sr.No": index + 1,
-        "Fees Date": formatDate(a.fees_date),
-        "Course Name": a.name,
-        "Course Duration": a.duration,
-        "Amount": a.amount,
+        "Student Name": a.student_name,
+        "Course Name": a.course_name,
+        "Date": a.date,
+        "Welcome Kit": a.welcome_kit,
       }))
     );
     const workbook = XLSX.utils.book_new();
@@ -175,13 +229,13 @@ const Admission_Fees = () => {
     const doc = new jsPDF();
     doc.text("Courses Data", 14, 22);
     doc.autoTable({
-      head: [["Sr.No", "Fees Date", "Course Name", "Course Duration", "Amount"]],
+      head: [["Sr.No", "Student Name", "Course Name", "Date", "welcome_kit"]],
       body: userData.map((a, index) => [
         index + 1,
-        formatDate(a.fees_date),
-        a.name,
-        a.duration,
-        a.amount,
+        a.student_name,
+        a.course_name,
+        a.date,
+        a.welcome_kit,
       ]),
       startY: 30,
     });
@@ -191,10 +245,10 @@ const Admission_Fees = () => {
   // CSV data for export
   const csvData = userData.map((a, index) => ({
     "Sr.No": index + 1,
-    "Fees Date": formatDate(a.fees_date),
-    "Course Name": a.name,
-    "Course Duration": a.duration,
-    "Amount": a.amount,
+    "Student Name": a.student_name,
+    "Course Name": a.course_name,
+    "Date": a.date,
+    "Welcome Kit": a.welcome_kit,
   }));
 
   // Pagination logic
@@ -227,27 +281,23 @@ const Admission_Fees = () => {
 
   // Handle search
   const handleSearch = () => {
-    const filteredData = userData.filter((item) => 
-      String(item.name).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item.fees_date).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item.duration).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item.amount).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item.status).toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setUserData(filteredData);
+    const filteredData = userData.filter((item) => {
+      return (
+        (item.course_name && typeof item.course_name === 'string' && item.course_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.student_name && typeof item.student_name === 'string' && item.student_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.date && typeof item.date === 'string' && item.date.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.welcome_kit && typeof item.welcome_kit === 'string' && item.welcome_kit.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.status && typeof item.status === 'string' && item.status.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    });
+  
+    setUserData(filteredData); // Update the table data
   };
-
-  // Handle Enter key press
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
-
+  
   // Reset search when the input is cleared
   useEffect(() => {
     if (searchTerm === "") {
-      showUsers();
+      showUsers(); // Reset the table data to the original data
     }
   }, [searchTerm]);
 
@@ -258,12 +308,12 @@ const Admission_Fees = () => {
           <Col md={4}>
             <Breadcrumb>
               <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-              <Breadcrumb.Item active>Fees structure</Breadcrumb.Item>
+              <Breadcrumb.Item active>WelCome Kit Fees Paid</Breadcrumb.Item>
             </Breadcrumb>
           </Col>
           <Col md={8} className="d-flex justify-content-end mb-4">
-            <Button variant="primary" onClick={handleShow}>
-              Add Fees Structure
+            <Button variant="primary" onClick={() => setShow(true)}>
+              Add Student for Welcome Kit
             </Button>
           </Col>
         </Row>
@@ -272,99 +322,74 @@ const Admission_Fees = () => {
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {editingId ? "Update Fees Structure" : "Add Fees Structure"}
+              {editingId ? " Update WelCome Kit Fees Paid" : "Add WelCome Kit Fees Paid"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={12}>
-                  <Form.Label>Fees Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    placeholder="Enter Fees Date"
-                    value={fees_date}
-                    onChange={(e) => setFees_date(e.target.value)}
+                  <Form.Label>Student Name</Form.Label>
+                  <Form.Select
+                    aria-label="Select student"
+                    value={student_name}
+                    onChange={(e) => setStudent_name(e.target.value)}
                     required
-                    readOnly
+                  >
+                    <option value="">Choose a Student name</option>
+                    {categoriesdata.map((student) => (
+                      <option key={student._id} value={student.student_name}>
+                        {student.student_name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
+                <Col md={12}>
+                  <Form.Label>Course Name</Form.Label>
+                  <Form.Select
+                    aria-label="select Course"
+                    value={course_name}
+                    onChange={(e) => setCourse_Name(e.target.value)}
+                    required
+                  >
+                    <option value="">Choose Course Name</option>
+                    {categories.map((course) => (
+                      <option key={course._id} value={course.course_name}>
+                        {course.course_name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Col>
+                <Col md={12}>
+                  <Form.Label>Date</Form.Label>
+                  <Form.Control
+                    type="Date"
+                    placeholder="Enter Date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
                   />
                 </Col>
-               
-                {/* Course Name */}
-                                  <Col md={6} className="pb-4">
-                                    <Form.Label>Course Name :</Form.Label>
-                                    <Form.Select
-                                      aria-label="select Course"
-                                      value={name}
-                                      onChange={(e) => {
-                                        const selectedCourse = e.target.value;
-                                        setName(selectedCourse);
-                
-                                        // Filter durations based on selected course
-                                        const courseDurations = categories.filter(
-                                          (category) => category.name === selectedCourse
-                                        );
-                
-                                        setFilteredDurations(courseDurations);
-                
-                                        // Reset duration and amount when course changes
-                                        setDuration("");
-                                        setAmount("");
-                                      }}
-                                      required
-                                    >
-                                      <option value="">Choose Course Name</option>
-                                      {categories.map((course) => (
-                                        <option key={course._id} value={course.name}>
-                                          {course.name}
-                                        </option>
-                                      ))}
-                                    </Form.Select>
-                                  </Col>
 
-                 {/* Duration */}
-                                  <Col md={6} className="pb-4">
-                                    <Form.Label>Duration :</Form.Label>
-                                    <Form.Select
-                                      aria-label="select Duration"
-                                      value={duration}
-                                      onChange={(e) => {
-                                        const selectedDuration = e.target.value;
-                                        setDuration(selectedDuration);
-                
-                                        // Find the corresponding amount based on the selected duration
-                                        const selectedCategory = filteredDurations.find(
-                                          (category) => category.duration === selectedDuration
-                                        );
-                
-                                        // If a matching category is found, set the amount
-                                        if (selectedCategory) {
-                                          setAmount(selectedCategory.amount);
-                                        }
-                                      }}
-                                      required
-                                      disabled={!name} // Disable if no course is selected
-                                    >
-                                      <option value="">Choose Duration</option>
-                                      {filteredDurations.map((category) => (
-                                        <option key={category._id} value={category.duration}>
-                                          {category.duration}
-                                        </option>
-                                      ))}
-                                    </Form.Select>
-                                  </Col>
-                
-                                      {/* Amount */}
-                                  <Col md={6} className="pb-4">
-                                    <Form.Label>Amount :</Form.Label>
-                                    <Form.Control
-                                      type="text"
-                                      placeholder="Amount will auto-fill"
-                                      value={amount}
-                                      readOnly // Make it read-only since it's auto-filled
-                                      required
-                                    />
-                                  </Col>
+                <Col md={12}>
+                <Form.Label>Welcome Kit</Form.Label>
+                  {categorieskitdata.map((kit) => (
+                    <div key={kit._id}>
+                      <input
+                        type="checkbox"
+                        value={kit.welcome_kit}
+                        checked={selectedKits.includes(kit.welcome_kit)} // Check if the kit is selected
+                        onChange={(e) =>{
+                          handleCheckboxChange(e, kit.welcome_kit)
+                          setWelcome_kit(e.target.welcome_kit)
+                        }
+                        } // Handle the checkbox change
+                        required
+                      />
+                      <label>{kit.welcome_kit}</label>
+                    </div>
+                  ))}
+                </Col>
 
                 <Col md={12} className="d-flex mt-3">
                   <Form.Label>Status</Form.Label>
@@ -441,7 +466,7 @@ const Admission_Fees = () => {
               value={searchTerm}
               className="ms-2"
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleKeyPress}
+              // onKeyPress={handleKeyPress}
               onChangeCapture={handleSearch}
               aria-label="Recipient's username"
               aria-describedby="basic-addon2"
@@ -458,10 +483,10 @@ const Admission_Fees = () => {
               <thead>
                 <tr>
                   <th>Sr.No</th>
+                  <th>Student Name</th>
                   <th>Course Name</th>
-                  <th>Fees Date</th>
-                  <th>Course Duration</th>
-                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Welcome Kit</th>
                   <th className="no-print">Status</th>
                   <th className="no-print text-center">Action</th>
                 </tr>
@@ -470,10 +495,11 @@ const Admission_Fees = () => {
                 {currentItems.map((a, index) => (
                   <tr key={index}>
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>{a.name}</td>
-                    <td>{formatDate(a.fees_date)}</td>
-                    <td>{a.duration}</td>
-                    <td>{a.amount}</td>
+                    <td>{a.student_name}</td>
+                    <td>{a.course_name}</td>
+                    <td>{formatDate(a.date)}</td>
+                    {/* <td>{a.date}</td> */}
+                    <td>{a.welcome_kit}</td>
                     <td className="no-print">{a.status}</td>
                     <td className="no-print d-flex justify-content-evenly">
                       <Button variant="warning" onClick={() => handleEdit(a)}>
@@ -532,4 +558,6 @@ const Admission_Fees = () => {
   );
 };
 
-export default Admission_Fees;
+export default Welcomekit_Feespaid;
+
+

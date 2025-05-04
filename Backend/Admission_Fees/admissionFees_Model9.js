@@ -4,10 +4,9 @@ const data = mongoose.Schema({
 
     fees_date:{
         type:Date,
-        default: Date.now,
         required:true,
     },
-    name:{
+    course_name:{
         type:String,
         required:true,
     },

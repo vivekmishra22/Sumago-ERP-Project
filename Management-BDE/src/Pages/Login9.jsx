@@ -8,7 +8,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [showChangePassword, setShowChangePassword] = useState(false); // State to toggle between login and forgot password
 
   const handleLogin = (e) => {
@@ -27,9 +26,8 @@ const Login = () => {
         // alert('Login successful!');
         navigate('/Head'); // Redirect to home page after login
       })
-      .catch(() => {
-        // console.error('Login error:', error);
-        setError(" Please Enter Correct password");
+      .catch((error) => {
+        console.error('Login error:', error);
         // alert('Invalid email or password!');
       });
   };
@@ -53,7 +51,6 @@ const Login = () => {
           ) : (
             <Col md={6} sm={12} lg={6} xl={6} xxl={6} className="mt-5 pt-3">
               <h1 className="text-center text-white">LOGIN</h1>
-              
               <Card className="login4 py-5 rounded-4 border-0">
                 <Card.Body>
                   <Form onSubmit={handleLogin}>
@@ -69,7 +66,6 @@ const Login = () => {
                       />
                     </Col>
 
-                    {error && <p className="text-danger text-center">{error}</p>}
                     <Col md={12} className="my-3  text-white">
                       <Form.Label>Password</Form.Label>
                       <Form.Control
@@ -100,6 +96,7 @@ const Login = () => {
 
                     <Col md={12} className="d-flex justify-content-center">
                       <Button type="submit" className="mt-4 w-50 rounded-pill btn btn-primary login2"
+                      onClick={() =>navigate(`/Head`)}
                       >
                         Submit
                       </Button>

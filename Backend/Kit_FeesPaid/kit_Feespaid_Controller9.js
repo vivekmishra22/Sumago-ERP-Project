@@ -1,11 +1,11 @@
-const model = require('./admissionFees_Model')
+const model = require('../Kit_FeesPaid/kit_Feespaid_Model')
 
 // post API
 const add = async(req, res) => {
-    const { name,fees_date,duration,amount, status} = req.body;
+    const { course_name, student_name, date, welcome_kit, status} = req.body;
     try {
         const data = new model({
-            name,fees_date,duration,amount, status
+            course_name, student_name, date, welcome_kit, status
         });
         const userdata = await data.save()
         res.send({userdata});
@@ -51,12 +51,12 @@ const Delete = async (req, res) => {
 
 //Update API
 const Update = async (req, res) => {
-    const {name,fees_date,duration,amount, status} = req.body;
+    const {course_name, student_name, date, welcome_kit, status} = req.body;
     try{
         const data = await model.updateOne(
             {_id: req.params._id},
             { $set: {
-                name,fees_date,duration,amount, status
+                course_name, student_name, date, welcome_kit, status
             },}
             
         );

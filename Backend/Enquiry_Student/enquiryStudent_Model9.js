@@ -17,16 +17,13 @@ const data = mongoose.Schema({
     temporary_address:{ type:String, required:true },
     permanent_address:{ type:String, required:true },
     mode_education:{ type:String, required:true},
-    name:{ type:String, required:true },
+    course_name:{ type:String, required:true },
     duration:{ type:String, required:true },
     amount:{ type:String, required:true },
     placement_reference:{ type:String, required:true },
     system:{ type:String, required:true },
     tshirt:{ type:String, required:true },
     batch_slot:{ type:String, required:true },
-    current_date:{type:Date, default:Date.now, required:true},
-    end_date:{type:Date, required:true},
-    admission:{type:String, required:true},
     status: { type: String, required: true }
 })
 

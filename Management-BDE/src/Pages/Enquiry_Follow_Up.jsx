@@ -17,11 +17,13 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
+import { GrEdit } from "react-icons/gr";
 // import { GrEdit } from "react-icons/gr";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Enquiry_Student = () => {
-  const navigate = useNavigate("");
+const Enquiry_Follow_Up = () => {
+    const {_id} = useParams("")
+    const navigate = useNavigate("");
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Adjust as needed
@@ -78,7 +80,7 @@ const Enquiry_Student = () => {
   // Export to Excel
   const handleExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
-      userData.map((a, index) => ({
+      userData.map((a) => ({
         "Student Name": a.student_name,
         "University Name": a.university_name,
         "College Name": a.college_name,
@@ -86,20 +88,20 @@ const Enquiry_Student = () => {
         "Mobile No": a.mobile_number,
         "WhatsApp No": a.whatsApp_number,
         "Birth Date No": a.date_birth,
-        Gmail: a.gmail,
+        "Gmail": a.gmail,
         "Blood Group": a.blood_Group,
-        Education: a.education_name,
+        "Education": a.education_name,
         "Marital Status": a.marital_status,
         "Office City Name": a.office_city_name,
         "Temporary Address": a.temporary_address,
         "Permanent Address": a.permanent_address,
         "Mode Education": a.mode_education,
         "Course Name": a.course_name,
-        Duration: a.duration,
-        Amoute: a.amount,
+        "Duration": a.duration,
+        "Amoute": a.amount,
         "Placement Reference": a.placement_reference,
-        System: a.system,
-        Tshirt: a.tshirt,
+        "System": a.system,
+        "Tshirt": a.tshirt,
         "Batch Slot": a.batch_slot,
       }))
     );
@@ -107,44 +109,6 @@ const Enquiry_Student = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Courses Data");
     XLSX.writeFile(workbook, "courses-data.xlsx");
   };
-
-  // Export to PDF
-  //  const handlePdf = () => {
-  //    const doc = new jsPDF();
-  //    doc.text("Courses Data", 14, 22);
-  //    doc.autoTable({
-  //      head: [["Sr.No", "Student Name","University Name","College Name","City Name", "Mobile No","WhatsApp No","Birth Date No",
-  //       "Gmail","Blood Group", "Education", "Marital Status", "Office City Name","Temporary Address", "Permanent Address",
-  //       "Mode Education", "Course Name", "Duration","Amoute", "Placement Reference", "System", "Tshirt", "Batch Slot"]],
-  //      body: userData.map((a, index) => [
-  //        index + 1,
-  //         a.student_name,
-  //         a.university_name,
-  //          a.college_name,
-  //          a.city_name,
-  //         a.mobile_number,
-  //         a.whatsApp_number,
-  //         a.date_birth,
-  //         a.gmail,
-  //         a.blood_Group,
-  //         a.education_name,
-  //         a.marital_status,
-  //         a.office_city_name,
-  //         a.temporary_address,
-  //         a.permanent_address,
-  //         a.mode_education,
-  //          a.course_name,
-  //         a.duration,
-  //         a.amount,
-  //         a.placement_reference,
-  //         a.system,
-  //         a.tshirt,
-  //         a.batch_slot
-  //      ]),
-  //      startY: 30,
-  //    });
-  //    doc.save("Courses-data.pdf");
-  //  };
 
   const handlePdf = () => {
     const doc = new jsPDF();
@@ -282,7 +246,7 @@ const Enquiry_Student = () => {
   };
 
   // CSV data for export
-  const csvData = userData.map((a, index) => ({
+  const csvData = userData.map((a) => ({
     "Student Name": a.student_name,
     "University Name": a.university_name,
     "College Name": a.college_name,
@@ -290,20 +254,20 @@ const Enquiry_Student = () => {
     "Mobile No": a.mobile_number,
     "WhatsApp No": a.whatsApp_number,
     "Birth Date No": a.date_birth,
-    Gmail: a.gmail,
+    "Gmail": a.gmail,
     "Blood Group": a.blood_Group,
-    Education: a.education_name,
+    "Education": a.education_name,
     "Marital Status": a.marital_status,
     "Office City Name": a.office_city_name,
     "Temporary Address": a.temporary_address,
     "Permanent Address": a.permanent_address,
     "Mode Education": a.mode_education,
     "Course Name": a.course_name,
-    Duration: a.duration,
-    Amoute: a.amount,
+    "Duration": a.duration,
+    "Amoute": a.amount,
     "Placement Reference": a.placement_reference,
-    System: a.system,
-    Tshirt: a.tshirt,
+    "System": a.system,
+    "Tshirt": a.tshirt,
     "Batch Slot": a.batch_slot,
   }));
 
@@ -339,14 +303,8 @@ const Enquiry_Student = () => {
   const handleSearch = () => {
     const filteredData = userData.filter((index) => {
       return (
-        (index.student_name &&
-          index.student_name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) ||
-        (index.university_name &&
-          index.university_name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) ||
+        (index.student_name && index.student_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (index.university_name &&index.university_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (index.college_name &&
           index.college_name
             .toLowerCase()
@@ -444,24 +402,26 @@ const Enquiry_Student = () => {
     <Container className="d-flex justify-content-end">
       <Row className="d-flex justify-content-center mt-2 pt-5">
         <Row>
-          <Col md={12} lg={4} xl={4} xxl={4}>
+          <Col md={4}>
             <Breadcrumb>
               <Breadcrumb.Item href="/Head/">Home</Breadcrumb.Item>
-              <Breadcrumb.Item active>Student Enquiry</Breadcrumb.Item>
+              <Breadcrumb.Item active>
+                Student Enquiry Follow Up
+              </Breadcrumb.Item>
             </Breadcrumb>
           </Col>
-          <Col md={12} lg={8} xl={8} xxl={8} className="d-flex justify-content-end mb-4">
+          {/* <Col md={8} className="d-flex justify-content-end mb-4">
             <Button
               variant="primary"
               onClick={() => navigate("/Head/enquiry_add")}
             >
               Add Student Enquiry
             </Button>
-          </Col>
+          </Col> */}
         </Row>
 
         {/* Export Buttons */}
-        <Col  md={12} lg={8} xl={8} xxl={8} className="mt-4">
+        <Col md={8} className="mt-4">
           <CSVLink data={csvData} filename={"course-data.csv"}>
             <Button className=" btn-secondary">CSV</Button>
           </CSVLink>
@@ -489,7 +449,7 @@ const Enquiry_Student = () => {
         </Col>
 
         {/* Search Input */}
-        <Col  md={12} lg={4} xl={4} xxl={4} className=" d-flex mt-4">
+        <Col md={4} className=" d-flex mt-4">
           <InputGroup className="mb-3  ">
             <Form.Control
               type="text"
@@ -507,7 +467,6 @@ const Enquiry_Student = () => {
             </InputGroup.Text>
           </InputGroup>
         </Col>
-
 
         {/* Table */}
         <Col md={12} lg={12} xl={12} xxl={12}>
@@ -528,6 +487,7 @@ const Enquiry_Student = () => {
                   <th>College</th>
                   <th>City</th>
                   <th>Mobile</th>
+
                   <th className="no-print">Status</th>
                   <th className="no-print">Actions</th>
                 </tr>
@@ -558,8 +518,16 @@ const Enquiry_Student = () => {
                         <td>{item.college_name}</td>
                         <td>{item.city_name}</td>
                         <td>{item.mobile_number}</td>
+
                         <td className="no-print">{item.status}</td>
                         <td className="no-print d-flex justify-content-evenly ">
+                          <Button
+                            variant="warning"
+                            // onClick={() => handleEdit(item)}
+                            onClick={() => navigate(`/Head/update_enquiry_followUp/${_id}`)}
+                          >
+                            <GrEdit />
+                          </Button>
                           <Button
                             variant="danger"
                             onClick={() => deletedata(item._id)}
@@ -584,9 +552,10 @@ const Enquiry_Student = () => {
                                   <th>Marital Status</th>
                                   <th>Office City</th>
                                   <th>Temp Address</th>
+                                  <th>Perm Address</th>
+                                  <th>Mode</th>
                                 </tr>
                               </thead>
-
                               <tbody>
                                 <tr>
                                   <td>{item.whatsApp_number}</td>
@@ -597,6 +566,8 @@ const Enquiry_Student = () => {
                                   <td>{item.marital_status}</td>
                                   <td>{item.office_city_name}</td>
                                   <td>{item.temporary_address}</td>
+                                  <td>{item.permanent_address}</td>
+                                  <td>{item.mode_education}</td>
                                 </tr>
                               </tbody>
                             </Table>
@@ -613,6 +584,7 @@ const Enquiry_Student = () => {
                                   <th>Tshirt</th>
                                   <th>Batch Slot</th>
                                   <th>Current Date</th>
+                                  <th>Folliw Up Date</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -627,6 +599,7 @@ const Enquiry_Student = () => {
                                   <td>{item.tshirt}</td>
                                   <td>{item.batch_slot}</td>
                                   <td>{formatDate(item.current_date)} </td>
+                                  <td>{formatDate(item.end_date)}</td>
                                 </tr>
                               </tbody>
                             </Table>
@@ -680,4 +653,4 @@ const Enquiry_Student = () => {
   );
 };
 
-export default Enquiry_Student;
+export default Enquiry_Follow_Up;

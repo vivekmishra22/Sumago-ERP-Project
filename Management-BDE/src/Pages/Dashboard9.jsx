@@ -65,7 +65,7 @@ const Dashboard = () => {
                   <FaListAlt  className="fs-1 ms-0 p-0 me-3 dashboarde-color  "/>
                   </Col>
                   <Card.Text style={{color:"rgb(61, 152, 250)"}} className=" fs-6  fw-bold d-flex gap-2">
-                    Enquiry to Follow Up List <FaArrowRightLong  className="my-1"/> 
+                    Enquiry to Floow up <FaArrowRightLong  className="my-1"/> 
                     </Card.Text>
                 </Row>
               </Card.Body>

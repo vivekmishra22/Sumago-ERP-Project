@@ -34,6 +34,7 @@ const student_Route = require('./Student/student_Route');
 const user_Route = require ('./Users/user_Route');
 const country_Route = require ('./Country/country_Route');
 const document_Route = require ('./Documents/documents_Route');
+const installment_Route = require ('./Fees_Installment/installment_Route');
 // const trainerProfile_Route = require ('./Trainer_Profile/trainer_Profile_Route');
 
 
@@ -67,6 +68,7 @@ app.use('/', student_Route);
 app.use('/', user_Route);
 app.use('/', country_Route);
 app.use('/', document_Route);
+app.use('/', installment_Route);
 // app.use('/', trainerProfile_Route);
 
   // Refresh token endpoint

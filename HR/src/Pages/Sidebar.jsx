@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Button, Col, Nav, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaComments, FaFolderOpen } from "react-icons/fa";
-import { LuLogIn } from "react-icons/lu";
 import { MdSpaceDashboard } from "react-icons/md";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import { BiLogOut } from "react-icons/bi";
 
 const Sidebar = () => {
     const [show, setShow] = useState(false); // State for Offcanvas
@@ -53,7 +53,7 @@ const Sidebar = () => {
 
                             {/* Logout Link (Always at the bottom) */}
                             <Link to="/" className="text-decoration-none link ps-3 py-2 d-flex align-items-center mt-auto">
-                                <LuLogIn size={25} className="me-2" /> 
+                                <BiLogOut size={25} className="me-2" /> 
                                 <span>Logout</span>
                             </Link>
                         </Nav>
@@ -86,7 +86,7 @@ const Sidebar = () => {
 
                             {/* Logout Link (Always at the bottom) */}
                             <Link to="/" className="text-decoration-none link ps-3 py-2 mt-auto">
-                                <LuLogIn size={25} className="me-2" /> Logout
+                                <BiLogOut size={25} className="me-2" /> Logout
                             </Link>
                         </Nav>
                     </div>

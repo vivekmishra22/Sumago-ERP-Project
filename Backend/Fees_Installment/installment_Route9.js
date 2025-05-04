@@ -1,4 +1,4 @@
-const {add, getdata, getbyId, Update, Delete,generateReceipt } = require ('../Fees_Installment/installment_Controller');
+const {add, getdata, getbyId, Update, Delete,generateReceipt } = require ('./installment_Controller');
 
 const express = require ('express');
 
@@ -11,4 +11,4 @@ route.get('/getbyIdinstallment/:_id', getbyId);
 route.put('/updateinstallment/:_id', Update);
 route.delete('/deleteinstallment/:_id', Delete);
 
-module.exports = route
+module.exports = route;

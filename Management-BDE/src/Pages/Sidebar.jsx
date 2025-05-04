@@ -1,21 +1,20 @@
 import { useState } from "react";
 import { Button, Col, Nav, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-// import { FaUniversity, FaUserGraduate } from "react-icons/fa";
-import { LuLogIn } from "react-icons/lu";
-import {  MdSpaceDashboard } from "react-icons/md";
+import { MdForum, MdPhoneCallback, MdSpaceDashboard } from "react-icons/md";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { IoBagCheckSharp } from "react-icons/io5";
 import { RiMoneyRupeeCircleFill, RiShoppingBag3Fill } from "react-icons/ri";
-// import { PiStudentBold } from "react-icons/pi";
-import { FaDatabase } from "react-icons/fa";
+import { PiStudentBold } from "react-icons/pi";
+import { BiLogOut } from "react-icons/bi";
+import { GiReceiveMoney } from "react-icons/gi";
 const Sidebar = () => {
     const [show, setShow] = useState(false); // State for Offcanvas
 
     const handleClose = () => setShow(false); // Close Offcanvas
     const handleShow = () => setShow(true); // Open Offcanvas
 
-    
+
 
     return (
         <>
@@ -33,64 +32,64 @@ const Sidebar = () => {
             <div className="sidebar d-none d-md-block">
                 <Row>
                     <Col>
-                    <div>
-                        {/* <br />
+                        <div>
+                            {/* <br />
                         <br />
                         <br /> */}
-                        <h5 className="text-white ps-3 mt-5 pt-5 fw-bold">Business Development Executive</h5>
-                    </div>
+                            <h5 className="text-white ps-3 mt-5 pt-5 fw-bold">Business Development Executive</h5>
+                        </div>
 
-                        <div className="sidebar3 ">
+                        <div className="sidebar3 d-flex flex-column justify-content-between h-100">
 
-                        <Nav defaultActiveKey="/User" className=" flex-column link-unstyled">
-                            {/* Dashboard Link */}
-                            <Link
-                                to="/Head/"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <MdSpaceDashboard size={25} className="me-2" /> Dashboard
-                            </Link>
-                            {/* <Link
-                                to="/Head/enquiry_add"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <PiStudentBold size={25} className="me-2" />  Student Enquiry
-                            </Link> */}
-                            <Link
-                                to="/Head/enquiry_student"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                               <FaDatabase size={25} className="me-2" />  Student Enquiry 
-                            </Link>
-                            <Link
-                                to="/Head/admission_fees"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Fees structure
-                            </Link>
-                            <Link
-                                to="/Head/Installment"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" /> Fees Installment
-                            </Link>            
-                            <Link
-                                to="/Head/welcomekit_feespaid"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <IoBagCheckSharp size={25} className="me-2" />  Welcome Kit
-                            </Link>
-                            <Link
-                                to="/Head/pending_welcomekit"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <RiShoppingBag3Fill size={25} className="me-2" />  Pending Welcome Kit
-                            </Link>
+                            <Nav defaultActiveKey="/User" className=" flex-column link-unstyled">
+                                {/* Dashboard Link */}
+                                <Link
+                                    to="/Head/"
+                                    className="text-decoration-none link ps-3 py-2"
+                                >
+                                    <MdSpaceDashboard size={25} className="me-2" /> Dashboard
+                                </Link>
+                                <Link
+                                    to="/Head/enquiry_follow_up"
+                                    className="text-decoration-none link ps-3 py-2"
+                                >
+                                    <MdPhoneCallback size={25} className="me-2" />   Enquiry Follow Up
+                                </Link>
+                                <Link
+                                    to="/Head/enquiry_student"
+                                    className="text-decoration-none link ps-3 py-2"
+                                >
+                                    <MdForum size={25} className="me-2" />  Student Enquiry
+                                </Link>
+                                <Link
+                                    to="/Head/admission_fees"
+                                    className="text-decoration-none link ps-3 py-2"
+                                >
+                                    <RiMoneyRupeeCircleFill size={25} className="me-2" />  Fees structure
+                                </Link>
+                                <Link
+                                    to="/Head/Installment"
+                                    className="text-decoration-none link ps-3 py-2"
+                                >
+                                    <GiReceiveMoney size={25} className="me-2" /> Fees Installment
+                                </Link>
+                                <Link
+                                    to="/Head/welcomekit_feespaid"
+                                    className="text-decoration-none link ps-3 py-2"
+                                >
+                                    <IoBagCheckSharp size={25} className="me-2" />  Welcome Kit
+                                </Link>
+                                <Link
+                                    to="/Head/pending_welcomekit"
+                                    className="text-decoration-none link ps-3 py-2"
+                                >
+                                    <RiShoppingBag3Fill size={25} className="me-2" />  Pending Welcome Kit
+                                </Link>
 
-                            <Link to="/" className="text-decoration-none link ps-3 py-2">
-                                <LuLogIn size={25} className="me-2" /> Logout
-                            </Link>
-                        </Nav>
+                            </Nav>
+                                <Link to="/" className="text-decoration-none link ps-3 py-2 mt-auto">
+                                    <BiLogOut size={25} className="me-2" /> Logout
+                                </Link>
                         </div>
                     </Col>
                 </Row>
@@ -104,64 +103,64 @@ const Sidebar = () => {
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <div className="sidebar d-block d-md-none">
-                        <Row>
-                    <Col>
-                    <div>
-                        <br />
-                        <br />
-                        <br />
-                        <h5 className="text-white ps-3 fw-bold">Business Development Executive</h5>
-                    </div>
+                            <Row>
+                                <Col>
+                                    <div>
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <h5 className="text-white ps-3 fw-bold">Business Development Executive</h5>
+                                    </div>
 
-                        <div className="sidebar3 ">
+                                    <div className="sidebar3 d-flex flex-column justify-content-between h-100">
 
-                        <Nav defaultActiveKey="/User" className=" flex-column link-unstyled">
-                            {/* Dashboard Link */}
-                            <Link
-                                to="/Head/"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <MdSpaceDashboard size={25} className="me-2" /> Dashboard
-                            </Link>
-                            {/* <Link
-                                to="/Head/enquiry_add"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry
-                            </Link> */}
-                            <Link
-                                to="/Head/enquiry_student"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry 
-                            </Link>
-                            <Link
-                                to="/Head/admission_fees"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Fees structure
-                            </Link>
-                            <Link
-                                to="/Head/Installment"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <RiMoneyRupeeCircleFill size={25} className="me-2" /> Fees Installment
-                            </Link>            
-                            <Link
-                                to="/Head/welcomekit_feespaid"
-                                className="text-decoration-none link ps-3 py-2"
-                            >
-                                <IoBagCheckSharp size={25} className="me-2" />  Welcome Kit
-                            </Link>
+                                        <Nav defaultActiveKey="/User" className=" flex-column link-unstyled">
+                                            {/* Dashboard Link */}
+                                            <Link
+                                                to="/Head/"
+                                                className="text-decoration-none link ps-3 py-2"
+                                            >
+                                                <MdSpaceDashboard size={25} className="me-2" /> Dashboard
+                                            </Link>
+                                            <Link
+                                                to="/Head/enquiry_follow_up"
+                                                className="text-decoration-none link ps-3 py-2"
+                                            >
+                                                <PiStudentBold size={25} className="me-2" />   Enquiry Follow Up
+                                            </Link>
+                                            <Link
+                                                to="/Head/enquiry_student"
+                                                className="text-decoration-none link ps-3 py-2"
+                                            >
+                                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Student Enquiry
+                                            </Link>
+                                            <Link
+                                                to="/Head/admission_fees"
+                                                className="text-decoration-none link ps-3 py-2"
+                                            >
+                                                <RiMoneyRupeeCircleFill size={25} className="me-2" />  Fees structure
+                                            </Link>
+                                            <Link
+                                                to="/Head/Installment"
+                                                className="text-decoration-none link ps-3 py-2"
+                                            >
+                                                <RiMoneyRupeeCircleFill size={25} className="me-2" /> Fees Installment
+                                            </Link>
+                                            <Link
+                                                to="/Head/welcomekit_feespaid"
+                                                className="text-decoration-none link ps-3 py-2"
+                                            >
+                                                <IoBagCheckSharp size={25} className="me-2" />  Welcome Kit
+                                            </Link>
 
-                            {/* Logout Link */}
-                            <Link to="/" className="text-decoration-none link ps-3 py-2">
-                                <LuLogIn size={25} className="me-2" /> Logout
-                            </Link>
-                        </Nav>
-                        </div>
-                    </Col>
-                </Row>
+                                        </Nav>
+                                            {/* Logout Link */}
+                                            <Link to="/" className="text-decoration-none link ps-3 py-2">
+                                                <BiLogOut size={25} className="me-2" /> Logout
+                                            </Link>
+                                    </div>
+                                </Col>
+                            </Row>
                         </div>
                     </Offcanvas.Body>
                 </Offcanvas>

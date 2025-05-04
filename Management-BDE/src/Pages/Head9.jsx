@@ -11,8 +11,6 @@ import Enquiry_Add from "./Enquiry_Add";
 import Installment from "./Installment";
 import GenerateReceipt from "./GenerateReceipt";
 import Pending_welcomeKit from "./Pending_welcomeKit";
-import Enquiry_Follow_Up from "./Enquiry_Follow_Up";
-import Update_Enquiry_FollowUp from "./Update_Enquiry_FollowUp";
 
 
 const Head = () => {
@@ -35,8 +33,6 @@ const Head = () => {
               <Route path="installment" element={<Installment/>}/>
               <Route path="GenerateReceipt/:id"  element={<GenerateReceipt/>}/>
               <Route path='/pending_welcomekit' element={<Pending_welcomeKit/>}/>
-              <Route path='/enquiry_follow_up' element={<Enquiry_Follow_Up/>}/>
-              <Route path="/update_enquiry_followUp/:_id" element={<Update_Enquiry_FollowUp/>}/>
              
             </Routes>
           </Container>

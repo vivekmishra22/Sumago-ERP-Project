@@ -10,8 +10,6 @@ const Change_Password = ({ onBackToLogin }) => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-
-  
   const handleChangePassword = async (e) => {
     e.preventDefault();
 

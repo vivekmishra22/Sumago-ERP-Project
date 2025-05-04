@@ -4,15 +4,15 @@ const model = require('../Enquiry_Student/enquiryStudent_Model')
 const add = async(req, res) => {
     const {  student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
         date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
-        temporary_address, permanent_address, mode_education, name, duration, amount,
-        placement_reference,system,tshirt,batch_slot, current_date, end_date, admission, status
+        temporary_address, permanent_address, mode_education, course_name, duration, 
+        amount,placement_reference,system,tshirt,batch_slot, status
     } = req.body;
     try {
         const data = new model({
             student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
             date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
-            temporary_address, permanent_address, mode_education, name, duration, amount,
-            placement_reference,system,tshirt,batch_slot, current_date, end_date, admission, status
+            temporary_address, permanent_address, mode_education, course_name, duration, 
+            amount,placement_reference,system,tshirt,batch_slot, status
             
         });
         const userdata = await data.save()
@@ -41,7 +41,7 @@ const getdata = async(req, res) => {
 // getById API
 const getbyId = async (req, res) => {
     try{
-        const data = await model.findOne({_id: req.params._id})
+        const data = await model.findOne({_id: req.params})
         res.status(200).send({data});
     }catch (error) {
         console.log(error);
@@ -62,19 +62,19 @@ const Delete = async (req, res) => {
 
 //Update API
 const Update = async (req, res) => {
-    const { student_name, university_name, college_name, city_name, mobile_number, whatsApp_number,
+    const { student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
         date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
-        temporary_address, permanent_address, mode_education, name, duration, amount,
-        placement_reference,system,tshirt,batch_slot, current_date, end_date, admission, status
+        temporary_address, permanent_address, mode_education, course_name, duration, 
+        amount,placement_reference,system,tshirt,batch_slot, status
     } = req.body;
     try{
         const data = await model.updateOne(
             {_id: req.params._id},
             { $set: {
-                student_name, university_name, college_name, city_name, mobile_number, whatsApp_number,
+                student_name, university_name, college_name, city_name,mobile_number,whatsApp_number,
                 date_birth, gmail, blood_Group,education_name,marital_status, office_city_name, 
-                temporary_address, permanent_address, mode_education, name, duration, amount,
-                placement_reference,system,tshirt,batch_slot, current_date, end_date, admission, status
+                temporary_address, permanent_address, mode_education, course_name, duration, 
+                amount,placement_reference,system,tshirt,batch_slot, status
                 
             },}
             
