@@ -6,8 +6,6 @@ const route = express.Router();
 const {photoUpload} = require('../documentsUpload');
 
 
-// route.post('/upload', photoUpload , add)
-
 route.get('/getdataDocuments', getdata);
 
 route.get('/getuserdataDocuments/:_id', GetuserById);

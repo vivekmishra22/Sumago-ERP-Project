@@ -10,6 +10,14 @@ Phone :{ type:Number, required:true },
 email:{ type:String, required:true},
 country:{ type:String, required:true },
 state:{ type:String,required:true},
+// email: {
+//     type: String,
+//     required: false // Make it optional if you want
+//   },
+//   state: {
+//     type: String,
+//     required: false // Make it optional if you want
+//   },  
 city_name:{ type:String, required:true},
 
 // Professional Summary

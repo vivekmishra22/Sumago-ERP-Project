@@ -1,125 +1,113 @@
-.dashboarde-color{
-  color:rgb(209, 209, 209);
-  /* color:rgb(191, 192, 192); */
+/* Dashboard text color */
+.dashboarde-color {
+  color: rgb(209, 209, 209);
 }
 
-.sidebar{
+/* Sidebar */
+.sidebar {
   position: fixed;
-  background-color:rgb(46, 46, 46);
-  /* background-color:rgb(1, 20, 19); */
-  /* background-color:rgb(83, 118, 155); */
-  
-  /* background-color:rgb(86, 133, 141); */
-  /* // background-color:rgb(232, 233, 233); */
-/* //   background-color:rgb(252, 214, 233); */
+  background-color: rgb(46, 46, 46);
   height: 100%;
   width: 250px;
-  /* // z-index: 1045; */
-  overflow-y:auto;
-  overflow-x:hidden;
-  }
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease;
+}
 
-  /* .sidebar3{
-    height: 100%;
-  width: 250px;
-    overflow-y:auto;
-    overflow-x:hidden;
-  } */
+/* Sidebar color variations */
+.sidebar1 {
+  background-color: rgb(86, 133, 141);
+}
 
-  .sidebar1{
-  background-color:rgb(86, 133, 141);
-  }
+.sidebar2 {
+  color: rgb(86, 133, 141);
+  font-size: 50px;
+}
 
-  .sidebar2{
-    color:rgb(86, 133, 141);
-    font-size:50px;
-    }
-
-  .link{
-  color: rgb(255, 255, 255);
-  /* color: black; */
+/* Navigation links */
+.link {
+  color: white;
   font-size: 20px;
-  }
+  padding: 10px 15px;
+  display: block;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-   .link:hover{
-  /* color: #4fe0fa;  */
-  color: #007bff; 
- background-color:rgb(140, 175, 212);
-  }
+.link:hover {
+  color: #ffffff;
+  background-color: #5a8db5;
+  text-decoration: underline;
+}
 
-.link2{
+/* Secondary link style */
+.link2 {
   color: black;
-   background-color:rgb(250, 250, 250);
+  background-color: rgb(250, 250, 250);
   font-size: 20px;
-  }
+  padding: 10px 15px;
+  display: block;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-    .link2:hover{
-  color: black; 
- background-color:rgb(140, 175, 212);
-  }
+.link2:hover {
+  background-color: #cfdfea;
+  color: black;
+  text-decoration: underline;
+}
 
- .links {
-   background-color: rgb(232, 233, 233);
-   overflow-y:auto;
-  overflow-x:hidden;
- }
+/* Extra link background */
+.links {
+  background-color: rgb(232, 233, 233);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
- .button{
+/* Button alignment */
+.button {
   padding-left: 200%;
 }
 
-/* Home css */
+/* Dropdown caret removal */
 .no-caret::after {
   display: none !important;
 }
 
-
-/* print css */
-/* Hide everything by default when printing */
+/* Print styles */
 @media print {
   body * {
     visibility: hidden;
   }
 
-  /* Show only the table and its data (except the Action column) */
   #printable-table,
   #printable-table * {
     visibility: visible;
   }
 
-
-  @media print {
-    #printable-table th.no-print,
-    #printable-table td.no-print {
-      display: none !important;
-    }
-  }
-
-  /* Ensure the table takes full width */
   #printable-table {
     position: absolute;
     left: 0;
     top: 20px;
     width: 100%;
-  }
-
-  /* Add borders to the table for better readability */
-  #printable-table {
     border-collapse: collapse;
   }
+
   #printable-table th,
   #printable-table td {
     border: 1px solid black;
   }
 
-  /* Remove padding and margin for the body */
+  #printable-table th.no-print,
+  #printable-table td.no-print {
+    display: none !important;
+  }
+
   body {
     margin: 0;
     padding: 0;
   }
-}
 
-@media print {
   #printable::before {
     content: "City Data Report";
     display: block;
@@ -130,48 +118,35 @@
   }
 }
 
+/* Rotate utility */
 .rotate-90 {
   transform: rotate(90deg);
   transition: transform 0.2s ease;
 }
 
-/* Home */
-/* Container for the bell icon */
+/* Bell icon and notification */
 .bell-container {
   position: relative;
   display: inline-block;
 }
 
-/* Bell icon styling */
 .bell-icon {
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
 }
 
-/* Animation for the bell */
 .bell-icon.ring {
   animation: ring 0.5s ease-in-out;
 }
 
 @keyframes ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(15deg);
-  }
-  50% {
-    transform: rotate(-15deg);
-  }
-  75% {
-    transform: rotate(10deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
 }
 
-/* Notification badge */
 .notification-badge {
   position: absolute;
   top: -5px;
@@ -182,86 +157,35 @@
   padding: 2px 6px;
   font-size: 12px;
 }
-/* print css */
-/* Hide everything by default when printing */
-@media print {
-  body * {
-    visibility: hidden;
-  }
 
-  /* Show only the table and its data (except the Action column) */
-  #printable-table,
-  #printable-table * {
-    visibility: visible;
-  }
-
-
-  @media print {
-    #printable-table th.no-print,
-    #printable-table td.no-print {
-      display: none !important;
-    }
-  }
-
-  /* Ensure the table takes full width */
-  #printable-table {
-    position: absolute;
-    left: 0;
-    top: 20px;
-    width: 100%;
-  }
-
-  /* Add borders to the table for better readability */
-  #printable-table {
-    border-collapse: collapse;
-  }
-  #printable-table th,
-  #printable-table td {
-    border: 1px solid black;
-  }
-
-  /* Remove padding and margin for the body */
-  body {
-    margin: 0;
-    padding: 0;
-  }
-}
-
-@media print {
-  #printable::before {
-    content: "City Data Report";
-    display: block;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-}
-
-.rotate-90 {
-  transform: rotate(90deg);
-  transition: transform 0.2s ease;
-}
+/* Signup background */
 .signup-container {
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), 
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)),
               url("./Assets/Images/restored_image.jpeg") no-repeat center;
   background-size: cover;
   height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Aligns the card to the start (left) */
+  justify-content: flex-start;
   padding-left: 0px;
 }
 
+/* Signup card */
 .custom-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;
-  width: 420px; /* Fixed width for better appearance */
+  width: 420px;
   padding: 30px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
 .custom-card h2 {
@@ -271,6 +195,7 @@
   text-transform: uppercase;
 }
 
+/* Form input styles */
 .input-group .form-control {
   background: transparent;
   color: white;
@@ -295,6 +220,7 @@
   box-shadow: none;
 }
 
+/* Sign in button */
 .btn-signin {
   background: #28a745;
   border-radius: 10px;
@@ -303,10 +229,10 @@
   font-weight: bold;
   padding: 10px;
   width: 100%;
-  transition: 0.3s;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-signin:hover {
-  background: #218838;
-  transform: scale(1.05);
+  background-color: #218838;
+  box-shadow: 0 4px 12px rgba(33, 136, 56, 0.4);
 }

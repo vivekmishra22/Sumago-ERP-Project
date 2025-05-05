@@ -18,7 +18,7 @@ import * as XLSX from "xlsx";
 import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { FaSearch } from "react-icons/fa";
+import { FaCaretDown, FaCaretUp, FaSearch } from "react-icons/fa";
 
 const Feedback = () => {
     const [show, setShow] = useState(false);
@@ -43,6 +43,8 @@ const Feedback = () => {
     const [liked_most, setLikedMost] = useState("");
     const [improvements, setImprovements] = useState("");
     const [other_comments, setOtherComments] = useState("");
+
+    const [expandedRow, setExpandedRow] = useState(null);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -333,12 +335,6 @@ const Feedback = () => {
         setUserData(filteredData);
     };
 
-    const handleKeyPress = (e) => {
-        if (e.key === "Enter") {
-            handleSearch();
-        }
-    };
-
     useEffect(() => {
         if (searchTerm === "") {
             showUsers();
@@ -414,20 +410,7 @@ const Feedback = () => {
                                     />
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col md={12}>
-                                    <div className="d-flex">
-                                        <Form.Label>Trainer Name</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Enter trainer Name"
-                                            value={trainer_name}
-                                            onChange={(e) => setTrainerName(e.target.value)}
-                                            required
-                                        />
-                                    </div>
-                                </Col>
-                            </Row>
+
                             <Row>
                                 <Col md={12} className="mt-3">
                                     <Form.Label className="">
@@ -825,7 +808,6 @@ const Feedback = () => {
                             value={searchTerm}
                             className="ms-2"
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            onKeyPress={handleKeyPress}
                             onChangeCapture={handleSearch}
                             aria-label="Recipient's username"
                             aria-describedby="basic-addon2"
@@ -851,6 +833,7 @@ const Feedback = () => {
                                     <th>Training Rating</th>
                                     <th>Trainer Explanation</th>
                                     <th>Materials Helpful</th>
+                                    <th className="no-print text-center">Action</th>
                                     {/* <th>Practical Exercises</th> */}
                                     {/* <th>Trainer Knowledge Rating</th> */}
                                     {/* <th>Trainer Approachability</th> */}
@@ -860,46 +843,96 @@ const Feedback = () => {
                                     {/* <th>Liked_most</th> */}
                                     {/* <th>Improvements</th> */}
                                     {/* <th>Other Feedback</th> */}
-                                    <th className="no-print text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentItems.map((product, index) => (
-                                    <tr key={product._id}>
-                                        <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                                        <td>{product.user_name}</td>
-                                        <td>{product.course_name}</td>
-                                        <td>{product.trainer_name}</td>
-                                        <td>{formatDate(product.current_date)}</td>
-                                        <td>{product.training_rating}</td>
-                                        <td>{product.trainer_explanation}</td>
-                                        <td>{product.materials_helpful}</td>
-                                        {/* <td>{product.practical_exercises}</td> */}
-                                        {/* <td>{product.trainer_knowledge_rating}</td> */}
-                                        {/* <td>{product.trainer_approachability}</td>
-                                        <td>{product.trainer_pacing}</td>
-                                        <td>{product.confidence_in_computer_skills}</td>
-                                        <td>{product.learning_expectations_met}</td>
-                                        <td>{product.liked_most}</td>
-                                        <td>{product.improvements}</td>
-                                        <td>{product.other_comments}</td> */}
-                                        <td className="no-print d-flex justify-content-evenly">
-                                            <Button
-                                                variant="warning"
-                                                onClick={() => handleEdit(product)}
-                                            >
-                                                <GrEdit />
-                                            </Button>
-                                            <Button
-                                                variant="danger"
-                                                onClick={() => deletedata(product._id)}
-                                            >
-                                                <AiFillDelete />
-                                            </Button>
-                                        </td>
-                                    </tr>
+                                    <React.Fragment key={product._id}>
+                                        {/* Main Row */}
+                                        <tr className="bg-light fade-in">
+                                            <td>
+                                                {index + 1 + (currentPage - 1) * itemsPerPage}
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => setExpandedRow(expandedRow === product._id ? null : product._id)}
+                                                    className="p-0 ms-2 text-decoration-none"
+                                                >
+                                                    {/* <span className="text-primary">more</span>  */}
+                                                    <span className="text-primary">
+                                                        {expandedRow === product._id ? "less" : "more"}
+                                                    </span>
+
+                                                    {expandedRow === product._id ? <FaCaretUp /> : <FaCaretDown />}
+                                                </Button>
+                                            </td>
+                                            <td>{product.user_name}</td>
+                                            <td>{product.course_name}</td>
+                                            <td>{product.trainer_name}</td>
+                                            <td>{formatDate(product.current_date)}</td>
+                                            <td>{product.training_rating}</td>
+                                            <td>{product.trainer_explanation}</td>
+                                            <td>{product.materials_helpful}</td>
+                                            <td className="no-print d-flex justify-content-evenly">
+                                                <Button variant="warning" onClick={() => handleEdit(product)} className="me-1">
+                                                    <GrEdit />
+                                                </Button>
+                                                <Button variant="danger" onClick={() => deletedata(product._id)}>
+                                                    <AiFillDelete />
+                                                </Button>
+                                            </td>
+                                        </tr>
+
+                                        {/* Expanded Row */}
+                                        {expandedRow === product._id && (
+                                            <tr className="bg-light">
+                                                <td colSpan="9" className="p-0">
+                                                    <Table bordered responsive className="mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Practical Exercises</th>
+                                                                <th>Trainer Knowledge</th>
+                                                                <th>Approachability</th>
+                                                                <th>Pacing</th>
+                                                                <th>Confidence</th>
+                                                                <th>Expectations Met</th>
+                                                                <th>Liked Most</th>
+                                                                <th>Improvements</th>
+                                                                <th>Other Comments</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{product.practical_exercises}</td>
+                                                                <td>{product.trainer_knowledge_rating}</td>
+                                                                <td>{product.trainer_approachability}</td>
+                                                                <td>{product.trainer_pacing}</td>
+                                                                <td>{product.confidence_in_computer_skills}</td>
+                                                                <td>{product.learning_expectations_met}</td>
+                                                                <td>{product.liked_most}</td>
+                                                                <td>{product.improvements}</td>
+                                                                <td>{product.other_comments}</td>
+                                                            </tr>
+                                                            {/* <tr>
+                  <td colSpan="2"><strong>Liked Most:</strong></td>
+                  <td colSpan="2"><strong>Improvements:</strong></td>
+                  <td colSpan="2"><strong>Other Comments:</strong></td>
+                </tr> */}
+                                                            {/* <tr>
+                  <td colSpan="2">{product.liked_most}</td>
+                  <td colSpan="2">{product.improvements}</td>
+                  <td colSpan="2">{product.other_comments}</td>
+                </tr> */}
+                                                            {/* <tr>
+                </tr> */}
+                                                        </tbody>
+                                                    </Table>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </React.Fragment>
                                 ))}
                             </tbody>
+
                         </Table>
                     </div>
                 </Col>

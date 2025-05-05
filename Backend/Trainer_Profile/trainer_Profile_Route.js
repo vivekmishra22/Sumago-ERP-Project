@@ -3,7 +3,7 @@ const {add, getdata, getbyId, Update, Delete } = require ('./trainer_Profile_Con
 const express = require ('express');
 
 const route = express.Router()
-const {photoUpload} = require('../fileUpload');
+const {photoUpload} = require('../fileUpload')
 
 route.post('/addTrainer_profile',photoUpload, add);
 route.get('/getTrainer_profile', getdata);

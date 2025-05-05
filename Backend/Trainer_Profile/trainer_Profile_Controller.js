@@ -97,8 +97,7 @@ const Update = async (req, res) => {
         programming_languages, software_expertise, hardware_networking_knowledge, training_tools, 
         // Training & Teaching Experience
         courses_taught, training_methods, seminars_conducted, 
-        languages_spoken, availability, github, linkedIn, website, status
-    } = req.body;
+        languages_spoken, availability, github, linkedIn, website,  status   } = req.body;
     try{
         const data = await model.updateOne(
             {_id: req.params._id},
@@ -135,4 +134,4 @@ const Update = async (req, res) => {
 };
 
 
-module.exports = {add, getdata, getbyId, Delete , Update};
+module.exports = {add, getdata, getbyId, Delete , Update}

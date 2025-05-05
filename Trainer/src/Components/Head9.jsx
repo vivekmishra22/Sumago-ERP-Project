@@ -6,8 +6,6 @@ import Home from "./Home";
 import Dashboard from "./Dashboard";
 import Trainer_profile from "./Trainer_profile";
 import Trainer_profile_Add from "./Trainer_profile_Add";
-import UpdateTrainerProfile from "./UpdateTrainerProfile";
-import Student_batch from "./Student_batch";
 
 // import Update_Enquiry_FollowUp from "./Update_Enquiry_FollowUp";
 
@@ -27,8 +25,7 @@ const Head = () => {
               <Route path="/" element={<Dashboard/>}></Route>
               <Route path="/trainer_profile" element={<Trainer_profile/>}></Route>
               <Route path="/trainer_profile_add" element={<Trainer_profile_Add/>}></Route>
-              <Route path="/updateTrainerProfile/:_id" element={<UpdateTrainerProfile/>}/> 
-              <Route path="/student_batch" element={<Student_batch/>}/>
+               
               {/* <Route path="/update_enquiry_followUp/:_id" element={<Update_Enquiry_FollowUp/>}/> */}
 
              

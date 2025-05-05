@@ -36,6 +36,7 @@ const Head = () => {
           <Container>
             <Routes>
               <Route path="/" element={<Dashboard/>}/>
+              <Route path="/dashboard" element={<Dashboard/>}/>
               <Route path="/users" element={<Users/>}/>
               <Route path="/technology" element={<Technology />} />
               <Route path="/university" element={<University />} />

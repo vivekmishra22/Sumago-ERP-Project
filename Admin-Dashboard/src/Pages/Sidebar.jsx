@@ -205,13 +205,6 @@ const Sidebar = () => {
                                         <FaUsersCog size={23} className="me-3" />
                                         <span>Batch</span>
                                     </Link>
-                                    {/* <Link
-                                        to="/Head/project"
-                                        className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"
-                                    >
-                                        <FaUsersCog size={23} className="me-3" />
-                                        <span>Project Allocation</span>
-                                    </Link> */}
                                     <Link
                                         to="/Head/welcomekit"
                                         className="d-flex text-decoration-none link ps-5 py-2 d-flex align-items-center"

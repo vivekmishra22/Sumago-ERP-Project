@@ -20,11 +20,9 @@ import "jspdf-autotable";
 import { FaSearch } from "react-icons/fa";
 // import { GrEdit } from "react-icons/gr";
 import { useNavigate} from "react-router-dom";
-import { GrEdit } from "react-icons/gr";
 
 const Trainer_profile_Add = () => {
 
-  // const {_id} = useParams("");
   const navigate = useNavigate("");
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -521,15 +519,6 @@ const Trainer_profile_Add = () => {
                         <td>{item.email}</td>
                         <td className="no-print">{item.status}</td>
                         <td className="no-print d-flex justify-content-evenly ">
-                        <Button
-                            variant="warning"
-                            // onClick={() => handleEdit(item)}
-                            onClick={() => 
-                              navigate(`/Head/updateTrainerProfile/${item._id}`)
-                            }
-                          >
-                            <GrEdit />
-                          </Button>
                           <Button
                             variant="danger"
                             onClick={() => deletedata(item._id)}

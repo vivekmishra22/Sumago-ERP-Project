@@ -4,7 +4,6 @@ import { Button, Col, Container, Form, Row, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const Trainer_profile = () => {
-
   const navigate = useNavigate("");
   const [full_Name, setFull_Name] = useState("");
   const [image, setImage] = useState(null);
@@ -40,15 +39,6 @@ const Trainer_profile = () => {
   const [categoriesStdata, setCategoriesStData] = useState([]);
   const [filteredstate, setFilteredState] = useState([]);
 
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-
-// // In handleSubmit:
-// setIsSubmitting(true);
-// axios.post(..."")
-//   .then(..."")
-//   .catch(..."")
-//   .finally(() => setIsSubmitting(false));
-
   function capitalizeFirstLetter(input) {
     if (typeof input === "string") {
       return input
@@ -79,7 +69,7 @@ const Trainer_profile = () => {
       .get("http://localhost:8000/getdataCity")
       .then((res) => {
         const cdata = res.data.data.filter((item) => item.status === "Active");
-        setCategories(cdata); 
+        setCategories(cdata);
         console.log("Categories fetched:", res.data.data);
       })
       .catch((err) => {
@@ -101,35 +91,59 @@ const Trainer_profile = () => {
     userData.append("State", capitalizeFirstLetter(state));
     userData.append("city_name", capitalizeFirstLetter(city_name));
     userData.append("brief_bio", capitalizeFirstLetter(brief_bio));
-    userData.append("areas_specialization",capitalizeFirstLetter(areas_specialization));
+    userData.append(
+      "areas_specialization",
+      capitalizeFirstLetter(areas_specialization)
+    );
     userData.append("degree_earned", capitalizeFirstLetter(degree_earned));
     userData.append("certifications", capitalizeFirstLetter(certifications));
     userData.append("year", year);
     userData.append("job_roles", capitalizeFirstLetter(job_roles));
     userData.append("job_duration", capitalizeFirstLetter(job_duration));
-    userData.append("key_responsibilities_achievements", capitalizeFirstLetter(key_responsibilities_achievements));
-    userData.append("programming_languages", capitalizeFirstLetter(programming_languages));
-    userData.append("software_expertise", capitalizeFirstLetter(software_expertise));
-    userData.append("hardware_networking_knowledge", capitalizeFirstLetter(hardware_networking_knowledge));
+    userData.append(
+      "key_responsibilities_achievements",
+      capitalizeFirstLetter(key_responsibilities_achievements)
+    );
+    userData.append(
+      "programming_languages",
+      capitalizeFirstLetter(programming_languages)
+    );
+    userData.append(
+      "software_expertise",
+      capitalizeFirstLetter(software_expertise)
+    );
+    userData.append(
+      "hardware_networking_knowledge",
+      capitalizeFirstLetter(hardware_networking_knowledge)
+    );
     userData.append("training_tools", capitalizeFirstLetter(training_tools));
     userData.append("courses_taught", capitalizeFirstLetter(courses_taught));
-    userData.append("training_methods",capitalizeFirstLetter(training_methods));
-    userData.append("seminars_conducted",capitalizeFirstLetter(seminars_conducted));
-    userData.append("languages_spoken",capitalizeFirstLetter(languages_spoken));
+    userData.append(
+      "training_methods",
+      capitalizeFirstLetter(training_methods)
+    );
+    userData.append(
+      "seminars_conducted",
+      capitalizeFirstLetter(seminars_conducted)
+    );
+    userData.append(
+      "languages_spoken",
+      capitalizeFirstLetter(languages_spoken)
+    );
     userData.append("availability", capitalizeFirstLetter(availability));
     userData.append("github", capitalizeFirstLetter(github));
     userData.append("linkedIn", capitalizeFirstLetter(linkedIn));
     userData.append("website", capitalizeFirstLetter(website));
-    userData.append("Image", image);
+    userData.append("image", image);
 
     axios
       .post("http://localhost:8000/addTrainer_profile", userData)
       .then((res) => {
         console.log("hi", res.data);
         alert("Data Added Successfully!");
-        
+
         // Navigate to a different page after successful submission
-        navigate("/Head/trainer_profile_add"); 
+        navigate("/Head/trainer_profile_add");
         setFull_Name("");
         setImage(null);
         setCountry("");
@@ -160,13 +174,11 @@ const Trainer_profile = () => {
         setWebsite("");
         setStatus("Active");
       })
-      // .catch((err) => {
-      //   console.log(err);
-      //   alert("Error adding data. Please try again.");
-      // });
       .catch((err) => {
         console.log(err);
-        alert(`Error adding data: ${err.response?.data?.message || err.message}`);
+        alert(
+          `Error adding data: ${err.response?.data?.message || err.message}`
+        );
       });
   }
 
@@ -197,11 +209,10 @@ const Trainer_profile = () => {
                 <Col md={12} lg={6} className="pb-4">
                   <Form.Label>Profile Photo:</Form.Label>
                   <Form.Control
-                    // name="image"
+                    name="image" // <- Add this line
                     placeholder="Profile Photo"
                     required
                     type="file"
-                    // value={image}
                     onChange={(e) => setImage(e.target.files[0])}
                   />
                 </Col>
@@ -336,9 +347,7 @@ const Trainer_profile = () => {
                     placeholder="Enter Areas Specialization"
                     value={areas_specialization}
                     required
-                    onChange={(e) =>
-                      setAreas(e.target.value)
-                    }
+                    onChange={(e) => setAreas(e.target.value)}
                   />
                 </Col>
 
@@ -377,9 +386,7 @@ const Trainer_profile = () => {
                     placeholder="Enter Years Experience"
                     value={year}
                     required
-                    onChange={(e) =>
-                      setYear(e.target.value)
-                    }
+                    onChange={(e) => setYear(e.target.value)}
                   />
                 </Col>
 
@@ -418,11 +425,7 @@ const Trainer_profile = () => {
                     placeholder="Enter Key Responsibilities Achievements"
                     value={key_responsibilities_achievements}
                     required
-                    onChange={(e) =>
-                      setKey(
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => setKey(e.target.value)}
                   />
                 </Col>
 
@@ -435,11 +438,7 @@ const Trainer_profile = () => {
                     placeholder="Enter Programming Languages "
                     value={programming_languages}
                     required
-                    onChange={(e) =>
-                      setProgramming(
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => setProgramming(e.target.value)}
                   />
                 </Col>
 
@@ -452,9 +451,7 @@ const Trainer_profile = () => {
                     placeholder="Software Expertise "
                     value={software_expertise}
                     required
-                    onChange={(e) =>
-                      setSoftware(e.target.value)
-                    }
+                    onChange={(e) => setSoftware(e.target.value)}
                   />
                 </Col>
 
@@ -467,11 +464,7 @@ const Trainer_profile = () => {
                     placeholder="Hardware Networking Knowledge "
                     value={hardware_networking_knowledge}
                     required
-                    onChange={(e) =>
-                      setHardware(
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => setHardware(e.target.value)}
                   />
                 </Col>
 
@@ -502,7 +495,7 @@ const Trainer_profile = () => {
                 </Col>
 
                 {/* Training Methods 22*/}
-                <Col md={12} lg={6}className=" pb-4">
+                <Col md={12} lg={6} className=" pb-4">
                   <Form.Label>Training Methods:</Form.Label>
                   <div className=" d-flex">
                     <Form.Check
@@ -544,9 +537,7 @@ const Trainer_profile = () => {
                     placeholder="Seminars Conducted "
                     value={seminars_conducted}
                     required
-                    onChange={(e) =>
-                      setSeminars_conducted(e.target.value)
-                    }
+                    onChange={(e) => setSeminars_conducted(e.target.value)}
                   />
                 </Col>
 
@@ -559,9 +550,7 @@ const Trainer_profile = () => {
                     placeholder="Languages Spoken "
                     value={languages_spoken}
                     required
-                    onChange={(e) =>
-                      setLanguages_spoken(e.target.value)
-                    }
+                    onChange={(e) => setLanguages_spoken(e.target.value)}
                   />
                 </Col>
 
@@ -645,10 +634,6 @@ const Trainer_profile = () => {
                   <Button type="submit" variant="primary" size="lg">
                     Submit
                   </Button>
-
-{/* <Button type="submit" variant="primary" size="lg" disabled={isSubmitting}>
-  {isSubmitting ? 'Submitting...' : 'Submit'}
-</Button> */}
                 </Col>
               </Row>
             </Form>
@@ -660,598 +645,3 @@ const Trainer_profile = () => {
 };
 
 export default Trainer_profile;
-
-
-// import axios from "axios";
-// import React, { useEffect, useState } from "react";
-// import { Button, Col, Container, Form, Row, Card, Spinner } from "react-bootstrap";
-// import { useNavigate } from "react-router-dom";
-
-// const Trainer_profile = () => {
-//   const navigate = useNavigate();
-//   const [formData, setFormData] = useState({
-//     full_Name: "",
-//     image: null,
-//     job_title: "",
-//     Phone: "",
-//     email: "",
-//     country: "",
-//     state: "",
-//     city_name: "",
-//     brief_bio: "",
-//     areas_specialization: "",
-//     degree_earned: "",
-//     certifications: "",
-//     year: "",
-//     job_roles: "",
-//     job_duration: "",
-//     key_responsibilities_achievements: "",
-//     programming_languages: "",
-//     software_expertise: "",
-//     hardware_networking_knowledge: "",
-//     training_tools: "",
-//     courses_taught: "",
-//     training_methods: "",
-//     seminars_conducted: "",
-//     languages_spoken: "",
-//     availability: "",
-//     github: "",
-//     linkedIn: "",
-//     website: "",
-//     status: "Active"
-//   });
-  
-//   const [categories, setCategories] = useState([]);
-//   const [categoriesStdata, setCategoriesStData] = useState([]);
-//   const [filteredstate, setFilteredState] = useState([]);
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-//   const [errors, setErrors] = useState({});
-
-//   function capitalizeFirstLetter(input) {
-//     if (typeof input === "string") {
-//       return input
-//         .split(" ")
-//         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-//         .join(" ");
-//     }
-//     return input;
-//   }
-
-//   // Get data country and city_name
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         // Country
-//         const countryRes = await axios.get("http://localhost:8000/getdataCountry");
-//         const csdata = countryRes.data.data.filter((item) => item.status === "Active");
-//         setCategoriesStData(csdata);
-
-//         // City
-//         const cityRes = await axios.get("http://localhost:8000/getdataCity");
-//         const cdata = cityRes.data.data.filter((item) => item.status === "Active");
-//         setCategories(cdata);
-//       } catch (err) {
-//         console.error("Error fetching data:", err);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   const handleChange = (e) => {
-//     const { name, value, files } = e.target;
-    
-//     if (name === "image") {
-//       setFormData(prev => ({ ...prev, [name]: files[0] }));
-//     } else {
-//       setFormData(prev => ({ ...prev, [name]: value }));
-//     }
-//   };
-
-//   const validateForm = () => {
-//     const newErrors = {};
-    
-//     if (!formData.full_Name) newErrors.full_Name = "Full Name is required";
-//     if (!formData.email) newErrors.email = "Email is required";
-//     else if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = "Email is invalid";
-//     if (!formData.Phone) newErrors.Phone = "Phone is required";
-//     if (!formData.image) newErrors.image = "Profile photo is required";
-    
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-    
-//     if (!validateForm()) return;
-    
-//     setIsSubmitting(true);
-    
-//     try {
-//       const userData = new FormData();
-      
-//       // Append all form data to FormData
-//       Object.entries(formData).forEach(([key, value]) => {
-//         if (key === "image") {
-//           if (value) userData.append("Image", value);
-//         } else {
-//           userData.append(key, typeof value === "string" ? capitalizeFirstLetter(value) : value);
-//         }
-//       });
-
-//       const response = await axios.post("http://localhost:8000/addTrainer_profile", userData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data"
-//         }
-//       });
-
-//       if (response.data.success) {
-//         alert("Data Added Successfully!");
-//         navigate("/Head/trainer_profiles"); // Navigate to the listing page
-//       }
-//     } catch (err) {
-//       console.error("Submission error:", err);
-//       alert(`Error: ${err.response?.data?.message || "Failed to submit data"}`);
-//     } finally {
-//       setIsSubmitting(false);
-//     }
-//   };
-
-//   return (
-//     <Container className="d-flex justify-content-center mt-5">
-//       <Col md={12} sm={12} lg={10} xl={10}>
-//         <h1 className="text-center text-dark pt-3">Trainer Profile</h1>
-//         <div className="border-top border-5 mt-4 border-primary"></div>
-
-//         <Card className="">
-//           <Card.Body>
-//             <Form onSubmit={handleSubmit}>
-//               <Row>
-//                 {/* Full Name */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Full Name:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="full_Name"
-//                     placeholder="Enter Full Name"
-//                     value={formData.full_Name}
-//                     required
-//                     onChange={handleChange}
-//                     isInvalid={!!errors.full_Name}
-//                   />
-//                   <Form.Control.Feedback type="invalid">
-//                     {errors.full_Name}
-//                   </Form.Control.Feedback>
-//                 </Col>
-
-//                 {/* Profile Photo */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Profile Photo:</Form.Label>
-//                   <Form.Control
-//                     name="image"
-//                     type="file"
-//                     onChange={handleChange}
-//                     required
-//                     isInvalid={!!errors.image}
-//                   />
-//                   <Form.Control.Feedback type="invalid">
-//                     {errors.image}
-//                   </Form.Control.Feedback>
-//                 </Col>
-
-//                 {/* Country */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Country:</Form.Label>
-//                   <Form.Select
-//                     name="country"
-//                     value={formData.country}
-//                     onChange={(e) => {
-//                       handleChange(e);
-//                       const selectedCountry = e.target.value;
-//                       const countryStates = categoriesStdata.filter(
-//                         (category) => category.country === selectedCountry
-//                       );
-//                       setFilteredState(countryStates);
-//                       setFormData(prev => ({ ...prev, state: "" }));
-//                     }}
-//                     required
-//                   >
-//                     <option value="">Choose Country</option>
-//                     {categoriesStdata.map((countryItem) => (
-//                       <option key={countryItem._id} value={countryItem.country}>
-//                         {countryItem.country}
-//                       </option>
-//                     ))}
-//                   </Form.Select>
-//                 </Col>
-
-//                 {/* State */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>State:</Form.Label>
-//                   <Form.Select
-//                     name="state"
-//                     value={formData.state}
-//                     onChange={handleChange}
-//                     required
-//                     disabled={!formData.country}
-//                   >
-//                     <option value="">Choose State</option>
-//                     {filteredstate.map((stateItem) => (
-//                       <option key={stateItem._id} value={stateItem.state}>
-//                         {stateItem.state}
-//                       </option>
-//                     ))}
-//                   </Form.Select>
-//                 </Col>
-
-//                 {/* City */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>City:</Form.Label>
-//                   <Form.Select
-//                     name="city_name"
-//                     value={formData.city_name}
-//                     onChange={handleChange}
-//                     required
-//                   >
-//                     <option value="">Choose a city</option>
-//                     {categories.map((city) => (
-//                       <option key={city._id} value={city.city_name}>
-//                         {city.city_name}
-//                       </option>
-//                     ))}
-//                   </Form.Select>
-//                 </Col>
-
-//                 {/* Email */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Email:</Form.Label>
-//                   <Form.Control
-//                     type="email"
-//                     name="email"
-//                     placeholder="Enter Email"
-//                     value={formData.email}
-//                     required
-//                     onChange={handleChange}
-//                     isInvalid={!!errors.email}
-//                   />
-//                   <Form.Control.Feedback type="invalid">
-//                     {errors.email}
-//                   </Form.Control.Feedback>
-//                 </Col>
-
-//                 {/* Phone No */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Phone No:</Form.Label>
-//                   <Form.Control
-//                     type="number"
-//                     name="Phone"
-//                     placeholder="Enter Mobile No"
-//                     value={formData.Phone}
-//                     required
-//                     onChange={handleChange}
-//                     isInvalid={!!errors.Phone}
-//                   />
-//                   <Form.Control.Feedback type="invalid">
-//                     {errors.Phone}
-//                   </Form.Control.Feedback>
-//                 </Col>
-
-//                 {/* Job Title */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Job Title:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="job_title"
-//                     placeholder="Enter Job Title"
-//                     value={formData.job_title}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Brief Bio */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Brief Bio:</Form.Label>
-//                   <Form.Control
-//                     as="textarea"
-//                     rows={3}
-//                     name="brief_bio"
-//                     placeholder="Enter brief bio"
-//                     value={formData.brief_bio}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Areas Specialization */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Areas Specialization:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="areas_specialization"
-//                     placeholder="Enter Areas Specialization"
-//                     value={formData.areas_specialization}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Degree Earned */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Degree Earned:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="degree_earned"
-//                     placeholder="Enter Degree Earned"
-//                     value={formData.degree_earned}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Certifications */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Certifications:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="certifications"
-//                     placeholder="Enter Certifications"
-//                     value={formData.certifications}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Years Experience */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Years Experience:</Form.Label>
-//                   <Form.Control
-//                     type="number"
-//                     name="year"
-//                     placeholder="Enter Years Experience"
-//                     value={formData.year}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Job Roles */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Job Roles:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="job_roles"
-//                     placeholder="Enter Job Roles"
-//                     value={formData.job_roles}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Job Duration */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Job Duration:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="job_duration"
-//                     placeholder="Enter Job Duration"
-//                     value={formData.job_duration}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Key Responsibilities Achievements */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Key Responsibilities Achievements:</Form.Label>
-//                   <Form.Control
-//                     as="textarea"
-//                     rows={3}
-//                     name="key_responsibilities_achievements"
-//                     placeholder="Enter Key Responsibilities Achievements"
-//                     value={formData.key_responsibilities_achievements}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Programming Languages */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Programming Languages:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="programming_languages"
-//                     placeholder="Enter Programming Languages"
-//                     value={formData.programming_languages}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Software Expertise */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Software Expertise:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="software_expertise"
-//                     placeholder="Software Expertise"
-//                     value={formData.software_expertise}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Hardware Networking Knowledge */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Hardware Networking Knowledge:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="hardware_networking_knowledge"
-//                     placeholder="Hardware Networking Knowledge"
-//                     value={formData.hardware_networking_knowledge}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Training Tools */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Training Tools:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="training_tools"
-//                     placeholder="Training Tools"
-//                     value={formData.training_tools}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Courses Taught */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Courses Taught:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="courses_taught"
-//                     placeholder="Courses Taught"
-//                     value={formData.courses_taught}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Training Methods */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Training Methods:</Form.Label>
-//                   <div className="d-flex">
-//                     {["Classroom", "Online", "Hands-on"].map((method) => (
-//                       <Form.Check
-//                         key={method}
-//                         type="radio"
-//                         label={method}
-//                         name="training_methods"
-//                         value={method}
-//                         className="ps-5"
-//                         checked={formData.training_methods === method}
-//                         onChange={handleChange}
-//                       />
-//                     ))}
-//                   </div>
-//                 </Col>
-
-//                 {/* Seminars Conducted */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Seminars Conducted:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="seminars_conducted"
-//                     placeholder="Seminars Conducted"
-//                     value={formData.seminars_conducted}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Languages Spoken */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Languages Spoken:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="languages_spoken"
-//                     placeholder="Languages Spoken"
-//                     value={formData.languages_spoken}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Availability */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Availability:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="availability"
-//                     placeholder="Availability"
-//                     value={formData.availability}
-//                     required
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Github */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Github:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="github"
-//                     placeholder="Github"
-//                     value={formData.github}
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* LinkedIn */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>LinkedIn:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="linkedIn"
-//                     placeholder="LinkedIn"
-//                     value={formData.linkedIn}
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Website */}
-//                 <Col md={12} lg={6} className="pb-4">
-//                   <Form.Label>Website:</Form.Label>
-//                   <Form.Control
-//                     type="text"
-//                     name="website"
-//                     placeholder="Website"
-//                     value={formData.website}
-//                     onChange={handleChange}
-//                   />
-//                 </Col>
-
-//                 {/* Status */}
-//                 <Col md={12} className="d-flex mt-3">
-//                   <Form.Label>Status:</Form.Label>
-//                   {["Active", "Inactive"].map((statusOption) => (
-//                     <Form.Check
-//                       key={statusOption}
-//                       type="radio"
-//                       label={statusOption}
-//                       name="status"
-//                       value={statusOption}
-//                       className="ps-5"
-//                       checked={formData.status === statusOption}
-//                       onChange={handleChange}
-//                     />
-//                   ))}
-//                 </Col>
-
-//                 {/* Submit Button */}
-//                 <Col md={12} className="d-flex justify-content-center mt-4">
-//                   <Button type="submit" variant="primary" size="lg" disabled={isSubmitting}>
-//                     {isSubmitting ? (
-//                       <>
-//                         <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-//                         <span className="ms-2">Submitting...</span>
-//                       </>
-//                     ) : (
-//                       "Submit"
-//                     )}
-//                   </Button>
-//                 </Col>
-//               </Row>
-//             </Form>
-//           </Card.Body>
-//         </Card>
-//       </Col>
-//     </Container>
-//   );
-// };
-
-// export default Trainer_profile;
