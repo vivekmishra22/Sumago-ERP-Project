@@ -92,8 +92,8 @@ const Sidebar = () => {
                                     className="text-decoration-none link ps-3 py-2"
                                 >
                                     <ImProfile size={25} className="me-2" /> Student Batch
-                                </Link>
-
+                                </Link>                              
+                                
                             {/* Logout Link (Always at the bottom) */}
                             <Link to="/" className="text-decoration-none link ps-3 py-2 mt-auto">
                                 <BiLogOut size={25} className="me-2" /> Logout

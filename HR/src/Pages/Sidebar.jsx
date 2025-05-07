@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button, Col, Nav, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { FaComments, FaFolderOpen } from "react-icons/fa";
+import { FaComments, FaFolderOpen, FaUserPlus } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { BiLogOut } from "react-icons/bi";
+import { PiStudentFill } from "react-icons/pi";
+import { HiMiniDocumentCheck } from "react-icons/hi2";
+import { RiIdCardFill } from "react-icons/ri";
 
 const Sidebar = () => {
     const [show, setShow] = useState(false); // State for Offcanvas
@@ -39,16 +42,19 @@ const Sidebar = () => {
                                 <span>Dashboard</span>
                             </Link>
 
-                            {/* Feedback Link */}
                             <Link to="/Head/studentlogin" className="text-decoration-none link ps-3 py-2 d-flex align-items-center">
-                                <FaComments size={23} className="me-2" />
-                                <span>Student Login</span>
+                                <FaUserPlus size={23} className="me-2" />
+                                <span>Add Student Login</span>
                             </Link>
 
-                            {/* Projects Link */}
-                            <Link to="/Head/project" className="text-decoration-none link ps-3 py-2 d-flex align-items-center">
-                                <FaFolderOpen size={23} className="me-2" />
-                                <span>Projects</span>
+                            <Link to="/Head/studentlogin" className="text-decoration-none link ps-3 py-2 d-flex align-items-center">
+                                <HiMiniDocumentCheck size={23} className="me-2" />
+                                <span>Document Approved</span>
+                            </Link>
+
+                            <Link to="/Head/studentlogin" className="text-decoration-none link ps-3 py-2 d-flex align-items-center">
+                                <RiIdCardFill size={23} className="me-2" />
+                                <span>New Admitted ID Card</span>
                             </Link>
 
                             {/* Logout Link (Always at the bottom) */}

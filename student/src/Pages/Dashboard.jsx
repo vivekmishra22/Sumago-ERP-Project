@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { FaUniversity } from "react-icons/fa";
+import { BiSolidReceipt } from "react-icons/bi";
+import { FaFolderOpen, FaUniversity } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
@@ -47,10 +48,10 @@ const Dashboard = () => {
                       <Card.Title className="fs-5 fw-bold">{user_name}</Card.Title>
                     </Col>
                     <Col md={4}>
-                      <FaUniversity className="fs-1 ms-0 p-0 me-3 dashboarde-color" />
+                      <BiSolidReceipt className="fs-1 ms-0 p-0 me-3 dashboarde-color" />
                     </Col>
                     <Card.Text style={{ color: "rgb(61, 152, 250)" }} className="fs-6 fw-bold d-flex gap-2">
-                      Feedback List <FaArrowRightLong className="my-1" />
+                      Fee Receipt <FaArrowRightLong className="my-1" />
                     </Card.Text>
                   </Row>
                 </Card.Body>
@@ -68,10 +69,10 @@ const Dashboard = () => {
                       <Card.Title className="fs-5 fw-bold">{projectTitle}</Card.Title>
                     </Col>
                     <Col md={4}>
-                      <FaUniversity className="fs-1 ms-0 p-0 me-3 dashboarde-color" />
+                      <FaFolderOpen className="fs-1 ms-0 p-0 me-3 dashboarde-color" />
                     </Col>
                     <Card.Text style={{ color: "rgb(32, 190, 79)" }} className="fs-6 fw-bold d-flex gap-2">
-                      Project List <FaArrowRightLong className="my-1" />
+                      Project Allocation <FaArrowRightLong className="my-1" />
                     </Card.Text>
                   </Row>
                 </Card.Body>

@@ -15,16 +15,18 @@ const student_detail = mongoose.Schema({
         required: true,
     },
 
-    duration:
-    {
-        type: String,
-        required: true,
-    },
     date:
     {
         type: Date,
         required: true,
     },
+
+    duration:
+    {
+        type: String,
+        required: true,
+    },
+    
     email:
     {
         type: String,

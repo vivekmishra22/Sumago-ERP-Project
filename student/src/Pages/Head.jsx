@@ -19,7 +19,8 @@ const Head = () => {
         <div className="content-container flex-grow-1" style={{ marginLeft: "250px", padding: "20px" }}>
           <Container>
             <Routes>
-              <Route path="/" element={<Home />} />
+              {/* <Route path="/" element={<Home />} /> */}
+              <Route path="/" element={<Dashboard />} />
               <Route path="/feedback" element={<Feedback />} />  
               <Route path="/project" element={<Project />} />  
               <Route path="/documents" element={<Document />} />  

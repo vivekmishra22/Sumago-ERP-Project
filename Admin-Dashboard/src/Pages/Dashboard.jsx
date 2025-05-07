@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [university_name ,setUniversityCount] = useState("");
   const [college_name, setCollegeCount] = useState("");
   const [city_name, setCityCount] = useState("");
-  const [ education_name ,setEducationCount] = useState("");
+  const [education_name ,setEducationCount] = useState("");
   const [technology_name ,setTechnologyCount] = useState("");
   const [welcome_kit, setWelcomeKitCount] = useState("");
   const [student_name ,setEnquiry_Studentcount] = useState("");
