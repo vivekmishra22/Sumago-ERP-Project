@@ -2,16 +2,17 @@ const model = require('./student_Model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET || 'mysecretkey'; // Use environment variable for the secret
-const saltRounds = 10;
+const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
+// const saltRounds = 10;
 
 
 // Register a new user
 const regi_student = async (req, res) => {
-  const { student_name, course_name,duration,date, email, password, status } = req.body;
+  const { student_name, name, duration, date, email, password, status } = req.body;
 
   try {
     // Validate input
-    if (!student_name || !course_name ||!duration ||!date || !email || !password) {
+    if (!student_name || !name || !duration || !date || !email || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -27,9 +28,9 @@ const regi_student = async (req, res) => {
     // Create the user
     const newStudent = await model.create({
       student_name,
-       course_name,
-       duration,
-       date,
+      name,
+      duration,
+      date,
       email,
       password: hashedPassword,
       status,
@@ -38,7 +39,11 @@ const regi_student = async (req, res) => {
     // Generate a token
     const token = jwt.sign({ email: newStudent.email, id: newStudent._id }, secret, { expiresIn: '1h' });
 
-    res.status(201).json({ student: newStudent, token });
+    // ⛔ Remove password from response
+    const { password: _, ...studentData } = newStudent.toObject();
+
+    res.status(201).json({ message: 'Student registered successfully', student: studentData, token });
+    // res.status(201).json({ student: studentData, token });
   } catch (error) {
     console.error('Error registering student:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -78,21 +83,22 @@ const regi_student = async (req, res) => {
 // };
 
 const login_student = async (req, res) => {
+
   const { email, password } = req.body;
 
   try {
-    const students = await model.findOne({ email });
-    if (!students) {
+    const student = await model.findOne({ email });
+    if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, students.password);
+    const isPasswordCorrect = await bcrypt.compare(password, student.password);
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: students._id, email: students.email }, secret, { expiresIn: '1h' });
-    res.json({message:"login successful..", token });
+    const token = jwt.sign({ id: student._id, email: student.email }, secret, { expiresIn: '1h' });
+    res.json({ message: "login successful..", token });
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -106,11 +112,17 @@ const change = async (req, res) => {
   try {
     // Extract user ID from the token
     const token = req.headers.authorization.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Authorization token missing' });
+    }
+    
     const decoded = jwt.verify(token, secret);
-    const studentId = decoded.id;
+    const student = await model.findById(decoded.id);
+    // const studentId = decoded.id;
 
     // Find the user by ID
-    const student = await model.findById(studentId);
+    // const student = await model.findById(studentId);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
@@ -135,13 +147,13 @@ const change = async (req, res) => {
   }
 };
 
-// Get all students
+// Get all student
 const getstudent = async (req, res) => {
   try {
-    const students = await model.find();
-    res.status(200).json({ data: students });
+    const student = await model.find();
+    res.status(200).json({ data: student });
   } catch (error) {
-    console.error('Error fetching students:', error);
+    console.error('Error fetching student:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -176,26 +188,27 @@ const getbyId = async (req, res) => {
 
 // Delete API
 const Delete = async (req, res) => {
-    try{
-        const data = await model.deleteOne({_id: req.params._id})
-        if (result.deletedCount === 0) {
-                 return res.status(404).json({ message: 'student not found' });
-               }
-        res.status(200).send({data});
-    }catch (error) {
-        // console.log(err);
-        res.status(500).send(err);
+  try {
+    const data = await model.deleteOne({ _id: req.params.id });
+    if (data.deletedCount === 0) {
+      return res.status(404).json({ message: 'Student not found' });
     }
-}
+    res.status(200).send({ message: 'Student deleted successfully', data });
+  } catch (error) {
+    console.error('Error deleting student:', error);
+    res.status(500).send(error);
+  }
+};
+
 
 // // Refresh token endpoint
 //   app.post('/refresh-token', (req, res) => {
 //     const { refreshToken } = req.body;
 //     if (!refreshToken) return res.status(401).json({ message: 'Refresh token missing' });
-  
+
 //     jwt.verify(refreshToken, refreshSecret, (err, user) => {
 //       if (err) return res.status(403).json({ message: 'Invalid refresh token' });
-  
+
 //       const newAccessToken = jwt.sign({ email: user.email, id: user.id }, secret, { expiresIn: '1h' });
 //       res.json({ accessToken: newAccessToken });
 //     });
@@ -203,12 +216,12 @@ const Delete = async (req, res) => {
 
 // Update user
 const Update_student = async (req, res) => {
-  const { student_name, course_name, duration, date, email, status, password } = req.body;
+  const { student_name, name, duration, date, email, status, password } = req.body;
 
   try {
     // Log the request body and parameters for debugging
-    console.log('Request Body:', req.body);
-    console.log('Request Params:', req.params);
+    // console.log('Request Body:', req.body);
+    // console.log('Request Params:', req.params);
 
     // Extract the student ID from the request parameters
     const studentId = req.params.id; // Use `req.params.id` instead of `req.params._id`
@@ -226,7 +239,7 @@ const Update_student = async (req, res) => {
     // Prepare the update object
     const updateData = {
       student_name,
-      course_name,
+      name,
       duration,
       date,
       email,
