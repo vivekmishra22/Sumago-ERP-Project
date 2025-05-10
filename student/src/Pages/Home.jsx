@@ -4,10 +4,23 @@ import { Link } from 'react-router-dom';
 import image1 from "../Assets/Images/SUMAGO Logo.png";
 import { FaCircleUser } from 'react-icons/fa6';
 import { FaBell } from 'react-icons/fa';
+import { BiLogOut } from 'react-icons/bi';
 
 const Home = () => {
   const [isRinging, setIsRinging] = useState(false);
   // const [notificationCount, setNotificationCount] = useState(99);
+
+  const [userEmail, setUserEmail] = useState("");
+  // const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("student_email");
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+    }
+  }, []);
+
+
 
   // Function to trigger the bell animation
   const ringBell = () => {
@@ -26,7 +39,6 @@ const Home = () => {
       ringBell(); // Trigger the animation
     }, 5000); // 5000 milliseconds = 5 seconds
 
-    // Cleanup the interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
@@ -59,27 +71,44 @@ const Home = () => {
                     style={{
                       fontSize: '0.7rem', // Smaller font size
                       padding: '0.25rem 0.4rem', // Smaller padding
-                      marginLeft:"-15px"
+                      marginLeft: "-15px"
                     }}
                   >
-                    99+ 
+                    99+
                     {/* {notificationCount > 99 ? "99+" : notificationCount} */}
                     <span className="visually-hidden">unread messages</span>
                   </span>
                 </div>
               </Link>
-              <Dropdown className="me-4 border border-0">
+              <Dropdown className="mx-2 border border-0">
                 <Dropdown.Toggle variant="" id="dropdown-basic" className="border border-0 no-caret">
-                  <span>
-                    <FaCircleUser className="fs-4 text-secondary" />
+                  <span className='d-flex align-items-center fs-5'>
+                    <FaCircleUser className="fs-4 text-info" />
+                    <span className="ms-2 text-primary">
+                      {userEmail ? userEmail : <span className="text-muted">Loading...</span>}
+                      {/* {userName ? userName : <span className="text-muted">Loading...</span>} */}
+                    </span>
+
+                    {/* <span className="ms-2 text-secondary">{userName || "Guest"}</span> */}
                   </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
+                  <Dropdown.Item href="#/action-1" className='text-secondary'>
+                    <FaCircleUser className="text-info me-2 fs-5" />
+                    <span>My Profile</span>
+                  </Dropdown.Item>
                   {/* <Dropdown.Item href="#/action-2">Another action</Dropdown.Item> */}
                   {/* <Dropdown.Item href="#/action-3">Something else</Dropdown.Item> */}
-                  <Link to="/" className="text-decoration-none ps-3 py-2">
-                    Logout
+                  <Link to="/" className="text-decoration-none ps-3 py-2 text-danger d-flex align-items-center"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      localStorage.removeItem("student_email");
+                      // localStorage.removeItem("student_name");
+                    }}
+
+                  >
+                    <BiLogOut className='me-2 fs-5'/>
+                    <span>Logout</span>
                   </Link>
                 </Dropdown.Menu>
               </Dropdown>

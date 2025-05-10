@@ -1,3 +1,8 @@
+.login-page {
+  background: linear-gradient(135deg, rgb(77, 95, 197), #5c6bc0, rgb(185, 221, 247));
+  min-height: 100vh;
+}
+
 .dashboarde-color{
   color:rgb(209, 209, 209);
   /* color:rgb(191, 192, 192); */

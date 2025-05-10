@@ -1,9 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require ('mongoose');
 const jwt = require('jsonwebtoken');
 const secret = 'your-secret-key';
 const refreshSecret = 'your-refresh-secret-key';
+
+const express = require('express');
+const cors = require('cors');
+const mongoose = require ('mongoose');
 
 // mongoose.connect("mongodb://127.0.0.1:27017/ERP_project");
 mongoose.connect("mongodb://127.0.0.1:27017/ERP_System");

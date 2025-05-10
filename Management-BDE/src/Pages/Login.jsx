@@ -93,7 +93,7 @@ const Login = () => {
                         <Nav.Link className="px-2 text-primary" 
                         onClick={handleChangePassword}
                         >
-                          Clange Password?
+                          Change Password?
                         </Nav.Link>
                       </Col>
                     </Row>
