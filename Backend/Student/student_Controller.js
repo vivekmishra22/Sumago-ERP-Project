@@ -47,24 +47,37 @@ const loginStudent = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const Student = await model.findOne({ email });
-    if (!Student) {
+    const student = await model.findOne({ email });
+    if (!student) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, Student.password);
+    const isPasswordCorrect = await bcrypt.compare(password, student.password);
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: Student._id, email: Student.email }, secret, { expiresIn: '1h' });
+    const token = jwt.sign({ id: student._id, email: student.email }, secret, { expiresIn: '1h' });
+
+    // Remove password before sending student data
+    // const { password: _, ...studentData } = Student.toObject();
+
+    // res.json({ message: 'Login successful', token, student: studentData });
+    
     // res.json({ message: 'login successfull..',token });
-    res.json({ message: 'Login successful', token, student: {
-    // id: Student._id,
-    student_name: Student.student_name, // or `name` depending on what you use
-    email: Student.email,
-  },
-});
+    // Send response
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      student: {
+        student_name: student.student_name,
+        email: student.email,
+        name: student.name,
+        date: student.date,
+        duration: student.duration,
+        status: student.status,
+      }
+    });
 
   } catch (error) {
     console.error('Error logging in:', error);

@@ -1,3 +1,15 @@
+.bell-icon:hover {
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
 .login-page {
   background: linear-gradient(135deg, rgb(77, 95, 197), #5c6bc0, rgb(185, 221, 247));
   min-height: 100vh;

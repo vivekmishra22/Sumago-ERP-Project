@@ -21,7 +21,12 @@ const SignIn = () => {
         axios.post("http://localhost:8000/studentlogin", userData)
             .then((res) => {
                 localStorage.setItem("token", res.data.token);  // Store token
+                localStorage.setItem('student_name', res.data.student.student_name);
                 localStorage.setItem('student_email', res.data.student.email);
+                localStorage.setItem('course_name', res.data.student.name);
+                localStorage.setItem('joining_date', res.data.student.date);
+                localStorage.setItem('course_duration', res.data.student.duration);
+                localStorage.setItem('student_status', res.data.student.status);
                 // localStorage.setItem('student_name', res.data.student.student_name);
                 // localStorage.setItem("userName", res.data.name); // Store name
                 setEmail("");

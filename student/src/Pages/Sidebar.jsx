@@ -58,7 +58,7 @@ const Sidebar = () => {
                             </Link>
 
                             {/* Logout Link (Always at the bottom) */}
-                            <Link to="/" className="text-decoration-none link ps-3 py-2 d-flex align-items-center mt-auto">
+                            <Link to="/" className="text-decoration-none text-danger link ps-3 py-2 d-flex align-items-center mt-auto">
                                 <BiLogOut size={25} className="me-2" /> 
                                 <span>Logout</span>
                             </Link>
